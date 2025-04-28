@@ -5,3 +5,52 @@ h1 {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 3rem;
 }
+
+.generic-form{
+    max-width: 2000px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+}
+
+.generic-form [type=text], .generic-form [type=email], [type=password] {
+    padding: 10px;
+    font-size: 1.2rem;
+    border: #c3c0d6;
+    color: black;
+    border: none;
+}
+
+.generic-form button {
+    font-size: 1.2rem;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: cornflowerblue;
+    color: white;
+    border: #c3c0d6;
+    border: none;
+}
+
+.footer-side {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Space between buttons */
+}
+
+.footer div{
+    display: flex;
+}
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: #ffffff;
+}
+
+.background-color {
+    background-color: #ffffff;
+}
