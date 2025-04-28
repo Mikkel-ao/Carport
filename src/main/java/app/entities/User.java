@@ -5,23 +5,19 @@ public class User {
     private String password;
     private String email;
     private String role;
-    private double balance;
 
-    public User(int userId, String password, String email, String role, double balance) {
+    public User(int userId, String password, String email, String role) {
         this.userId = userId;
         this.password = password;
         this.email = email;
         this.role = role;
-        this.balance = balance;
     }
 
-    public User(String password, String email, String role, double balance) {
+    public User(String password, String email, String role) {
         this.password = password;
         this.email = email;
         this.role = role;
-        this.balance = balance;
     }
-
 
     public int getUserId() {
         return userId;
@@ -39,19 +35,13 @@ public class User {
         return role;
     }
 
-
-    public double getBalance() {
-        return balance;
-    }
-
     @Override
     public String toString() {
         return "User{" +
-                "user_id=" + userId +
+                "userId=" + userId +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", role='" + role + '\'' +
-                ", balance=" + balance +
                 '}';
     }
 }
