@@ -1,6 +1,6 @@
 @startuml
 'https://plantuml.com/class-diagram
-
+'Klasse diagram'
 package app {
 class Main {}
 
@@ -107,4 +107,15 @@ DatabaseException ()
     }
 }
 }
+
+'Pile'
+
+persistence <-- DatabaseException
+Main <-- config
+Main <-- controllers
+controllers <-- persistence
+entities <-- persistence
+controllers <-- entities
+controllers <-- services
+
 @enduml
