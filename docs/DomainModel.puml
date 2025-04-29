@@ -1,0 +1,42 @@
+@startuml
+'https://plantuml.com/class-diagram
+' Domain Model
+
+class Main {
+}
+
+class User {
+
+}
+
+class Order {
+}
+
+class Product {
+}
+
+class ProductVariant {
+- Product product
+}
+
+class OrderItem {
+- ProductVariant productVariant
+}
+
+class Svg {
+}
+class Calculator{
+}
+
+
+Main <-- User
+User <-- Order
+Product <-- ProductVariant
+Order <-- Product
+Order <-- OrderItem
+Svg <-- ProductVariant
+Order <-- Calculator
+Order <-- Svg
+Calculator <-- ProductVariant
+
+@enduml
