@@ -1,0 +1,126 @@
+@startuml
+'https://plantuml.com/class-diagram
+'Klasse diagram'
+package app {
+class Main {}
+
+package controllers {
+class OrderController {
+
+}
+class UserController{
++ addRoutes(Javalin app, ConnectionPool connectionPool)
+- logout(Context ctx)
+- login(Context ctx, ConnectionPool connectionPool)
+- createUser(Context ctx, ConnectionPool connectionPool)
+    }
+}
+
+package services{
+class Svg{
+- StringBuilder svg
++ Svg()
++ addRectangle()
++ addArrows()
++ addLine()
++ addText ()
+    }
+
+class Calculator {
+- double price
+- String name
++ CalculatePrice ()
+    }
+}
+
+package persistence{
+class OrderMapper {
++ getOrderById()
++ getAllOrders()
++ getOrderStatus()
+
+    }
+class UserMapper {
++ login(String email, String password, ConnectionPool connectionPool)
++ createUser(String password, String email, ConnectionPool connectionPool)
+
+}
+
+class ConnectionPool {
+- volatile ConnectionPool
+- HikariDataSource ds
+- Logger LOGGER
+- ConnectionPool ()
++ ConnectionPool getInstance(String user, String Password, String url, String db)
++ Connection getConnection ()
++ close ()
++ HikariDataSource createHikariConnectionPool(String user, String password, String url, String db)
+    }
+}
+
+package entities {
+class User {
+- int userId
+- String email
+- String hashedPassword
+- int phoneNumber
+- String role
++ User ()
+    }
+class Order {
+- int orderId
+- double carportWidth
+- double carportLength
+- int status
++ Order()
+    }
+class ProductVariant {
+- int productVariantId
+- double length
+- Product product
++ ProductVariant()
+    }
+class Product {
+- int productId
+- String name
+- String unit
+- double price
++ Product()
+    }
+class OrderItem {
+- int orderItemId
+- int quantity
+- String description
+- Order order
+- ProductVariant productVariant
++ OrderItem()
+    }
+}
+
+
+package config {
+class SessionConfig {
+sessionConfig ()
+    }
+class ThymleafController {
+templateEngine ()
+    }
+}
+
+package exception{
+class DatabaseException {
+DatabaseException ()
+    }
+}
+}
+
+'Pile'
+
+persistence <-- DatabaseException
+Main <-- config
+Main <-- controllers
+controllers <-- persistence
+persistence <-- entities
+controllers <-- services
+
+@enduml
