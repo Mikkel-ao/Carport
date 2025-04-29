@@ -5,7 +5,9 @@ package app {
 class Main {}
 
 package controllers {
-class OrderController {}
+class OrderController {
+
+}
 class UserController{
 + addRoutes(Javalin app, ConnectionPool connectionPool)
 - logout(Context ctx)
@@ -33,6 +35,10 @@ class Calculator {
 
 package persistence{
 class OrderMapper {
++ getOrderById()
++ getAllOrders()
++ getOrderStatus()
+
     }
 class UserMapper {
 + login(String email, String password, ConnectionPool connectionPool)
@@ -114,8 +120,7 @@ persistence <-- DatabaseException
 Main <-- config
 Main <-- controllers
 controllers <-- persistence
-entities <-- persistence
-controllers <-- entities
+persistence <-- entities
 controllers <-- services
 
 @enduml
