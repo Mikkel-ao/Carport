@@ -27,8 +27,8 @@ class Svg{
     }
 
 class Calculator {
-- double price
-- String name
+Length
+Width
 + CalculatePrice ()
     }
 }
@@ -44,6 +44,9 @@ class UserMapper {
 + login(String email, String password, ConnectionPool connectionPool)
 + createUser(String password, String email, ConnectionPool connectionPool)
 
+}
+
+class ProductMapper{
 }
 
 class ConnectionPool {
@@ -122,5 +125,6 @@ Main <-- controllers
 controllers <-- persistence
 persistence <-- entities
 controllers <-- services
+controllers <-- entities
 
 @enduml
