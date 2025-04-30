@@ -53,7 +53,7 @@ public class UserController {
         }
 
         try {
-            UserMapper.createUser(password1, email, connectionPool);
+            UserMapper.createUser(email, password1, connectionPool);
             ctx.attribute("message", "User created successfully. Please log in.");
             ctx.render("/login.html");
         } catch (DatabaseException e) {
