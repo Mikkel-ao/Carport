@@ -34,7 +34,7 @@ public class ConnectionPool {
      * @param db Database name
      * @return Singleton instance of ConnectionPool
      */
-    public static ConnectionPool getInstance(String user, String password, String url, String db) {
+    public static ConnectionPool getInstance() {
         if (instance == null) {
             synchronized (ConnectionPool.class) {
                 if (instance == null) {  // Double-checked locking
@@ -45,7 +45,7 @@ public class ConnectionPool {
                                 System.getenv("JDBC_CONNECTION_STRING"),
                                 System.getenv("JDBC_DB"));
                     } else {
-                        ds = createHikariConnectionPool(user, password, url, db);
+                        ds = createHikariConnectionPool("123", "123", "123","123");
                     }
                     instance = new ConnectionPool();
                 }
