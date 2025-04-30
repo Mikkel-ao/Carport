@@ -1,13 +1,35 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<title>Newsletters</title>
+<title>Configurator</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
+<!-- For icons-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
 
-<body>
-<h1>Welcome to the Javalin / Thymeleaf demo</h1>
-<p>This is your first web application in this world</p>
+<header>
+    <div class="index-container">
+        <a href="index.html" th:href="@{/}">
+            <img class="logo-index" src="/public/images/fog_logo_small.png"
+                 th:src="@{/images/fog_logo_small.png}" alt="foglogo">
+        </a>
+        <a href="/login" class="account-button">
+            <i class="fas fa-user"></i>
+            <span>Fog Konto</span>
+        </a>
+        <a th:if="${session.currentUser != null}" href="index.html" th:href="@{/logout}">
+            <button>Log ud</button>
+        </a>
+    </div>
+</header>
+
+
+<body class="background-color">
+
+<h1>Index / Carport configuration page</h1>
+
+
 </body>
 </html>

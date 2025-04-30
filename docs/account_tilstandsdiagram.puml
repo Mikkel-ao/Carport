@@ -1,0 +1,32 @@
+@startuml
+[*] --> Index
+
+state "index.html" as Index #Application
+state "login.html" as Login #Aquamarine
+state "createuser.html" as Opret #Aquamarine
+
+Index --> Login : User trykker "login / opret"
+LoginProces --> Opret : User trykker "Opret bruger"
+
+state LoginProces {
+  [*] --> IndtastInfo
+  IndtastInfo --> Autentifikation : Sender indtastning
+  Autentifikation --> LoginSucces : Findes i db
+  Autentifikation --> LoginFejl : Findes ikke i db
+  LoginFejl --> IndtastInfo : Prøv igen
+  LoginSucces --> Index : Efter login sendes bruger til index
+}
+
+state OpretProcess {
+  [*] --> IndtastOplysninger
+  IndtastOplysninger --> Validering : Sender indtastning
+  Validering --> Succes : Opfylder krav
+  Validering --> Fejl : Opfylder ikke krav
+  Fejl --> IndtastOplysninger : Prøv igen
+  Succes --> Login : Sender bruger til login
+}
+
+Login --> LoginProces
+Opret --> OpretProcess
+
+@enduml
