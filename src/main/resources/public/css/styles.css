@@ -54,3 +54,12 @@ h1 {
 .background-color {
     background-color: #ffffff;
 }
+
+.index-container {
+    display: flex;
+    flex-wrap: wrap; /* Allows buttons to wrap if needed */
+    align-items: center; /* Aligns items vertically */
+    justify-content: flex-start; /* Keeps the other buttons on the left */
+    gap: 10px; /* Adds spacing between elements */
+    width: 99%;
+}
