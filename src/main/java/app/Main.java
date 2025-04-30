@@ -10,13 +10,8 @@ import io.javalin.rendering.template.JavalinThymeleaf;
 
 public class Main {
 
-    private static final String USER = "gruppe10";
-    private static final String PASSWORD = "gruppe10";
-    private static final String URL = "jdbc:postgresql://207.154.198.27:5433/%s?currentSchema=public";
-    private static final String DB = "fog";
 
-    private static final ConnectionPool connectionPool = ConnectionPool.getInstance(USER, PASSWORD, URL, DB);
-    private static UserMapper userMapper = new UserMapper();
+    private static final ConnectionPool connectionPool = ConnectionPool.getInstance();
 
 
     public static void main(String[] args) {

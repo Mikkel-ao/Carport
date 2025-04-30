@@ -46,7 +46,7 @@ public class UserMapper {
     }
 
     //Creates a new user by inserting username and password into the database
-    public static void createUser(String password, String email, String phonenumber, String role, ConnectionPool connectionPool) throws DatabaseException {
+    public static void createUser(String password, String email, ConnectionPool connectionPool) throws DatabaseException {
         String sql = "INSERT INTO users (email, password, phone_number, role) VALUES (?, ?, ?, ?)";
         //Encrypts the password and stores it in a variable. Doing the encrypting before storing in database for security
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
@@ -61,8 +61,8 @@ public class UserMapper {
         ) {
             ps.setString(1, hashedPassword);
             ps.setString(2, email);
-            ps.setString(3, phonenumber);
-            ps.setString(4, role);
+            ps.setString(3, "12345"); //Hard-coded values for now
+            ps.setString(4, "customer"); //Hard-coded values for now
 
             //Storing the number of rows modified, if no rows were inserted, exception is thrown
             int rowsAffected = ps.executeUpdate();
