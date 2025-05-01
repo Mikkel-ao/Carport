@@ -32,7 +32,7 @@ class MapperTest {
 
     @Test
     void createUser() {
-        UserMapper.createUser("1234", "peter@haha", testConnectionPool);
+        UserMapper.createUser("1234", "peter@hihi", testConnectionPool);
     }
 
     @AfterEach

@@ -38,15 +38,11 @@ public class ConnectionPool {
         if (instance == null) {
             synchronized (ConnectionPool.class) {
                 if (instance == null) {  // Double-checked locking
-                    if (System.getenv("DEPLOYED") != null) {
                         ds = createHikariConnectionPool(
                                 System.getenv("JDBC_USER"),
                                 System.getenv("JDBC_PASSWORD"),
                                 System.getenv("JDBC_CONNECTION_STRING"),
                                 System.getenv("JDBC_DB"));
-                    } else {
-                        ds = createHikariConnectionPool("123123", "123123", "12321312", "1313123");
-                    }
                     instance = new ConnectionPool();
                 }
             }
