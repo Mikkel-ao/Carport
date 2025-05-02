@@ -8,7 +8,7 @@ public class CarportSvg {
     public CarportSvg(int width, int length) {
         this.width = width;
         this.length = length;
-        carportSvg = new Svg(0, 0, "0 0 855 690", "75%");
+        carportSvg = new Svg(0, 0, "0 0 855 690", "700px");
 
         drawBase();
         addBeams();
@@ -19,28 +19,31 @@ public class CarportSvg {
     private void drawBase() {
         carportSvg.addRectangle(0, 0, 600, 780, "stroke-width:1px; stroke:#000000; fill: #ffffff");
     }
-
+    // Rem
     private void addBeams() {
-        String beamStyle = "stroke-width:1px; stroke:#000000; fill: #cfcfcf";
+        String beamStyle = "stroke-width:1px; stroke:#000000; fill: #ffffff";
         carportSvg.addRectangle(0, 35, 4.5, 780, beamStyle);
         carportSvg.addRectangle(0, 565, 4.5, 780, beamStyle);
     }
-
+    // Spær // TODO: Check does this match Calculator method?
     private void addRafters() {
-        String rafterStyle = "stroke:#000000; fill: #aaaaaa";
+        String rafterStyle = "stroke:#000000; fill: #ffffff";
         for (double i = 0; i < 780; i += 55.714) {
-            carportSvg.addRectangle(i, 0.0, 600, 4.5, rafterStyle);
+            carportSvg.addRectangle(i, 0.0, width, 4.5, rafterStyle);
         }
     }
 
     private void addDimensions() {
-        // Horizontal dimension (width)
-        carportSvg.addArrow(0, 610, 780, 610, "stroke:black; stroke-width:1");
-        carportSvg.addText(370, 625, 0, "780 cm");
+        // Horizontal dimension
+        carportSvg.addArrow(0, width+10, length, width+10, "stroke:black; stroke-width:1");
+        carportSvg.addText(length/2, width+25, 0, "780 cm");
 
-        // Vertical dimension (height)
-        carportSvg.addArrow(790, 0, 790, 600, "stroke:black; stroke-width:1");
-        carportSvg.addText(795, 300, 90, "600 cm");
+        // Vertical dimension
+        carportSvg.addArrow(length+10, 0, length+10, width, "stroke:black; stroke-width:1");
+        carportSvg.addText(length+15, width/2, 90, "600 cm");
+
+        // Inner vertical dimension
+
     }
 
     @Override

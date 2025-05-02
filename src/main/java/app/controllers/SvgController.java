@@ -11,7 +11,7 @@ import io.javalin.http.Context;
 public class SvgController {
 
     public static void addRoutes(Javalin app, ConnectionPool connectionPool) {
-        app.get("/svg", SvgController::showSvg);  // Correct route definition
+        app.get("/svg", SvgController::showSvg);
     }
 
     public static void showSvg(Context ctx) {
