@@ -114,16 +114,16 @@ h1 {
 
 /***** SVG ******/
 
-
 .carport-svg-topview {
     display: flex;
     justify-content: center;
-    margin: 100px 0 20px 0; /* top, right, bottom, left */
+    margin: 100px 0 20px 0;
     overflow-x: auto;
 }
 
 .carport-svg-topview svg {
     display: block;
-    max-width: 100%;
+    width: 700px;
     height: auto;
 }
+

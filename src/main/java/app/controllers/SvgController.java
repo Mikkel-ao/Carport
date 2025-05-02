@@ -17,7 +17,10 @@ public class SvgController {
     public static void showSvg(Context ctx) {
         Locale.setDefault(Locale.US);
         CarportSvg topView = new CarportSvg(600, 780); // Example dimensions
+        CarportSvg topView2 = new CarportSvg(400, 580); // Second smaller one
+
         ctx.attribute("svg", topView.toString());
+        ctx.attribute("svg2", topView2.toString());
         ctx.render("svg.html");
     }
 }
