@@ -5,6 +5,7 @@ import app.config.ThymeleafConfig;
 import app.controllers.UserController;
 import app.persistence.ConnectionPool;
 import app.persistence.UserMapper;
+import app.util.Calculator;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinThymeleaf;
 
