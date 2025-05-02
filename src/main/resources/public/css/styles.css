@@ -111,3 +111,17 @@ h1 {
     margin-bottom: 4px;
     color: #383e3e;
 }
+
+
+/***** SVG ******/
+
+.carport-svg-topview, .carport-svg-sideview {
+    max-width: 100%;
+    overflow-x: auto;
+    margin: 20px 0;
+}
+
+.carport-svg-sideview {
+    transform: scale(0.8); /* Try 0.6 or 0.7 as needed */
+    transform-origin: top left;
+}

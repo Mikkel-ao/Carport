@@ -2,6 +2,7 @@ package app;
 
 import app.config.SessionConfig;
 import app.config.ThymeleafConfig;
+import app.controllers.SvgController;
 import app.controllers.UserController;
 import app.persistence.ConnectionPool;
 import app.persistence.UserMapper;
@@ -27,5 +28,6 @@ public class Main {
         app.get("/", ctx -> ctx.render("index.html"));
 
         UserController.addRoutes(app, connectionPool);
+        SvgController.addRoutes(app, connectionPool);
     }
 }
