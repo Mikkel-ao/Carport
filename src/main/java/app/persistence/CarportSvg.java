@@ -8,7 +8,10 @@ public class CarportSvg {
     public CarportSvg(int width, int length) {
         this.width = width;
         this.length = length;
-        carportSvg = new Svg(0, 0, "0 0 855 690", "700px");
+        // carportSvg = new Svg(0, 0, "0 0 855 690", "700px");
+        String viewBox = "0 0 " + (length+50) + " " + (width+50); // +50 to allow content outside of carport measurements
+        carportSvg = new Svg(0, 0, viewBox, "100%");
+
 
         drawBase();
         addBeams();
