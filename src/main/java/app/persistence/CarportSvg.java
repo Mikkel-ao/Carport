@@ -8,8 +8,9 @@ public class CarportSvg {
     public CarportSvg(int width, int length) {
         this.width = width;
         this.length = length;
+        // TODO: Find a simpler solution for displaying images correctly
         // carportSvg = new Svg(0, 0, "0 0 855 690", "700px");
-        String viewBox = "0 0 " + (length+50) + " " + (width+50); // +50 to allow content outside of carport measurements
+        String viewBox = "0 0 " + (length+100) + " " + (width+100); // +100 to allow content outside of carport measurements
         carportSvg = new Svg(0, 0, viewBox, "100%");
 
 
@@ -43,10 +44,12 @@ public class CarportSvg {
         carportSvg.addText(length/2, width+25, 0, length+" cm");
 
         // Vertical dimension of the drawing, width of the carport
-        carportSvg.addArrow(length+20, 0, length+20, width, "stroke:black; stroke-width:1");
-        carportSvg.addText(length+25, width/2, 90, width+" cm");
+        carportSvg.addArrow(length+40, 0, length+40, width, "stroke:black; stroke-width:1");
+        carportSvg.addText(length+45, width/2, 90, width+" cm");
 
         // Inner vertical dimension
+        carportSvg.addArrow(length+20, 35, length+20, width-35, "stroke:black; stroke-width:1");
+        carportSvg.addText(length+25, width/2, 90, width-70+" cm");
 
     }
 
