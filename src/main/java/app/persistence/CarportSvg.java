@@ -1,5 +1,7 @@
 package app.persistence;
 
+import app.util.Calculator;
+
 public class CarportSvg {
     private int width;
     private int length;
@@ -32,8 +34,9 @@ public class CarportSvg {
     // Spær
     private void addRafters() {
         String rafterStyle = "stroke:#000000; fill: #ffffff";
+        double spacing = Calculator.getRafterSpacing(length);
         // TODO: Check does this match Calculator method? Needs to know how to place the last one correctly.
-        for (double i = 0; i < length; i += 55.714) {
+        for (double i = 0; i < length; i += spacing) {
             carportSvg.addRectangle(i, 0.0, width, 4.5, rafterStyle);
         }
     }
