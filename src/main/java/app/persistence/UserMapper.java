@@ -32,7 +32,7 @@ public class UserMapper {
 
                 //Comparing the entered password with the now hashed password from the database using BCrypt
                 if (BCrypt.checkpw(password, hashedPassword)) {
-                    return new User(user_id, hashedPassword, email, role);
+                    return new User(user_id,hashedPassword,email,"12345",role);
                 }else {
                     throw new DatabaseException("Invalid email or password.");
                 }
