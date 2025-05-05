@@ -3,20 +3,72 @@ package app.persistence;
 import app.entities.*;
 import app.exceptions.DatabaseException;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
+//TODO: Refactor to several mapper classes
 class MapperTest {
 
     private static ConnectionPool testConnectionPool;
+
+    @BeforeAll
+    static void SetupClass(){
+        try(Connection connection = testConnectionPool.getConnection()){
+
+            try(Statement stmt = connection.createStatement()){
+
+                //Deleting all tables and related sequences
+                //Using normal Statements (and not "PreparedStatements") because it's only used internally
+                stmt.execute("DROP TABLE IF EXISTS test.users");
+                stmt.execute("DROP TABLE IF EXISTS test.orders");
+                stmt.execute("DROP TABLE IF EXISTS test.product");
+                stmt.execute("DROP TABLE IF EXISTS test.product_description");
+                stmt.execute("DROP TABLE IF EXISTS test.product_variant");
+                stmt.execute("DROP TABLE IF EXISTS test.order_item");
+                stmt.execute("DROP SEQUENCE IF EXISTS test.users_user_id_seq");
+                stmt.execute("DROP SEQUENCE IF EXISTS test.orders_order_id_seq");
+                stmt.execute("DROP SEQUENCE IF EXISTS test.order_item_order_item_id_seq");
+                stmt.execute("DROP SEQUENCE IF EXISTS test.product_description_description_id_seq");
+                stmt.execute("DROP SEQUENCE IF EXISTS test.product_product_id_seq");
+                stmt.execute("DROP SEQUENCE IF EXISTS test.product_variant_product_variant_id_seq");
+
+                //Creating new tables (as a copy of the ones in the production database without the data)
+                stmt.execute("CREATE TABLE test.users AS (SELECT * FROM public.users) WITH NO DATA");
+                stmt.execute("CREATE TABLE test.orders AS (SELECT * FROM public.orders) WITH NO DATA");
+                stmt.execute("CREATE TABLE test.product AS (SELECT * FROM public.product) WITH NO DATA");
+                stmt.execute("CREATE TABLE test.product_variant AS (SELECT * FROM public.product_variant) WITH NO DATA");
+                stmt.execute("CREATE TABLE test.order_item AS (SELECT * FROM public.order_item) WITH NO DATA");
+                stmt.execute("CREATE TABLE test.product_description AS (SELECT * FROM public.product_description) WITH NO DATA");
+
+                //Creating sequences and making them point to the wished columns
+                stmt.execute("CREATE SEQUENCE test.users_user_user_id");
+                stmt.execute("ALTER TABLE test.users ALTER COLUMN user_id SET DEFAULT nextval('test.users_user_id_seq')");
+                stmt.execute("CREATE SEQUENCE test.orders_order_id_seq");
+                stmt.execute("ALTER TABLE test.orders ALTER COLUMN order_id SET DEFAULT nextval('test.orders_order_id_seq')");
+                stmt.execute("CREATE SEQUENCE test.order_item_order_item_id_seq");
+                stmt.execute("ALTER TABLE test.order_item ALTER COLUMN order_item_id SET DEFAULT nextval('test.order_item_order_item_id_seq')");
+                stmt.execute("CREATE SEQUENCE test.product_description_description_id_seq");
+                stmt.execute("ALTER TABLE test.product_description ALTER COLUMN product_description_id SET DEFAULT nextval('test.product_description_description_id_seq')");
+                stmt.execute("CREATE SEQUENCE test.product_product_id_seq");
+                stmt.execute("ALTER TABLE test.product ALTER COLUMN product_id SET DEFAULT nextval('test.product_product_id_seq')");
+                stmt.execute("CREATE SEQUENCE test.product_variant_product_variant_id_seq");
+                stmt.execute("ALTER TABLE test.product_variant ALTER COLUMN product_variant_id SET DEFAULT nextval('test.product_variant_product_variant_id_seq')");
+
+
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+            fail("Database connection failed");
+        }
+    }
 
     @BeforeEach
     void setUp() {
