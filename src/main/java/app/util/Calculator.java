@@ -39,6 +39,7 @@ public class Calculator {
 
         }
 
+
         public static double getRafterSpacing(int carportLength){
 
             int rafterCount = calcAmountOfRafters(carportLength);

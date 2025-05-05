@@ -50,7 +50,7 @@ class CalculatorTest {
     void calcAmountOfRafters780() {
 
         int expected = 15;
-        int totalRafters = Calculator.calcAmountOfRafters(780);
+        int totalRafters = Calculator.calcAmountOfRafters(564);
 
         assertEquals(expected, totalRafters);
 
@@ -60,7 +60,7 @@ class CalculatorTest {
     void getRafterSpacing780() {
 
         double expectedSpacing = 55;
-        double totalSpacing = Calculator.getRafterSpacing(780);
+        double totalSpacing = Calculator.getRafterSpacing(563);
 
         assertEquals(expectedSpacing, totalSpacing);
     }
