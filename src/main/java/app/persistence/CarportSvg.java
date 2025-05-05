@@ -1,11 +1,13 @@
 package app.persistence;
 
 import app.util.Calculator;
-
+// TODO: Where should this be placed, package wise?
 public class CarportSvg {
     private int width;
     private int length;
     private Svg carportSvg;
+    private double rafterWidth = 4.5;
+
 
     public CarportSvg(int width, int length) {
         this.width = width;
@@ -34,10 +36,12 @@ public class CarportSvg {
     // Spær
     private void addRafters() {
         String rafterStyle = "stroke:#000000; fill: #ffffff";
+        int rafterCount = Calculator.calcAmountOfRafters(length);
         double spacing = Calculator.getRafterSpacing(length);
-        // TODO: Check does this match Calculator method? Needs to know how to place the last one correctly.
-        for (double i = 0; i < length; i += spacing) {
-            carportSvg.addRectangle(i, 0.0, width, 4.5, rafterStyle);
+
+        for (int i = 0; i < rafterCount; i++) {
+            double x = i * (spacing + rafterWidth);
+            carportSvg.addRectangle(x, 0.0, width, rafterWidth, rafterStyle);
         }
     }
 
