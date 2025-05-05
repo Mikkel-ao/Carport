@@ -6,43 +6,62 @@ import static org.junit.jupiter.api.Assertions.*;
 class CalculatorTest {
 
     @Test
-    void testCalPoles440() {
+    void testCalcAmountOfPoles440() {
         //Arrange, Act, Assert
 
         int expected = 4;
-        int totalPoles = Calculator.calcPoles(440);
+        int totalPoles = Calculator.calcAmountOfPoles(440);
 
         assertEquals(expected, totalPoles);
     }
 
     @Test
-    void testCalPoles441() {
+    void testCalcAmountOfPoles441() {
         //Arrange, Act, Assert
 
         int expected = 6;
-        int totalPoles = Calculator.calcPoles(441);
+        int totalPoles = Calculator.calcAmountOfPoles(441);
 
         assertEquals(expected, totalPoles);
     }
 
     @Test
-    void testCalPoles750() {
+    void testCalcAmountOfPoles750() {
         //Arrange, Act, Assert
 
         int expected = 6;
-        int totalPoles = Calculator.calcPoles(750);
+        int totalPoles = Calculator.calcAmountOfPoles(750);
 
         assertEquals(expected, totalPoles);
     }
 
     @Test
-    void testCalPoles751() {
+    void testCalcAmountOfPoles751() {
         //Arrange, Act, Assert
 
         int expected = 8;
-        int totalPoles = Calculator.calcPoles(751);
+        int totalPoles = Calculator.calcAmountOfPoles(751);
 
         assertEquals(expected, totalPoles);
     }
 
+
+    @Test
+    void calcAmountOfRafters780() {
+
+        int expected = 15;
+        int totalRafters = Calculator.calcAmountOfRafters(780);
+
+        assertEquals(expected, totalRafters);
+
+    }
+
+    @Test
+    void getRafterSpacing780() {
+
+        double expectedSpacing = 55;
+        double totalSpacing = Calculator.getRafterSpacing(780);
+
+        assertEquals(expectedSpacing, totalSpacing);
+    }
 }

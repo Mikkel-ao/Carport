@@ -90,6 +90,7 @@ class MapperTest {
     void createUser() {
         UserMapper.createUser("1234", "peter@hihi", testConnectionPool);
     }
+
     @Test
     void getAllOrders_returnsOrdersFromDatabase() {
         try (Connection conn = testConnectionPool.getConnection()) {
