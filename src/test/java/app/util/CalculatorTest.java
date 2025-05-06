@@ -11,7 +11,7 @@ class CalculatorTest {
         //Arrange, Act, Assert
 
         int expected = 4;
-        int totalPoles = Calculator.calcAmountOfPoles(100);
+        int totalPoles = Calculator.calcAmountOfPoles(100, 9.7);
 
         assertEquals(expected, totalPoles);
     }
@@ -21,7 +21,7 @@ class CalculatorTest {
         //Arrange, Act, Assert
 
         int expected = 4;
-        int totalPoles = Calculator.calcAmountOfPoles(459);
+        int totalPoles = Calculator.calcAmountOfPoles(459, 9.7);
 
         assertEquals(expected, totalPoles);
     }
@@ -31,7 +31,7 @@ class CalculatorTest {
         //Arrange, Act, Assert
 
         int expected = 6;
-        int totalPoles = Calculator.calcAmountOfPoles(460);
+        int totalPoles = Calculator.calcAmountOfPoles(460, 9.7);
 
         assertEquals(expected, totalPoles);
     }
@@ -42,7 +42,7 @@ class CalculatorTest {
         //Arrange, Act, Assert
 
         int expected = 6;
-        int totalPoles = Calculator.calcAmountOfPoles(779);
+        int totalPoles = Calculator.calcAmountOfPoles(779,9.7);
 
         assertEquals(expected, totalPoles);
     }
@@ -52,7 +52,7 @@ class CalculatorTest {
         //Arrange, Act, Assert
 
         int expected = 8;
-        int totalPoles = Calculator.calcAmountOfPoles(780);
+        int totalPoles = Calculator.calcAmountOfPoles(780, 9.7);
 
         assertEquals(expected, totalPoles);
     }
@@ -62,7 +62,7 @@ class CalculatorTest {
         //Arrange, Act, Assert
 
         double expected = 309.6;
-        double poleSpacing = Calculator.calcPoleSpacing(459);
+        double poleSpacing = Calculator.calcPoleSpacing(459, 9.7);
 
         assertEquals(expected, poleSpacing);
     }
@@ -72,7 +72,7 @@ class CalculatorTest {
         //Arrange, Act, Assert
 
         double expected = 150.45;
-        double poleSpacing = Calculator.calcPoleSpacing(460);
+        double poleSpacing = Calculator.calcPoleSpacing(460, 9.7);
 
         assertEquals(expected, poleSpacing);
     }
@@ -83,7 +83,7 @@ class CalculatorTest {
         //Arrange, Act, Assert
 
         double expected = 309.95;
-        double poleSpacing = Calculator.calcPoleSpacing(779);
+        double poleSpacing = Calculator.calcPoleSpacing(779, 9.7);
 
         assertEquals(expected, poleSpacing);
     }
@@ -93,7 +93,7 @@ class CalculatorTest {
         //Arrange, Act, Assert
 
         double expected = 203.733333333333335;
-        double poleSpacing = Calculator.calcPoleSpacing(780);
+        double poleSpacing = Calculator.calcPoleSpacing(780, 9.7);
 
         assertEquals(expected, poleSpacing);
     }
@@ -103,7 +103,7 @@ class CalculatorTest {
     void calcAmountOfRafters580() {
 
         int expected = 11;
-        int totalRafters = Calculator.calcAmountOfRafters(580);
+        int totalRafters = Calculator.calcAmountOfRafters(580, 4.5);
 
         assertEquals(expected, totalRafters);
 
@@ -114,7 +114,7 @@ class CalculatorTest {
     void calcAmountOfRafters780() {
 
         int expected = 15;
-        int totalRafters = Calculator.calcAmountOfRafters(780);
+        int totalRafters = Calculator.calcAmountOfRafters(780, 4.5);
 
         assertEquals(expected, totalRafters);
 
@@ -124,7 +124,7 @@ class CalculatorTest {
     void calRafterSpacing580() {
 
         double expectedSpacing = 53.05;
-        double totalSpacing = Calculator.calcRafterSpacing(580);
+        double totalSpacing = Calculator.calcRafterSpacing(580, 4.5);
 
         assertEquals(expectedSpacing, totalSpacing);
     }
@@ -133,7 +133,7 @@ class CalculatorTest {
     void calcRafterSpacing780() {
 
         double expectedSpacing = 50.892857142857146;
-        double totalSpacing = Calculator.calcRafterSpacing(780);
+        double totalSpacing = Calculator.calcRafterSpacing(780, 4.5);
 
         assertEquals(expectedSpacing, totalSpacing);
     }
