@@ -178,4 +178,40 @@ public class OrderMapper {
             throw new DatabaseException("Fejl ved opdatering af database", e.getMessage());
         }
     }
+    public static List<Integer> getCarportLength(ConnectionPool connectionPool)throws DatabaseException{
+        String sql = "SELECT carport_length FROM carport_dimension_website";
+        List<Integer> carportLengthList = new ArrayList<>();
+        try (
+                Connection connection = connectionPool.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql);
+
+                ResultSet rs = ps.executeQuery()
+        ){
+            while (rs.next()){
+               int carportLength = rs.getInt("carport_length");
+               carportLengthList.add(carportLength);
+            }
+        }catch (SQLException e){
+            throw new DatabaseException("Fejl ved hentning af længde", e.getMessage());
+        }
+        return carportLengthList;
+    }
+    public static List<Integer> getCarportWidth(ConnectionPool connectionPool)throws DatabaseException{
+        String sql = "SELECT carport_width FROM carport_dimension_website";
+        List<Integer> carportWidthList = new ArrayList<>();
+        try (
+                Connection connection = connectionPool.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql);
+
+                ResultSet rs = ps.executeQuery()
+        ){
+            while (rs.next()){
+                int carportWidth = rs.getInt("carport_width");
+                carportWidthList.add(carportWidth);
+            }
+        }catch (SQLException e){
+            throw new DatabaseException("Fejl ved hentning af bredde", e.getMessage());
+        }
+        return carportWidthList;
+    }
 }

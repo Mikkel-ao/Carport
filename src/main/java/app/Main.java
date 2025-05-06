@@ -2,6 +2,7 @@ package app;
 
 import app.config.SessionConfig;
 import app.config.ThymeleafConfig;
+import app.controllers.CarportController;
 import app.controllers.SvgController;
 import app.controllers.UserController;
 import app.persistence.ConnectionPool;
@@ -30,5 +31,6 @@ public class Main {
 
         UserController.addRoutes(app, connectionPool);
         SvgController.addRoutes(app, connectionPool);
+        CarportController.addRoutes(app, connectionPool);
     }
 }
