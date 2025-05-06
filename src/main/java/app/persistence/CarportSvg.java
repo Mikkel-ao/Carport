@@ -63,11 +63,26 @@ public class CarportSvg {
         int postCount = Calculator.calcAmountOfPoles(length);
         double spacing = Calculator.calcPoleSpacing(length);
 
-        for (int i = 0; i < postCount; i++) {
-            double x = i * (spacing + postWidth);
-            // y:'s value centers the post with the beam.
-            carportSvg.addRectangle(x, 32.5, postWidth, postWidth, style); // Upper
-            carportSvg.addRectangle(x, width - 37.5, postWidth, postWidth, style); // Lower
+        // Place first post after 100cm
+        double x = 100;
+
+        // Place the first posts
+        carportSvg.addRectangle(x, 32.5, postWidth, postWidth, style);    // Upper post
+        carportSvg.addRectangle(x, width - 37.5, postWidth, postWidth, style); // Lower post
+
+        // Posts after the first ones
+        for (int i = 1; i < postCount; i++) {
+            // Calculate the x position for the next post based on spacing
+            x = 100 + i * spacing;
+
+            // Ensure the last post is placed within the carport's length
+            if (x + postWidth > length - 100) {  // If placing a post exceeds the carport's length
+                x = length - postWidth - 100;  // Place the last post at 100cm from the end
+            }
+
+            // Placing posts
+            carportSvg.addRectangle(x, 32.5, postWidth, postWidth, style);    // Upper post
+            carportSvg.addRectangle(x, width - 37.5, postWidth, postWidth, style); // Lower post
         }
     }
 
