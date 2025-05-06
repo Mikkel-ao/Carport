@@ -5,42 +5,44 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CalculatorTest {
 
+
     @Test
-    void testCalcAmountOfPoles440() {
+    void testCalcAmountOfPoles100() {
         //Arrange, Act, Assert
 
         int expected = 4;
-        int totalPoles = Calculator.calcAmountOfPoles(440);
+        int totalPoles = Calculator.calcAmountOfPoles(100);
 
         assertEquals(expected, totalPoles);
     }
 
     @Test
-    void testCalcAmountOfPoles441() {
+    void testCalcAmountOfPoles459() {
+        //Arrange, Act, Assert
+
+        int expected = 4;
+        int totalPoles = Calculator.calcAmountOfPoles(459);
+
+        assertEquals(expected, totalPoles);
+    }
+
+    @Test
+    void testCalcAmountOfPoles460() {
         //Arrange, Act, Assert
 
         int expected = 6;
-        int totalPoles = Calculator.calcAmountOfPoles(441);
+        int totalPoles = Calculator.calcAmountOfPoles(460);
 
         assertEquals(expected, totalPoles);
     }
 
+
     @Test
-    void testCalcAmountOfPoles750() {
+    void testCalcAmountOfPoles779() {
         //Arrange, Act, Assert
 
         int expected = 6;
-        int totalPoles = Calculator.calcAmountOfPoles(750);
-
-        assertEquals(expected, totalPoles);
-    }
-
-    @Test
-    void testCalcAmountOfPoles751() {
-        //Arrange, Act, Assert
-
-        int expected = 8;
-        int totalPoles = Calculator.calcAmountOfPoles(751);
+        int totalPoles = Calculator.calcAmountOfPoles(779);
 
         assertEquals(expected, totalPoles);
     }
@@ -55,11 +57,63 @@ class CalculatorTest {
         assertEquals(expected, totalPoles);
     }
 
+    @Test
+    void testCalcPoleSpacing459() {
+        //Arrange, Act, Assert
+
+        double expected = 309.6;
+        double poleSpacing = Calculator.calcPoleSpacing(459);
+
+        assertEquals(expected, poleSpacing);
+    }
+
+    @Test
+    void testCalcPoleSpacing460() {
+        //Arrange, Act, Assert
+
+        double expected = 150.45;
+        double poleSpacing = Calculator.calcPoleSpacing(460);
+
+        assertEquals(expected, poleSpacing);
+    }
+
+
+    @Test
+    void testCalcPoleSpacing779() {
+        //Arrange, Act, Assert
+
+        double expected = 309.95;
+        double poleSpacing = Calculator.calcPoleSpacing(779);
+
+        assertEquals(expected, poleSpacing);
+    }
+
+    @Test
+    void testCalcPoleSpacing780() {
+        //Arrange, Act, Assert
+
+        double expected = 203.733333333333335;
+        double poleSpacing = Calculator.calcPoleSpacing(780);
+
+        assertEquals(expected, poleSpacing);
+    }
+
+
+    @Test
+    void calcAmountOfRafters580() {
+
+        int expected = 11;
+        int totalRafters = Calculator.calcAmountOfRafters(580);
+
+        assertEquals(expected, totalRafters);
+
+    }
+
 
     @Test
     void calcAmountOfRafters780() {
 
-        int expected = 11;
+        int expected = 15;
         int totalRafters = Calculator.calcAmountOfRafters(780);
 
         assertEquals(expected, totalRafters);
@@ -67,9 +121,18 @@ class CalculatorTest {
     }
 
     @Test
-    void getRafterSpacing780() {
+    void calRafterSpacing580() {
 
-        double expectedSpacing = 55;
+        double expectedSpacing = 53.05;
+        double totalSpacing = Calculator.calcRafterSpacing(580);
+
+        assertEquals(expectedSpacing, totalSpacing);
+    }
+
+    @Test
+    void calcRafterSpacing780() {
+
+        double expectedSpacing = 50.892857142857146;
         double totalSpacing = Calculator.calcRafterSpacing(780);
 
         assertEquals(expectedSpacing, totalSpacing);
