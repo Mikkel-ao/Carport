@@ -61,8 +61,7 @@ public class CarportSvg {
     // Stolpe
     private void addPosts() {
         int postCount = Calculator.calcAmountOfPoles(length);
-        // TODO: Use method call for correct spacing
-        double spacing = 250;
+        double spacing = Calculator.calcPoleSpacing(length);
 
         for (int i = 0; i < postCount; i++) {
             double x = i * (spacing + postWidth);
