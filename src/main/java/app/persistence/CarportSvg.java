@@ -21,9 +21,9 @@ public class CarportSvg {
 
 
         drawBase();
+        addPosts();
         addBeams();
         addRafters();
-        addPosts();
         addDimensions();
     }
 
@@ -46,14 +46,14 @@ public class CarportSvg {
             double x = i * (spacing + rafterWidth);
             carportSvg.addRectangle(x, 0.0, width, rafterWidth, style);
 
+            // Sets arrows and text measurements
             if (i > 0) {
                 double previousRafter = (i - 1) * (spacing + rafterWidth);
                 double start = previousRafter + rafterWidth;
                 double end = x;
-                double mid = (start + end) / 2;
+                double mid = (start + end) / 2 - 17; // -17 to adjust for SVG starting at mid location.
                 carportSvg.addArrow((int) start, width - 20, (int) end, width - 20, style);
-                // -17 to center the text with the arrow for now. String.format for 2 decimals
-                carportSvg.addText((int) mid-17, (width - 20) + 15, 0, String.format("%.2f", end - start));
+                carportSvg.addText((int) mid, (width - 20) + 15, 0, String.format("%.2f", end - start));
             }
         }
     }
@@ -67,8 +67,8 @@ public class CarportSvg {
         for (int i = 0; i < postCount; i++) {
             double x = i * (spacing + postWidth);
             // y:'s value centers the post with the beam.
-            carportSvg.addRectangle(x, 33, postWidth, postWidth, style); // Upper
-            carportSvg.addRectangle(x, width - 37, postWidth, postWidth, style); // Lower
+            carportSvg.addRectangle(x, 32.5, postWidth, postWidth, style); // Upper
+            carportSvg.addRectangle(x, width - 37.5, postWidth, postWidth, style); // Lower
         }
     }
 
