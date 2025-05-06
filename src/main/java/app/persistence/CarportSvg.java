@@ -37,7 +37,7 @@ public class CarportSvg {
     private void addRafters() {
         String rafterStyle = "stroke:#000000; fill: #ffffff";
         int rafterCount = Calculator.calcAmountOfRafters(length);
-        double spacing = Calculator.getRafterSpacing(length);
+        double spacing = Calculator.calcRafterSpacing(length);
 
         for (int i = 0; i < rafterCount; i++) {
             double x = i * (spacing + rafterWidth);

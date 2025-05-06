@@ -3,54 +3,52 @@ package app.util;
 public class Calculator {
 
 
-        public static int calcAmountOfPoles(int totalLength) {
-            int effectiveLength = totalLength - 130;
-            int maxGap = 310; // Maximum distance between poles
-            int basePoles = 4; // Minimum poles required
+    public static int calcAmountOfPoles(int totalLength) {
 
-            if (effectiveLength <= maxGap) {
-                return basePoles;
-            }
+        //100cm overhang in front and 30cm overhang in the back
+        int overhang = 130;
 
-            int additionalPoles = (int) Math.ceil((effectiveLength - maxGap) / (double) maxGap);
-            return basePoles + (additionalPoles * 2);
-        }
+        //The width of a pole is 9.7cm
+        double poleWidth = 9.7;
+
+        //Subtracting the overhang and the width of one pole (making sure there is space for the last pole)
+        double effectiveLength = totalLength - (overhang + poleWidth);
+
+        int maxGap = 310;
+
+        int quantity = (int) Math.ceil(Math.abs(effectiveLength / (maxGap + poleWidth)));
+
+        return (quantity + 1) * 2;
+    }
 
 
-        public static int calcAmountOfRafters(int totalLengthInCm) {
+    public static int calcAmountOfRafters(int totalLengthInCm) {
 
-            //TODO: Find ud af hvad vi gør med rafter width! (4,5cm er de normalt)!
-            //TODO: Refactor til global variabler
-            double rafterWidth = 4.5;
-            int spacing = 55; //maximum spacing allowed
+        //Making sure that there is spacing for the last rafter!
+        double remainingLength = totalLengthInCm - 4.5;
 
-            //Subtracting two times rafter width because of the starting and ending rafter is defaulted (4,5 cm each)
-            double remainingLength = totalLengthInCm - (2 * rafterWidth);
+        //A section which is 55cm for max space between rafters and 4.5 for width of rafter
+        double maxSpacing = 59.5;
 
-            int numIntermediateRafters = 0;
-            double usedLength = 0;
+        //rounding to smallest integer which is larger than the result of the calculation
+        int quantity = (int) Math.ceil((remainingLength / maxSpacing) + 1);
 
-            while(usedLength + spacing + rafterWidth <= remainingLength) {
-                numIntermediateRafters++;
-                usedLength += spacing;
-            }
-
-            return numIntermediateRafters + 2;
-
-        }
-
-        public static double getRafterSpacing(int carportLength){
-
-            int rafterCount = calcAmountOfRafters(carportLength);
-
-            double rafterWidth = 4.5;
-            double totalRafterWidth = rafterCount * rafterWidth;
-
-            double remainingLength = carportLength - totalRafterWidth;
-
-            //Subtracting 1, because there will always be one less space than rafter
-            return remainingLength / (rafterCount - 1);
-        }
+        return quantity;
 
     }
+
+    public static double calcRafterSpacing(int carportLength) {
+
+        int rafterCount = calcAmountOfRafters(carportLength);
+
+        double rafterWidth = 4.5;
+        double totalRafterWidth = rafterCount * rafterWidth;
+
+        double remainingLength = carportLength - totalRafterWidth;
+
+        //Subtracting 1, because there will always be one less space than rafter
+        return remainingLength / (rafterCount - 1);
+    }
+
+}
 

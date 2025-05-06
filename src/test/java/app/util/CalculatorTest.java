@@ -45,11 +45,21 @@ class CalculatorTest {
         assertEquals(expected, totalPoles);
     }
 
+    @Test
+    void testCalcAmountOfPoles780() {
+        //Arrange, Act, Assert
+
+        int expected = 8;
+        int totalPoles = Calculator.calcAmountOfPoles(780);
+
+        assertEquals(expected, totalPoles);
+    }
+
 
     @Test
     void calcAmountOfRafters780() {
 
-        int expected = 15;
+        int expected = 11;
         int totalRafters = Calculator.calcAmountOfRafters(780);
 
         assertEquals(expected, totalRafters);
@@ -60,7 +70,7 @@ class CalculatorTest {
     void getRafterSpacing780() {
 
         double expectedSpacing = 55;
-        double totalSpacing = Calculator.getRafterSpacing(780);
+        double totalSpacing = Calculator.calcRafterSpacing(780);
 
         assertEquals(expectedSpacing, totalSpacing);
     }
