@@ -6,6 +6,7 @@ import app.controllers.OrderController;
 import app.controllers.SvgController;
 import app.controllers.UserController;
 import app.persistence.ConnectionPool;
+import app.persistence.OrderMapper;
 import app.persistence.UserMapper;
 import app.util.Calculator;
 import io.javalin.Javalin;
@@ -24,7 +25,7 @@ public class Main {
             config.jetty.modifyServletContextHandler(handler ->  handler.setSessionHandler(SessionConfig.sessionConfig()));
             config.fileRenderer(new JavalinThymeleaf(ThymeleafConfig.templateEngine()));
         }).start(7070);
-
+        
 
         // Routing
         app.get("/", ctx -> ctx.render("index.html"));

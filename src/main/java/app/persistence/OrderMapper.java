@@ -210,4 +210,32 @@ public class OrderMapper {
         }
         return lengths;
     }
+
+    public static double getProductWidth(ConnectionPool connectionPool, int productId) throws DatabaseException {
+
+
+        double widthInMM = 0;
+
+        String sql = "SELECT width_in_mm FROM public.product WHERE product_id = ?";
+
+        try (
+                Connection connection = connectionPool.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+
+
+
+            if(rs.next()) {
+                widthInMM = rs.getDouble("width_in_mm");
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Fejl ved hentning af bredder", e.getMessage());
+        }
+        double widthInCm = widthInMM / 10;
+
+        return widthInCm;
+    }
 }
