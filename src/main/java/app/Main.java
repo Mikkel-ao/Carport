@@ -25,7 +25,7 @@ public class Main {
             config.jetty.modifyServletContextHandler(handler ->  handler.setSessionHandler(SessionConfig.sessionConfig()));
             config.fileRenderer(new JavalinThymeleaf(ThymeleafConfig.templateEngine()));
         }).start(7070);
-        
+
 
         // Routing
         app.get("/", ctx -> ctx.render("index.html"));
