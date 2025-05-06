@@ -11,6 +11,7 @@ import java.util.List;
 public class OrderController {
 
     public static int selectRafterLength(int length, ConnectionPool connectionPool) {
+
         List<Integer> possibleLengths = OrderMapper.getProductLengths(connectionPool, 2);
 
         //Making sure that the order is correct and ascending
