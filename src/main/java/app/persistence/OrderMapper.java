@@ -194,6 +194,7 @@ public class OrderMapper {
         }catch (SQLException e){
             throw new DatabaseException("Fejl ved hentning af længde", e.getMessage());
         }
+
         return carportLengthList;
     }
     public static List<Integer> getCarportWidth(ConnectionPool connectionPool)throws DatabaseException{

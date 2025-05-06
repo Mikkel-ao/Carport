@@ -25,9 +25,9 @@ public class Main {
             config.fileRenderer(new JavalinThymeleaf(ThymeleafConfig.templateEngine()));
         }).start(7070);
 
-
+        System.out.println("DEBUG: Javalin server started!");
         // Routing
-        app.get("/", ctx -> ctx.render("index.html"));
+        app.get("/", ctx -> ctx.redirect("/index"));
 
         UserController.addRoutes(app, connectionPool);
         SvgController.addRoutes(app, connectionPool);

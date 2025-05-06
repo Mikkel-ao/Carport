@@ -37,7 +37,8 @@
 <div class="formular-container">
     <label for="Længde">Længde:</label>
     <select name="Længde" id="Længde" class="formular-dropDown" required>
-        <option th:each="length : ${carportLength}" th:value="${length}" th:text="${length}"></option>
+        <option value="" disabled selected></option>
+        <option th:value="${length}" th:each="length : ${carportLength}" th:text="${length}" ></option>
     </select>
     <br>
     <label for="Bredde">Bredde:</label>
@@ -77,6 +78,8 @@
     <br>
     <form action="/add-customer-request" method="post" th:action="@{/add-customer-request}">
     <div class="bestil-tilbud-button">
+
+        <---- TODO: lav så der kommer en besked til brugeren på siden at deres forespørgsel er blevet sendt ---->
     <button type="submit">Bestil tilbud</button>
     </div>
     </form>

@@ -442,6 +442,10 @@ class MapperTest {
             fail("Test failed due to: " + e.getMessage());
         }
     }
+    @Test
+    void getCarportLength() {
+
+    }
 
 
     @AfterEach
