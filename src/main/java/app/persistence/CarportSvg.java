@@ -47,15 +47,14 @@ public class CarportSvg {
             carportSvg.addRectangle(x, 0.0, width, rafterWidth, style);
 
             if (i > 0) {
-                double prevRafter = (i - 1) * (spacing + rafterWidth);
-                double start = prevRafter + rafterWidth;
+                double previousRafter = (i - 1) * (spacing + rafterWidth);
+                double start = previousRafter + rafterWidth;
                 double end = x;
                 double mid = (start + end) / 2;
                 carportSvg.addArrow((int) start, width - 20, (int) end, width - 20, style);
                 // -17 to center the text with the arrow for now. String.format for 2 decimals
                 carportSvg.addText((int) mid-17, (width - 20) + 15, 0, String.format("%.2f", end - start));
             }
-
         }
     }
 
