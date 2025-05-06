@@ -2,6 +2,7 @@ package app;
 
 import app.config.SessionConfig;
 import app.config.ThymeleafConfig;
+import app.controllers.OrderController;
 import app.controllers.SvgController;
 import app.controllers.UserController;
 import app.persistence.ConnectionPool;

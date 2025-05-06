@@ -39,7 +39,7 @@ public class Calculator {
         //Subtracting the overhang and the sum of the width of the poles, to get the free space that needs supporting
         double remainingLength = totalLength - (overhang + totalPoleWidth);
 
-        //Subtracting 1 from the amount of poles, because there will always be one gap less than the amount of poles!
+        //Subtracting 1 from the number of poles, because there will always be one gap less than the amount of poles!
         return remainingLength / (poleCountPrSide - 1);
 
     }
@@ -50,10 +50,10 @@ public class Calculator {
         //Making sure that there is spacing for the last rafter!
         double remainingLength = totalLengthInCm - rafterWidth;
 
-        //A section which is 55cm for max space between rafters and 4.5 for width of rafter
+        //A section that consists of 55cm of maximum space between each rafter and then a rafter
         double maxSpacing = 55 + rafterWidth;
 
-        //rounding to smallest integer which is larger than the result of the calculation
+        //Rounding to smallest integer which is larger than the result of the calculation
         int quantity = (int) Math.ceil((remainingLength / maxSpacing));
 
         //Adding the last rafter to the quantity before returning (the one we made space for in the beginning)
@@ -63,13 +63,16 @@ public class Calculator {
 
     public static double calcRafterSpacing(int carportLength, double rafterWidth) {
 
+        //Getting the total number of rafters for this specific length
         int rafterCount = calcAmountOfRafters(carportLength, rafterWidth);
 
+        //Calculating how much space the total number of rafters will occupy
         double totalRafterWidth = rafterCount * rafterWidth;
 
+        //Subtracting the space occupied by rafters from the total length
         double remainingLength = carportLength - totalRafterWidth;
 
-        //Subtracting 1, because there will always be one less space than rafter
+        //Subtracting 1 before returning, because there will always be one less space than rafters
         return remainingLength / (rafterCount - 1);
     }
 

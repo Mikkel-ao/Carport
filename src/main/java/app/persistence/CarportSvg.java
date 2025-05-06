@@ -36,6 +36,7 @@ public class CarportSvg {
     // Spær
     private void addRafters() {
         String rafterStyle = "stroke:#000000; fill: #ffffff";
+        //TODO: for now the rafterWidth is hard-coded until we get a mapper method that pulls it from DB
         int rafterCount = Calculator.calcAmountOfRafters(length, 4.5);
         double spacing = Calculator.calcRafterSpacing(length, 4.5);
 
