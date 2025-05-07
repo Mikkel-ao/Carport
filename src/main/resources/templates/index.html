@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<title>Configurator</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
-<!-- For icons-->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+<head>
+    <title>Configurator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
+    <!-- For icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
+<body class="background-color">
 
 <header>
     <div class="index-container">
@@ -25,66 +27,75 @@
     </div>
 </header>
 
-
-<body class="background-color">
-
 <h1>Index / Carport configuration page</h1>
 <a th:href="@{svg}" href="svg.html">Show SVG drawing</a>
-
 <br>
-<--- kontakt formular starter --->
 
+<!-- kontakt formular starter -->
 <div class="formular-container">
-    <label for="Længde">Længde:</label>
-    <select name="Længde" id="Længde" class="formular-dropDown" required>
-        <option value="" disabled selected></option>
-        <option th:value="${length}" th:each="length : ${carportLength}" th:text="${length}" ></option>
-    </select>
-    <br>
-    <label for="Bredde">Bredde:</label>
-    <select name="Bredde" id="Bredde" class="formular-dropDown" required>
-        <option th:each="width : ${carportWidth}" th:value="${width}" th:text="${width}"></option>
-    </select>
-    <br>
-    <label for="Trapetz tag"> Trapetz Tag:</label>
-    <select name="Trapetz tag" id="Trapetz tag" class="formular-dropDown" required> </select>
-
-    <h3> Redskabsrum:</h3>
-    <p>NB! Der skal beregnes 15 cm tagudhæng på hver side af redskabsrummet*</p>
-    <br>
-    <label for="Redskabsrum Bredde"> Redskabsrum Bredde:</label>
-    <select name="Redskabsrum Bredde" id="Redskabsrum Bredde" class="formular-dropDown" required> </select>
-    <br>
-    <label for="Redskabsrum Længde"> Redskabsrum Længde:</label>
-    <select name="Redskabsrum Længde" id="Redskabsrum Længde" class="formular-dropDown" required> </select>
-    <br>
-    <h4> Evt. bemærkninger / særlige ønsker:</h4>
-    <textarea id="textarea-formular" name="textarea-formular" placeholder="Bemærkninger"></textarea>
-    <br>
-    <h5> Kontaktoplysninger:</h5>
-    <br>
-    <input type="text" name="Navn" placeholder="Fornavn og efternavn" required>
-    <br>
-    <input type="text" name="Adresse" placeholder="Adresse (vej + nummer)" required>
-    <br>
-    <input type="text" name="Telefon" placeholder="Telefon nummer" required>
-    <br>
-    <input type="text" name="Email" placeholder="Din email adresse" required>
-    <br>
-    <input type="checkbox" name="Samtykke-checkbox" required>
-    <nobr>
-        Fog må benytte din de afgivne oplysninger til at kontakte mig i forbindelse med tilbud på QuickByg carport
-    </nobr>
-    <br>
     <form action="/add-customer-request" method="post" th:action="@{/add-customer-request}">
-    <div class="bestil-tilbud-button">
+        <label for="Længde">Længde:</label>
+        <select name="Længde" id="Længde" class="formular-dropDown" required>
+            <option value="" disabled selected>Vælg længde</option>
+            <option th:value="${length}" th:each="length : ${carportLength}" th:text="${length}"></option>
+        </select>
+        <br>
 
-        <---- TODO: lav så der kommer en besked til brugeren på siden at deres forespørgsel er blevet sendt ---->
-    <button type="submit">Bestil tilbud</button>
-    </div>
+        <label for="Bredde">Bredde:</label>
+        <select name="Bredde" id="Bredde" class="formular-dropDown" required>
+            <option value="" disabled selected>Vælg bredde</option>
+            <option th:each="width : ${carportWidth}" th:value="${width}" th:text="${width}"></option>
+        </select>
+        <br>
+
+        <label for="Trapetz tag">Trapetz Tag:</label>
+        <select name="Trapetz tag" id="Trapetz tag" class="formular-dropDown" required>
+            <option value="" disabled selected>Vælg tag</option>
+            <option th:each="roof : ${roofTypes}" th:value="${roof}" th:text="${roof}"></option>
+        </select>
+        <br>
+
+        <h3>Redskabsrum:</h3>
+        <p>NB! Der skal beregnes 15 cm tagudhæng på hver side af redskabsrummet*</p>
+
+        <label for="Redskabsrum Bredde">Redskabsrum Bredde:</label>
+        <select name="Redskabsrum Bredde" id="Redskabsrum Bredde" class="formular-dropDown" required>
+            <option value="" disabled selected>Vælg bredde</option>
+            <option th:each="shedWidth : ${shedWidths}" th:value="${shedWidth}" th:text="${shedWidth}"></option>
+        </select>
+        <br>
+
+        <label for="Redskabsrum Længde">Redskabsrum Længde:</label>
+        <select name="Redskabsrum Længde" id="Redskabsrum Længde" class="formular-dropDown" required>
+            <option value="" disabled selected>Vælg længde</option>
+            <option th:each="shedLength : ${shedLengths}" th:value="${shedLength}" th:text="${shedLength}"></option>
+        </select>
+        <br>
+
+        <h4>Evt. bemærkninger / særlige ønsker:</h4>
+        <textarea id="textarea-formular" name="textarea-formular" placeholder="Bemærkninger"></textarea>
+        <br>
+
+        <h5>Kontaktoplysninger:</h5>
+        <input type="text" name="Navn" placeholder="Fornavn og efternavn" required>
+        <br>
+        <input type="text" name="Adresse" placeholder="Adresse (vej + nummer)" required>
+        <br>
+        <input type="text" name="Telefon" placeholder="Telefon nummer" required>
+        <br>
+        <input type="email" name="Email" placeholder="Din email adresse" required>
+        <br>
+
+        <input type="checkbox" name="Samtykke-checkbox" required>
+        <nobr>Fog må benytte dine afgivne oplysninger til at kontakte mig i forbindelse med tilbud på QuickByg carport</nobr>
+        <br>
+
+        <div class="bestil-tilbud-button">
+            <!-- TODO: lav så der kommer en besked til brugeren på siden at deres forespørgsel er blevet sendt -->
+            <button type="submit">Bestil tilbud</button>
+        </div>
     </form>
 </div>
-
 
 </body>
 </html>
