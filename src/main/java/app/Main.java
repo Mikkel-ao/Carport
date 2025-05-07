@@ -26,6 +26,9 @@ public class Main {
             config.fileRenderer(new JavalinThymeleaf(ThymeleafConfig.templateEngine()));
         }).start(7070);
 
+        int[] beamList = OrderController.selectBeamLength(240, connectionPool);
+
+        System.out.println(beamList.length);
 
         // Routing
         app.get("/", ctx -> ctx.render("index.html"));
