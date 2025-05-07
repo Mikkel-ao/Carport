@@ -33,14 +33,16 @@ public class CarportSvg {
 
     // Rem
     private void addBeams() {
-        carportSvg.addRectangle(0, 35, rafterWidth, length, style);
-        carportSvg.addRectangle(0, width-35, rafterWidth, length, style);
+        String beamStyle = "stroke-width:1px; stroke:#000000; fill: #ffffff";
+        carportSvg.addRectangle(0, 35, 4.5, length, beamStyle);
+        carportSvg.addRectangle(0, width-35, 4.5, length, beamStyle);
     }
 
     // Spær
     private void addRafters() {
-        int rafterCount = Calculator.calcAmountOfRafters(length);
-        double spacing = Calculator.calcRafterSpacing(length);
+        //TODO: for now the rafterWidth is hard-coded until we get a mapper method that pulls it from DB
+        int rafterCount = Calculator.calcAmountOfRafters(length, rafterWidth);
+        double spacing = Calculator.calcRafterSpacing(length, rafterWidth);
 
         for (int i = 0; i < rafterCount; i++) {
             double x = i * (spacing + rafterWidth);
@@ -60,8 +62,8 @@ public class CarportSvg {
 
     // Stolpe
     private void addPosts() {
-        int postCount = Calculator.calcAmountOfPoles(length);
-        double spacing = Calculator.calcPoleSpacing(length);
+        int postCount = Calculator.calcAmountOfPoles(length, postWidth);
+        double spacing = Calculator.calcPoleSpacing(length, postWidth);
 
         // Place first post after 100cm
         double x = 100;
