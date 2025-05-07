@@ -26,6 +26,7 @@ public class OrderController {
         throw new IllegalArgumentException("No suitable length found");
     }
 
+    /*
     public static int[] selectBeamLength(int length, ConnectionPool connectionPool) {
 
         List<Integer> possibleLengths = OrderMapper.getProductLengths(connectionPool, 2);
@@ -44,6 +45,8 @@ public class OrderController {
         //TODO: Proper message for the user on webpage!
         throw new IllegalArgumentException("No suitable length found");
     }
+    */
+
 
 
 }
