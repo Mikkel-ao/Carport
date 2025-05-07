@@ -28,7 +28,7 @@ public class OrderController {
     }
 
 
-    //TODO: Skal returnere et ProductVariant objekt! 
+    //TODO: Skal returnere et ProductVariant objekt!
     public static int[] selectBeamLength(int length, ConnectionPool connectionPool) {
 
         List<Integer> possibleLengths = OrderMapper.getProductLengths(connectionPool, 2);
