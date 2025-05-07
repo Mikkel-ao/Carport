@@ -2,7 +2,7 @@ package app;
 
 import app.config.SessionConfig;
 import app.config.ThymeleafConfig;
-import app.controllers.OrderController;
+import app.controllers.CarportController;
 import app.controllers.SvgController;
 import app.controllers.UserController;
 import app.persistence.ConnectionPool;
@@ -26,14 +26,12 @@ public class Main {
             config.fileRenderer(new JavalinThymeleaf(ThymeleafConfig.templateEngine()));
         }).start(7070);
 
-        int[] beamList = OrderController.selectBeamLength(240, connectionPool);
-
-        System.out.println(beamList.length);
 
         // Routing
-        app.get("/", ctx -> ctx.render("index.html"));
+        app.get("/", ctx -> ctx.redirect("/index"));
 
         UserController.addRoutes(app, connectionPool);
         SvgController.addRoutes(app, connectionPool);
+        CarportController.addRoutes(app, connectionPool);
     }
 }
