@@ -16,11 +16,12 @@ public class CarportController {
         app.get("/index",ctx -> getCarportDimension(ctx, connectionPool));
     }
     private static void getCarportDimension(Context ctx, ConnectionPool connectionPool) {
+        // todo slet senere sout
         System.out.println("DEBUG: Entering getCarportDimension method!");
         List<Integer> carportLength = OrderMapper.getCarportLength(connectionPool);
         List<Integer> carportWidth = OrderMapper.getCarportWidth(connectionPool);
+        // todo slet senere sout
         System.out.println("DEBUG: Using test data -> " + carportLength);
-
 
 
         ctx.attribute("carportLength", carportLength);
