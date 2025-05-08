@@ -3,14 +3,18 @@ package app;
 import app.config.SessionConfig;
 import app.config.ThymeleafConfig;
 import app.controllers.CarportController;
+import app.controllers.OrderController;
 import app.controllers.SvgController;
 import app.controllers.UserController;
+import app.entities.OrderItem;
 import app.persistence.ConnectionPool;
 import app.persistence.OrderMapper;
 import app.persistence.UserMapper;
 import app.util.Calculator;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinThymeleaf;
+
+import java.util.List;
 
 public class Main {
 
@@ -26,6 +30,11 @@ public class Main {
             config.fileRenderer(new JavalinThymeleaf(ThymeleafConfig.templateEngine()));
         }).start(7070);
 
+
+        List<OrderItem> listOfMaterials = (OrderController.createListOfMaterials(421, 599, connectionPool));
+        for(OrderItem item : listOfMaterials) {
+            System.out.println(item);
+        }
 
         // Routing
         app.get("/", ctx -> ctx.redirect("/index"));

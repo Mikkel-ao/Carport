@@ -203,7 +203,7 @@ class MapperTest {
             assertEquals("Beam", item.getProductVariant().getProduct().getName());
             assertEquals(240, item.getProductVariant().getLength());
             assertEquals("pcs", item.getProductVariant().getProduct().getUnit());
-            assertEquals(100, item.getProductVariant().getProduct().getPrice());
+            assertEquals(100, item.getProductVariant().getProduct().getPricePrUnit());
             assertEquals(500, item.getOrder().getCarportWidth());
             assertEquals("pending", item.getOrder().getStatus());
 
@@ -400,7 +400,7 @@ class MapperTest {
             int minLength = 200;
 
             // Call method under test
-            List<ProductVariant> variants = ProductMapper.getVariantsByProductAndMinLength(minLength, productId, testConnectionPool);
+            List<ProductVariant> variants = ProductMapper.getVariantsByProductAndLength(minLength, productId, testConnectionPool);
 
             // Assertions
             assertNotNull(variants, "List should not be null");

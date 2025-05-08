@@ -2,17 +2,23 @@ package app.entities;
 
 public class OrderItem {
     int orderItemId;
-    Order order;
     ProductVariant productVariant;
     int quantity;
     String description;
+    double unitPrice;
 
-    public OrderItem(int orderItemId, Order order, ProductVariant productVariant, int quantity, String description) {
+    public OrderItem(int orderItemId, ProductVariant productVariant, int quantity, String description) {
         this.orderItemId = orderItemId;
-        this.order = order;
         this.productVariant = productVariant;
         this.quantity = quantity;
         this.description = description;
+    }
+
+    public OrderItem(ProductVariant productVariant, int quantity, String description, double unitPrice) {
+        this.productVariant = productVariant;
+        this.quantity = quantity;
+        this.description = description;
+        this.unitPrice = unitPrice;
     }
 
     public int getOrderItemId() {
@@ -39,13 +45,6 @@ public class OrderItem {
         this.description = description;
     }
 
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
-    }
 
     public ProductVariant getProductVariant() {
         return productVariant;
@@ -59,7 +58,6 @@ public class OrderItem {
     public String toString() {
         return "OrderItem{" +
                 "orderItemId=" + orderItemId +
-                ", order=" + order +
                 ", productVariant=" + productVariant +
                 ", quantity=" + quantity +
                 ", description='" + description + '\'' +

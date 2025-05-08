@@ -1,20 +1,23 @@
 package app.entities;
 
+import java.util.List;
+
 public class Order {
+    private List<OrderItem> orderItemList;
     int orderId;
     int carportWidth;
     int carportLength;
     String status;
     User user;
-    int totalPrice;
+    double totalSalesPrice;
 
-    public Order(int orderId, int carportWidth, int carportLength, String status, User user, int totalPrice) {
+    public Order(int orderId, int carportWidth, int carportLength, String status, User user, double totalPrice) {
         this.orderId = orderId;
         this.carportWidth = carportWidth;
         this.carportLength = carportLength;
         this.status = status;
         this.user = user;
-        this.totalPrice = totalPrice;
+        this.totalSalesPrice = totalPrice;
     }
 
     public Order(int orderId, int carportWidth, int carportLength, String status, User user) {
@@ -57,12 +60,12 @@ public class Order {
         this.status = status;
     }
 
-    public int getTotalPrice() {
-        return totalPrice;
+    public List<OrderItem> getOrderItemList() {
+        return orderItemList;
     }
 
-    public void setTotalPrice(int totalPrice) {
-        this.totalPrice = totalPrice;
+    public double getTotalSalesPrice() {
+        return totalSalesPrice;
     }
 
     public User getUser() {
@@ -81,7 +84,7 @@ public class Order {
                 ", carportLength=" + carportLength +
                 ", status='" + status + '\'' +
                 ", user=" + user +
-                ", totalPrice=" + totalPrice +
+                ", totalPrice=" + totalSalesPrice +
                 '}';
     }
 }

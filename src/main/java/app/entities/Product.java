@@ -4,13 +4,14 @@ public class Product {
     int productId;
     String name;
     String unit;
-    int price;
+    int pricePrUnit;
 
-    public Product(int productId, String name, String unit, int price) {
+
+    public Product(int productId, String name, String unit, int pricePrUnit) {
         this.productId = productId;
         this.name = name;
         this.unit = unit;
-        this.price = price;
+        this.pricePrUnit = pricePrUnit;
     }
 
     public int getProductId() {
@@ -37,13 +38,15 @@ public class Product {
         this.unit = unit;
     }
 
-    public int getPrice() {
-        return price;
+    public int getPricePrUnit() {
+        return pricePrUnit;
     }
 
-    public void setPrice(int price) {
-        this.price = price;
+    public void setPricePrUnit(int pricePrUnit) {
+        this.pricePrUnit = pricePrUnit;
     }
+
+
 
     @Override
     public String toString() {
@@ -51,7 +54,7 @@ public class Product {
                 "productId=" + productId +
                 ", name='" + name + '\'' +
                 ", unit='" + unit + '\'' +
-                ", price=" + price +
+                ", price=" + pricePrUnit +
                 '}';
     }
 }

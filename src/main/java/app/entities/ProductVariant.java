@@ -3,12 +3,20 @@ package app.entities;
 public class ProductVariant {
     int productVariantId;
     int length;
+    String description;
     Product product;
 
-    public ProductVariant(int productVariantId, int length, Product product) {
+    public ProductVariant(int productVariantId, int length, String description, Product product) {
         this.productVariantId = productVariantId;
         this.length = length;
+        this.description = description;
         this.product = product;
+    }
+
+    public ProductVariant(int length, String description, Product product){
+        this.length = length;
+        this.product = product;
+        this.description = description;
     }
 
     public int getProductVariantId() {
@@ -35,11 +43,16 @@ public class ProductVariant {
         this.product = product;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     @Override
     public String toString() {
         return "ProductVariant{" +
                 "productVariantId=" + productVariantId +
                 ", length=" + length +
+                ", description='" + description + '\'' +
                 ", product=" + product +
                 '}';
     }

@@ -67,18 +67,19 @@ public class OrderMapper {
                 String name = rs.getString("name");
                 String unit = rs.getString("unit");
                 int price = rs.getInt("price");
+                int width = rs.getInt("width_in_mm");
                 Product product = new Product(productId, name, unit, price);
 
                 //Product Variant
                 int productVariantId = rs.getInt("product_variant_id");
                 int length = rs.getInt("length");
                 String description = rs.getString("description");
-                ProductVariant productVariant = new ProductVariant(productVariantId, length, product);
+                ProductVariant productVariant = new ProductVariant(productVariantId, length, description, product);
 
                 //OrderItem
                 int orderItemId = rs.getInt("order_item_id");
                 int quantity = rs.getInt("quantity");
-                OrderItem orderItem = new OrderItem(orderItemId, order, productVariant, quantity, description);
+                OrderItem orderItem = new OrderItem(orderItemId, productVariant, quantity, description);
                 orderItemList.add(orderItem);
             }
         }catch (SQLException e){
@@ -96,11 +97,11 @@ public class OrderMapper {
             ps.setInt(2, order.getCarportLength());
             ps.setString(3, order.getStatus());
             ps.setInt(4, order.getUser().getUserId());
-            ps.setInt(5, order.getTotalPrice());
+            ps.setDouble(5, order.getTotalSalesPrice());
             ps.executeUpdate();
             ResultSet keySet = ps.getGeneratedKeys();
             if (keySet.next()){
-                return new Order(keySet.getInt(1),order.getCarportWidth(),order.getCarportLength(),order.getStatus(),order.getUser(),order.getTotalPrice());
+                return new Order(keySet.getInt(1),order.getCarportWidth(),order.getCarportLength(),order.getStatus(),order.getUser(),order.getTotalSalesPrice());
             }else {
                 return null;
             }
@@ -114,7 +115,6 @@ public class OrderMapper {
         try(Connection connection = connectionPool.getConnection()){
             for (OrderItem orderItem : orderItems){
                 try (PreparedStatement ps = connection.prepareStatement(sql)){
-                    ps.setInt(1, orderItem.getOrder().getOrderId());
                     ps.setInt(2, orderItem.getProductVariant().getProductVariantId());
                     ps.setInt(3, orderItem.getQuantity());
                     ps.setString(4, orderItem.getDescription());
@@ -267,4 +267,30 @@ public class OrderMapper {
         }
         return carportWidthList;
     }
+
+    public static double getProductPrice(int productId, ConnectionPool connectionPool) throws DatabaseException{
+        String sql = "SELECT price FROM public.product WHERE product_id = ?";
+
+        double price = 0;
+
+        try (
+                Connection connection = connectionPool.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+
+
+
+            if(rs.next()) {
+                price = rs.getDouble("price");
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Fejl ved hentning af bredder", e.getMessage());
+        }
+
+        return price;
+    }
+
 }
