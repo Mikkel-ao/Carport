@@ -11,15 +11,18 @@ import java.sql.SQLException;
 
 public class ProductMapper {
 
-    public static ProductVariant getVariantsByProductAndLength(int minLength, int productId, ConnectionPool connectionPool) throws DatabaseException {
+    public static ProductVariant getVariantsByProductAndLength(int productLength, int productId, String keyword, ConnectionPool connectionPool) throws DatabaseException {
 
-        String sql = "SELECT * FROM product_variant " +
-                "INNER JOIN product p USING (product_id) " +
-                "WHERE product_id = ? AND length = ?";
+        String sql = "SELECT * FROM product_variant\n" +
+                "                INNER JOIN product p USING (product_id)\n" +
+                "INNER JOIN product_description USING (product_id)\n" +
+                "                WHERE product_id = ? AND length = ? AND key_word = ?";
+
         try (Connection connection = connectionPool.getConnection()) {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, productId);
-            ps.setInt(2, minLength);
+            ps.setInt(2, productLength);
+            ps.setString(3, keyword);
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -29,10 +32,10 @@ public class ProductMapper {
                 String name = rs.getString("name");
                 String unit = rs.getString("unit");
                 int price = rs.getInt("price");
-                int width = rs.getInt("width_in_mm");
+                String description = rs.getString("description");
 
-                Product product = new Product(product_id, name, unit, price, width);
-                ProductVariant productVariant = new ProductVariant(variantId, length, product);
+                Product product = new Product(product_id, name, unit, price);
+                ProductVariant productVariant = new ProductVariant(variantId, length, description, product);
                 return productVariant;
             }
         } catch (SQLException e) {
@@ -53,9 +56,9 @@ public class ProductMapper {
                 String name = rs.getString("name");
                 String unit = rs.getString("unit");
                 int price = rs.getInt("price");
-                int width = rs.getInt("width_in_mm");
 
-                Product product = new Product(productId, name, unit, price, width);
+
+                Product product = new Product(productId, name, unit, price);
                 return product;
             }
         } catch (SQLException e) {

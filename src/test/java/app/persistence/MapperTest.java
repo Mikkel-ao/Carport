@@ -203,7 +203,7 @@ class MapperTest {
             assertEquals("Beam", item.getProductVariant().getProduct().getName());
             assertEquals(240, item.getProductVariant().getLength());
             assertEquals("pcs", item.getProductVariant().getProduct().getUnit());
-            assertEquals(100, item.getProductVariant().getProduct().getPrice());
+            assertEquals(100, item.getProductVariant().getProduct().getPricePrUnit());
             assertEquals(500, item.getOrder().getCarportWidth());
             assertEquals("pending", item.getOrder().getStatus());
 

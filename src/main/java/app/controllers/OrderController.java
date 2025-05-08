@@ -7,7 +7,6 @@ import app.persistence.ConnectionPool;
 import app.persistence.OrderMapper;
 import app.persistence.ProductMapper;
 import app.util.Calculator;
-import io.javalin.http.Context;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,7 +31,7 @@ public class OrderController {
             }
         }
 
-        ProductVariant rafterVariant = ProductMapper.getVariantsByProductAndLength(actualLength, 2, connectionPool);
+        ProductVariant rafterVariant = ProductMapper.getVariantsByProductAndLength(actualLength, 2, "spær", connectionPool);
 
         return rafterVariant;
     }
@@ -53,7 +52,7 @@ public class OrderController {
             for (int possibleLength : possibleLengths) {
                 if (possibleLength >= length) {
                     actualLength = possibleLength;
-                    beamLengths[0] = ProductMapper.getVariantsByProductAndLength(actualLength, 2, connectionPool);
+                    beamLengths[0] = ProductMapper.getVariantsByProductAndLength(actualLength, 2, "rem", connectionPool);
                     return beamLengths;
                 }
 
@@ -62,12 +61,12 @@ public class OrderController {
         if (length > 600) {
             ProductVariant[] beamLengths = new ProductVariant[2];
             int firstBeamLength = 360;
-            ProductVariant firstBeam = ProductMapper.getVariantsByProductAndLength(firstBeamLength, 2, connectionPool);
+            ProductVariant firstBeam = ProductMapper.getVariantsByProductAndLength(firstBeamLength, 2, "rem", connectionPool);
             beamLengths[0] = firstBeam;
 
             for (int possibleLength : possibleLengths) {
                 if (firstBeamLength + possibleLength >= length) {
-                    ProductVariant secondBeam = ProductMapper.getVariantsByProductAndLength(possibleLength, 2, connectionPool);
+                    ProductVariant secondBeam = ProductMapper.getVariantsByProductAndLength(possibleLength, 2, "rem", connectionPool);
                     beamLengths[1] = secondBeam;
                     return beamLengths;
                 }
@@ -81,14 +80,14 @@ public class OrderController {
 
         List<OrderItem> orderItems = new ArrayList<>();
 
-        //TODO: Sessions Attributes
+        //TODO: Sessions Attributes her og Context-objekt i signatur!
 
         double poleWidth = OrderMapper.getProductWidth(connectionPool, 1);
         int poleLength = 300;  //Hard-coded because we only have one lengths
         int poleCount = Calculator.calcAmountOfPoles(length, poleWidth);
         Product poleProduct = ProductMapper.getProductByProductId(1, connectionPool);
-        ProductVariant poleVariant = new ProductVariant(poleLength, poleProduct);
-        OrderItem poleOrderItem = new OrderItem(poleVariant, poleCount, "awdawd", poleProduct.getPrice());
+        ProductVariant poleVariant = ProductMapper.getVariantsByProductAndLength(poleLength, 1, "stolpe", connectionPool);
+        OrderItem poleOrderItem = new OrderItem(poleVariant, poleCount, poleVariant.getDescription(), poleProduct.getPricePrUnit());
         orderItems.add(poleOrderItem);
 
 
@@ -97,7 +96,7 @@ public class OrderController {
         int rafterCount = Calculator.calcAmountOfRafters(length, rafterWidth);
         Product rafterProduct = ProductMapper.getProductByProductId(2, connectionPool);
         ProductVariant rafterVariant = selectRafterLength(width, connectionPool);
-        OrderItem rafterOrderItem = new OrderItem(rafterVariant, rafterCount, "adwad", rafterProduct.getPrice());
+        OrderItem rafterOrderItem = new OrderItem(rafterVariant, rafterCount, rafterVariant.getDescription(), rafterProduct.getPricePrUnit());
         orderItems.add(rafterOrderItem);
 
 
@@ -105,18 +104,19 @@ public class OrderController {
 
         if(length <= 600){
             ProductVariant beamVariant = selectBeamLength(length, connectionPool)[0];
-            OrderItem beamOrderItem = new OrderItem(beamVariant, 2, "adwada", beamProduct.getPrice());
+            OrderItem beamOrderItem = new OrderItem(beamVariant, 2, beamVariant.getDescription(), beamProduct.getPricePrUnit());
             orderItems.add(beamOrderItem);
         } else {
             ProductVariant beamVariant1 = selectBeamLength(length, connectionPool)[0];
-            OrderItem firstBeamOrderItem = new OrderItem(beamVariant1, 2, "adwada", beamProduct.getPrice());
+            OrderItem firstBeamOrderItem = new OrderItem(beamVariant1, 2, beamVariant1.getDescription(), beamProduct.getPricePrUnit());
             orderItems.add(firstBeamOrderItem);
             ProductVariant beamVariant2 = selectBeamLength(length, connectionPool)[1];
-            OrderItem secondBeamOrderItem = new OrderItem(beamVariant2, 2, "dawdawd", beamProduct.getPrice());
+            OrderItem secondBeamOrderItem = new OrderItem(beamVariant2, 2, beamVariant2.getDescription(), beamProduct.getPricePrUnit());
             orderItems.add(secondBeamOrderItem);
         }
 
         return orderItems;
     }
+
 
 }

@@ -68,13 +68,13 @@ public class OrderMapper {
                 String unit = rs.getString("unit");
                 int price = rs.getInt("price");
                 int width = rs.getInt("width_in_mm");
-                Product product = new Product(productId, name, unit, price, width);
+                Product product = new Product(productId, name, unit, price);
 
                 //Product Variant
                 int productVariantId = rs.getInt("product_variant_id");
                 int length = rs.getInt("length");
                 String description = rs.getString("description");
-                ProductVariant productVariant = new ProductVariant(productVariantId, length, product);
+                ProductVariant productVariant = new ProductVariant(productVariantId, length, description, product);
 
                 //OrderItem
                 int orderItemId = rs.getInt("order_item_id");
