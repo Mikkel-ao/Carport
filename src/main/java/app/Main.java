@@ -6,6 +6,7 @@ import app.controllers.CarportController;
 import app.controllers.OrderController;
 import app.controllers.SvgController;
 import app.controllers.UserController;
+import app.entities.Order;
 import app.entities.OrderItem;
 import app.persistence.ConnectionPool;
 import app.persistence.OrderMapper;
@@ -31,8 +32,8 @@ public class Main {
         }).start(7070);
 
 
-        List<OrderItem> listOfMaterials = (OrderController.createListOfMaterials(421, 599, connectionPool));
-        for(OrderItem item : listOfMaterials) {
+        Order order = (OrderController.createListOfMaterials(421, 599, connectionPool));
+        for(OrderItem item : order.getOrderItemList()) {
             System.out.println(item);
         }
 

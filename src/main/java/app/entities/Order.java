@@ -4,28 +4,32 @@ import java.util.List;
 
 public class Order {
     private List<OrderItem> orderItemList;
-    int orderId;
-    int carportWidth;
-    int carportLength;
-    String status;
-    User user;
-    double totalSalesPrice;
+    private int orderId;
+    private int carportWidth;
+    private int carportLength;
+    private String status;
+    private User user;
+    private double totalSalesPrice;
+    private double costPrice;
 
-    public Order(int orderId, int carportWidth, int carportLength, String status, User user, double totalPrice) {
+    public Order(int orderId, int carportWidth, int carportLength, String status, User user, double totalPrice, double costPrice) {
         this.orderId = orderId;
         this.carportWidth = carportWidth;
         this.carportLength = carportLength;
         this.status = status;
         this.user = user;
         this.totalSalesPrice = totalPrice;
+        this.costPrice = costPrice;
     }
 
-    public Order(int orderId, int carportWidth, int carportLength, String status, User user) {
-        this.orderId = orderId;
+
+    public Order(int carportWidth, int carportLength, String Status, User user, double totalSalesPrice, double costPrice) {
         this.carportWidth = carportWidth;
         this.carportLength = carportLength;
-        this.status = status;
+        this.status = Status;
         this.user = user;
+        this.totalSalesPrice = totalSalesPrice;
+        this.costPrice = costPrice;
     }
 
     public int getOrderId() {
@@ -64,8 +68,13 @@ public class Order {
         return orderItemList;
     }
 
+
     public double getTotalSalesPrice() {
         return totalSalesPrice;
+    }
+
+    public void setOrderItemList(List<OrderItem> orderItemList) {
+        this.orderItemList = orderItemList;
     }
 
     public User getUser() {
@@ -74,6 +83,10 @@ public class Order {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public double getCostPrice() {
+        return costPrice;
     }
 
     @Override

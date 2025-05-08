@@ -1,8 +1,6 @@
 package app.controllers;
 
-import app.entities.OrderItem;
-import app.entities.Product;
-import app.entities.ProductVariant;
+import app.entities.*;
 import app.persistence.ConnectionPool;
 import app.persistence.OrderMapper;
 import app.persistence.ProductMapper;
@@ -76,14 +74,16 @@ public class OrderController {
         throw new IllegalArgumentException("No suitable length found");
     }
 
-    public static List<OrderItem> createListOfMaterials(int width, int length, ConnectionPool connectionPool) {
+    public static Order createListOfMaterials(int width, int length, ConnectionPool connectionPool) {
+
+        User user = new User(1,"1234", "per@hej.dk", "123123123", "customer");
 
         List<OrderItem> orderItems = new ArrayList<>();
 
         //TODO: Sessions Attributes her og Context-objekt i signatur!
 
         double poleWidth = OrderMapper.getProductWidth(connectionPool, 1);
-        int poleLength = 300;  //Hard-coded because we only have one lengths
+        int poleLength = 300;  //Hard-coded because we only have one length
         int poleCount = Calculator.calcAmountOfPoles(length, poleWidth);
         Product poleProduct = ProductMapper.getProductByProductId(1, connectionPool);
         ProductVariant poleVariant = ProductMapper.getVariantsByProductAndLength(poleLength, 1, "stolpe", connectionPool);
@@ -102,9 +102,14 @@ public class OrderController {
 
         Product beamProduct = ProductMapper.getProductByProductId(2, connectionPool);
 
+        double poleCostPrice = poleCount * poleProduct.getPricePrUnit();
+        double rafterCostPrice = rafterCount * (double) rafterVariant.getLength()/10 *  rafterProduct.getPricePrUnit();
+        double beamCostPrice;
+
         if(length <= 600){
             ProductVariant beamVariant = selectBeamLength(length, connectionPool)[0];
             OrderItem beamOrderItem = new OrderItem(beamVariant, 2, beamVariant.getDescription(), beamProduct.getPricePrUnit());
+            beamCostPrice = (double) beamVariant.getLength()/10 * beamProduct.getPricePrUnit() * 2;
             orderItems.add(beamOrderItem);
         } else {
             ProductVariant beamVariant1 = selectBeamLength(length, connectionPool)[0];
@@ -113,9 +118,20 @@ public class OrderController {
             ProductVariant beamVariant2 = selectBeamLength(length, connectionPool)[1];
             OrderItem secondBeamOrderItem = new OrderItem(beamVariant2, 2, beamVariant2.getDescription(), beamProduct.getPricePrUnit());
             orderItems.add(secondBeamOrderItem);
+            beamCostPrice = ((double) beamVariant2.getLength()/10 * beamProduct.getPricePrUnit() * 2) + ((double) beamVariant1.getLength()/10 * beamProduct.getPricePrUnit() * 2);
         }
 
-        return orderItems;
+        double totalCostPrice = poleCostPrice + rafterCostPrice + beamCostPrice;
+        double totalCustomerPrice = totalCostPrice * 1.39;
+
+        Order currentOrder = new Order(width, length, "pending", user, totalCustomerPrice, totalCostPrice);
+        Order currentOrderWithId = OrderMapper.insertOrder(currentOrder, connectionPool);
+
+        currentOrderWithId.setOrderItemList(orderItems);
+
+        //double costPrice = (poleCount * poleProduct.getPricePrUnit()) + (rafterCount * ((double) rafterVariant.getLength()/10) * rafterProduct.getPricePrUnit());
+
+        return currentOrderWithId;
     }
 
 

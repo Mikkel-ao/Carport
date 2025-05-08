@@ -31,10 +31,11 @@ public class OrderMapper {
                 int carportWidth = rs.getInt("carport_width");
                 int carportLength = rs.getInt("carport_length");
                 String status = rs.getString("status");
-                int totalPrice = rs.getInt("total_price");
+                double customerPrice = rs.getDouble("customer_price");
+                double costPrice = rs.getDouble("cost_price");
 
                 User user = new User(userId, password, email, phoneNumber, role);
-                Order order = new Order(orderId, carportWidth, carportLength, status, user, totalPrice);
+                Order order = new Order(orderId, carportWidth, carportLength, status, user, customerPrice, costPrice);
 
                 orderList.add(order);
             }
@@ -59,8 +60,9 @@ public class OrderMapper {
                 int carportWidth = rs.getInt("carport_width");
                 int carportLength = rs.getInt("carport_length");
                 String status = rs.getString("status");
-                int totalPrice = rs.getInt("total_price");
-                Order order = new Order(orderId, carportWidth, carportLength, status, null, totalPrice);
+                double customerPrice = rs.getDouble("customer_price");
+                double costPrice = rs.getDouble("cost_price");
+                Order order = new Order(orderId, carportWidth, carportLength, status, null, customerPrice, costPrice);
 
                 //Product
                 int productId = rs.getInt("product_id");
@@ -88,20 +90,21 @@ public class OrderMapper {
         return orderItemList;
     }
     public static Order insertOrder(Order order, ConnectionPool connectionPool) throws DatabaseException{
-        String sql = "INSERT INTO orders (carport_width, carport_length, status, user_id, total_price)" + "VALUES (?,?,?,?,?)";
+        String sql = "INSERT INTO orders (carport_width, carport_length, status, user_id, customer_price, cost_price)" + "VALUES (?,?,?,?,?,?)";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)){
 
             ps.setInt(1, order.getCarportWidth());
             ps.setInt(2, order.getCarportLength());
-            ps.setString(3, order.getStatus());
-            ps.setInt(4, order.getUser().getUserId());
+            ps.setString(3, "pending");
+            ps.setDouble(4, order.getUser().getUserId());
             ps.setDouble(5, order.getTotalSalesPrice());
+            ps.setDouble(6, order.getCostPrice());
             ps.executeUpdate();
             ResultSet keySet = ps.getGeneratedKeys();
             if (keySet.next()){
-                return new Order(keySet.getInt(1),order.getCarportWidth(),order.getCarportLength(),order.getStatus(),order.getUser(),order.getTotalSalesPrice());
+                return new Order(keySet.getInt(1), order.getCarportWidth(),order.getCarportLength(),order.getStatus(),order.getUser(),order.getTotalSalesPrice(), order.getCostPrice());
             }else {
                 return null;
             }
