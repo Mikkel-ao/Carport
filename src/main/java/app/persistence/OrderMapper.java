@@ -3,10 +3,7 @@ package app.persistence;
 import app.entities.*;
 import app.exceptions.DatabaseException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,7 +78,7 @@ public class OrderMapper {
                 //OrderItem
                 int orderItemId = rs.getInt("order_item_id");
                 int quantity = rs.getInt("quantity");
-                OrderItem orderItem = new OrderItem(orderItemId, productVariant, quantity, description);
+                OrderItem orderItem = new OrderItem(orderItemId, productVariant, quantity);
                 orderItemList.add(orderItem);
             }
         }catch (SQLException e){
@@ -97,7 +94,7 @@ public class OrderMapper {
 
             ps.setInt(1, order.getCarportWidth());
             ps.setInt(2, order.getCarportLength());
-            ps.setString(3, "pending");
+            ps.setString(3, "pennnding");
             ps.setDouble(4, order.getUser().getUserId());
             ps.setDouble(5, order.getTotalSalesPrice());
             ps.setDouble(6, order.getCostPrice());
@@ -112,22 +109,22 @@ public class OrderMapper {
             throw new DatabaseException("Kunne ikke indsætte order i Database", e.getMessage());
         }
     }
-    public static void insertOrderItems(List<OrderItem> orderItems, ConnectionPool connectionPool)throws DatabaseException{
-        String sql = "INSERT INTO order_item (order_id, product_variant_id, quantity, description)" + "VALUES (?,?,?,?)";
+    public static void insertOrderItem(int orderId, OrderItem orderItem, ConnectionPool connectionPool)throws DatabaseException{
+        String sql = "INSERT INTO order_item (order_id, product_variant_id, quantity)" + "VALUES (?,?,?)";
 
         try(Connection connection = connectionPool.getConnection()){
-            for (OrderItem orderItem : orderItems){
                 try (PreparedStatement ps = connection.prepareStatement(sql)){
+                    ps.setInt(1, orderId);
                     ps.setInt(2, orderItem.getProductVariant().getProductVariantId());
                     ps.setInt(3, orderItem.getQuantity());
-                    ps.setString(4, orderItem.getDescription());
                     ps.executeUpdate();
-                }
+
             }
         }catch (SQLException e){
-            throw new DatabaseException("Kunne ikke lave en orderitem i database", e.getMessage());
+            throw new DatabaseException("Kunne ikke lave en orderItem i database", e.getMessage());
         }
     }
+
     // Måske vi skal lave 3 mapper metoder. En til hver af de 3 stadier status kan have (annulleret, venter, købt)??
     public static void updateOrderStatus(int orderId, String newStatus, ConnectionPool connectionPool) throws DatabaseException {
         String sql = "UPDATE orders SET status = ? WHERE order_id = ?";
@@ -294,6 +291,32 @@ public class OrderMapper {
         }
 
         return price;
+    }
+
+    //Method for creating an order and retrieve the auto-generated order id
+    public static int createOrder(ConnectionPool connectionPool, int width, int length, int userId, double customerPrice, double costPrice) throws DatabaseException {
+        String sql = "INSERT INTO orders (carport_width, carport_length, user_id, customer_price, cost_price) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) { //Instructs database to return auto-generated keys (user_id) when executing insert statement!
+
+            ps.setInt(1, width);
+            ps.setInt(2, length);
+            ps.setInt(3, userId);
+            ps.setDouble(4, customerPrice);
+            ps.setDouble(5, costPrice);
+            //ps.setTimestamp(2, new Timestamp(System.currentTimeMillis())); //Setting "order_date" in sql query (which is datatype TimeStamp) to the current time!
+            ps.executeUpdate(); //Executing sql query
+
+            ResultSet rs = ps.getGeneratedKeys(); //Retrieving the auto-generated key from the database
+            if (rs.next()) { //Check if they key was in fact returned!
+                return rs.getInt(1); //Returning key of the first column in database (which is the order id)
+            } else {
+                throw new DatabaseException("Kunne ikke oprette ordren, da ingen genereret nøgle blev fundet!");
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException("Kunne ikke oprette ordren!", e.getMessage());
+        }
     }
 
 }

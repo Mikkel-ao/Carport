@@ -74,20 +74,23 @@ public class OrderController {
         throw new IllegalArgumentException("No suitable length found");
     }
 
-    public static Order createListOfMaterials(int width, int length, ConnectionPool connectionPool) {
+    public static List<OrderItem> createListOfMaterials(int width, int length, ConnectionPool connectionPool) {
 
+        //TODO: User kommer fra session attributes, men er blot hard-coded for
         User user = new User(1,"1234", "per@hej.dk", "123123123", "customer");
 
         List<OrderItem> orderItems = new ArrayList<>();
 
         //TODO: Sessions Attributes her og Context-objekt i signatur!
 
+
+        //TODO: Refactor!
         double poleWidth = OrderMapper.getProductWidth(connectionPool, 1);
         int poleLength = 300;  //Hard-coded because we only have one length
         int poleCount = Calculator.calcAmountOfPoles(length, poleWidth);
         Product poleProduct = ProductMapper.getProductByProductId(1, connectionPool);
         ProductVariant poleVariant = ProductMapper.getVariantsByProductAndLength(poleLength, 1, "stolpe", connectionPool);
-        OrderItem poleOrderItem = new OrderItem(poleVariant, poleCount, poleVariant.getDescription(), poleProduct.getPricePrUnit());
+        OrderItem poleOrderItem = new OrderItem(poleVariant, poleCount);
         orderItems.add(poleOrderItem);
 
 
@@ -96,7 +99,7 @@ public class OrderController {
         int rafterCount = Calculator.calcAmountOfRafters(length, rafterWidth);
         Product rafterProduct = ProductMapper.getProductByProductId(2, connectionPool);
         ProductVariant rafterVariant = selectRafterLength(width, connectionPool);
-        OrderItem rafterOrderItem = new OrderItem(rafterVariant, rafterCount, rafterVariant.getDescription(), rafterProduct.getPricePrUnit());
+        OrderItem rafterOrderItem = new OrderItem(rafterVariant, rafterCount);
         orderItems.add(rafterOrderItem);
 
 
@@ -108,15 +111,15 @@ public class OrderController {
 
         if(length <= 600){
             ProductVariant beamVariant = selectBeamLength(length, connectionPool)[0];
-            OrderItem beamOrderItem = new OrderItem(beamVariant, 2, beamVariant.getDescription(), beamProduct.getPricePrUnit());
+            OrderItem beamOrderItem = new OrderItem(beamVariant, 2);
             beamCostPrice = (double) beamVariant.getLength()/10 * beamProduct.getPricePrUnit() * 2;
             orderItems.add(beamOrderItem);
         } else {
             ProductVariant beamVariant1 = selectBeamLength(length, connectionPool)[0];
-            OrderItem firstBeamOrderItem = new OrderItem(beamVariant1, 2, beamVariant1.getDescription(), beamProduct.getPricePrUnit());
+            OrderItem firstBeamOrderItem = new OrderItem(beamVariant1, 2);
             orderItems.add(firstBeamOrderItem);
             ProductVariant beamVariant2 = selectBeamLength(length, connectionPool)[1];
-            OrderItem secondBeamOrderItem = new OrderItem(beamVariant2, 2, beamVariant2.getDescription(), beamProduct.getPricePrUnit());
+            OrderItem secondBeamOrderItem = new OrderItem(beamVariant2, 2);
             orderItems.add(secondBeamOrderItem);
             beamCostPrice = ((double) beamVariant2.getLength()/10 * beamProduct.getPricePrUnit() * 2) + ((double) beamVariant1.getLength()/10 * beamProduct.getPricePrUnit() * 2);
         }
@@ -124,14 +127,15 @@ public class OrderController {
         double totalCostPrice = poleCostPrice + rafterCostPrice + beamCostPrice;
         double totalCustomerPrice = totalCostPrice * 1.39;
 
-        Order currentOrder = new Order(width, length, "pending", user, totalCustomerPrice, totalCostPrice);
-        Order currentOrderWithId = OrderMapper.insertOrder(currentOrder, connectionPool);
+        int orderId = OrderMapper.createOrder(connectionPool, width, length, user.getUserId(), totalCustomerPrice, totalCostPrice);
 
-        currentOrderWithId.setOrderItemList(orderItems);
+        for (OrderItem orderItem : orderItems) {
+            OrderMapper.insertOrderItem(orderId, orderItem, connectionPool);
+        }
 
-        //double costPrice = (poleCount * poleProduct.getPricePrUnit()) + (rafterCount * ((double) rafterVariant.getLength()/10) * rafterProduct.getPricePrUnit());
 
-        return currentOrderWithId;
+        //TODO: Skal ikke nødvendigvis returneres, men måske gemmes i en attribute? Vi kan altid hente stykliste ud fra orderId senere hen!
+        return orderItems;
     }
 
 

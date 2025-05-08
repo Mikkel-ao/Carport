@@ -4,21 +4,16 @@ public class OrderItem {
     int orderItemId;
     ProductVariant productVariant;
     int quantity;
-    String description;
-    double unitPrice;
 
-    public OrderItem(int orderItemId, ProductVariant productVariant, int quantity, String description) {
+    public OrderItem(int orderItemId, ProductVariant productVariant, int quantity) {
         this.orderItemId = orderItemId;
         this.productVariant = productVariant;
         this.quantity = quantity;
-        this.description = description;
     }
 
-    public OrderItem(ProductVariant productVariant, int quantity, String description, double unitPrice) {
+    public OrderItem(ProductVariant productVariant, int quantity) {
         this.productVariant = productVariant;
         this.quantity = quantity;
-        this.description = description;
-        this.unitPrice = unitPrice;
     }
 
     public int getOrderItemId() {
@@ -37,13 +32,6 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
 
     public ProductVariant getProductVariant() {
@@ -60,7 +48,6 @@ public class OrderItem {
                 "orderItemId=" + orderItemId +
                 ", productVariant=" + productVariant +
                 ", quantity=" + quantity +
-                ", description='" + description + '\'' +
                 '}';
     }
 }

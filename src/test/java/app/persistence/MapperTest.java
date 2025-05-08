@@ -291,7 +291,7 @@ class MapperTest {
             List<OrderItem> itemList = List.of(item);
 
             // ✅ Call method
-            OrderMapper.insertOrderItems(itemList, testConnectionPool);
+            OrderMapper.insertOrderItem(itemList, testConnectionPool);
 
             // 🧪 Assert from DB
             String query = "SELECT * FROM test.order_item WHERE order_id = ?";

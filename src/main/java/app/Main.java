@@ -31,11 +31,7 @@ public class Main {
             config.fileRenderer(new JavalinThymeleaf(ThymeleafConfig.templateEngine()));
         }).start(7070);
 
-
-        Order order = (OrderController.createListOfMaterials(421, 599, connectionPool));
-        for(OrderItem item : order.getOrderItemList()) {
-            System.out.println(item);
-        }
+        OrderController.createListOfMaterials(299, 779, connectionPool);
 
         // Routing
         app.get("/", ctx -> ctx.redirect("/index"));
