@@ -400,7 +400,7 @@ class MapperTest {
             int minLength = 200;
 
             // Call method under test
-            List<ProductVariant> variants = ProductMapper.getVariantsByProductAndMinLength(minLength, productId, testConnectionPool);
+            List<ProductVariant> variants = ProductMapper.getVariantsByProductAndLength(minLength, productId, testConnectionPool);
 
             // Assertions
             assertNotNull(variants, "List should not be null");

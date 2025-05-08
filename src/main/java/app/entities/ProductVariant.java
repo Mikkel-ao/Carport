@@ -11,6 +11,11 @@ public class ProductVariant {
         this.product = product;
     }
 
+    public ProductVariant(int length, Product product){
+        this.length = length;
+        this.product = product;
+    }
+
     public int getProductVariantId() {
         return productVariantId;
     }

@@ -5,12 +5,14 @@ public class Product {
     String name;
     String unit;
     int price;
+    int widthInCm;
 
-    public Product(int productId, String name, String unit, int price) {
+    public Product(int productId, String name, String unit, int price, int widthInCm) {
         this.productId = productId;
         this.name = name;
         this.unit = unit;
         this.price = price;
+        this.widthInCm = widthInCm;
     }
 
     public int getProductId() {

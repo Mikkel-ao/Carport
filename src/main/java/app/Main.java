@@ -3,6 +3,7 @@ package app;
 import app.config.SessionConfig;
 import app.config.ThymeleafConfig;
 import app.controllers.CarportController;
+import app.controllers.OrderController;
 import app.controllers.SvgController;
 import app.controllers.UserController;
 import app.persistence.ConnectionPool;
@@ -26,6 +27,8 @@ public class Main {
             config.fileRenderer(new JavalinThymeleaf(ThymeleafConfig.templateEngine()));
         }).start(7070);
 
+
+        System.out.println(OrderController.createListOfMaterials(421, 780, connectionPool));
 
         // Routing
         app.get("/", ctx -> ctx.redirect("/index"));
