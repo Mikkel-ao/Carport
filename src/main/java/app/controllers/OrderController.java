@@ -17,11 +17,22 @@ import java.util.List;
 public class OrderController {
 
     public static void addRoutes(Javalin app, ConnectionPool connectionPool) {
+        app.get("/index", ctx -> getCarportDimensions(ctx, connectionPool));
+
+        // Route to handle the form submission
         app.post("/add-customer-request", ctx -> {
             createListOfMaterials(ctx, connectionPool);
             ctx.redirect("/add-customer-request?success=true");
         });
-        app.get("/add-customer-request", ctx -> ctx.render("index.html"));
+    }
+
+    private static void getCarportDimensions(Context ctx, ConnectionPool connectionPool) {
+        List<Integer> carportLength = OrderMapper.getCarportLength(connectionPool);
+        List<Integer> carportWidth = OrderMapper.getCarportWidth(connectionPool);
+
+        ctx.attribute("carportLength", carportLength);
+        ctx.attribute("carportWidth", carportWidth);
+        ctx.render("index.html");
     }
 
     public static ProductVariant selectRafterLength(int length, ConnectionPool connectionPool) {
