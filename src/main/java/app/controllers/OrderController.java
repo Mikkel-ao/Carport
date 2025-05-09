@@ -134,11 +134,11 @@ public class OrderController {
         }
 
 
-        /*//TODO: Skal ikke nødvendigvis returneres, men måske gemmes i en attribute? Vi kan altid hente stykliste ud fra orderId senere hen!
+        /*//TODO: Man kan også lave en order og smide listen i maven og returnerer denne?? 
         Order currentOrder = OrderMapper.getOrderById(orderId, connectionPool);
         currentOrder.setListOfMaterials(orderItems);*/
 
-
+        /*//TODO: Skal ikke nødvendigvis returneres, men måske gemmes i en attribute? Vi kan altid hente stykliste ud fra orderId senere hen!
         return orderItems;
     }
 
