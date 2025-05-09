@@ -13,10 +13,16 @@
 
 <header>
     <div class="index-container">
-        <a href="index.html" th:href="@{/}">
-            <img class="logo-index" src="/public/images/fog_logo_small.png"
-                 th:src="@{/images/fog_logo_small.png}" alt="foglogo">
+        <!-- If the user is logged in, go to index -->
+        <a th:if="${session.currentUser != null}" th:href="@{/}">
+            <img class="logo-index" th:src="@{/images/fog_logo_small.png}" alt="foglogo">
         </a>
+
+        <!-- If the user is not logged in, go to login -->
+        <a th:unless="${session.currentUser != null}" th:href="@{/login}">
+            <img class="logo-index" th:src="@{/images/fog_logo_small.png}" alt="foglogo">
+        </a>
+
         <a href="/login" class="account-button">
             <i class="fas fa-user"></i>
             <span>Fog Konto</span>
@@ -32,6 +38,10 @@
 
 <!-- kontakt formular starter -->
 <div class="formular-container">
+    <div th:if="${param.success}" style="color: green; margin-bottom: 15px; font-weight: bold;">
+        Din forespørgsel er modtaget. Tak!
+    </div>
+
     <form action="/add-customer-request" method="post" th:action="@{/add-customer-request}">
         <label for="Længde">Længde:</label>
         <select name="Længde" id="Længde" class="formular-dropDown" required>
