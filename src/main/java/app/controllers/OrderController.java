@@ -19,11 +19,11 @@ public class OrderController {
     public static void addRoutes(Javalin app, ConnectionPool connectionPool) {
         app.get("/index", ctx -> getCarportDimensions(ctx, connectionPool));
 
-        // Route to handle the form submission
         app.post("/add-customer-request", ctx -> {
             createListOfMaterials(ctx, connectionPool);
             ctx.redirect("/add-customer-request?success=true");
         });
+        app.get("/add-customer-request", ctx -> ctx.render("index.html"));
     }
 
     private static void getCarportDimensions(Context ctx, ConnectionPool connectionPool) {
@@ -107,9 +107,6 @@ public class OrderController {
             }
 
             List<OrderItem> orderItems = new ArrayList<>();
-
-            //TODO: Sessions Attributes her og Context-objekt i signatur!
-
 
             //TODO: Refactor!
             double poleWidth = OrderMapper.getProductWidth(connectionPool, 1);
