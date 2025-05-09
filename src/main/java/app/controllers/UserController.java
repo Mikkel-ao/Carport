@@ -3,7 +3,7 @@ package app.controllers;
 import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
 import app.persistence.UserMapper;
-import app.entities.User; // <-- Make sure to import your own User class!
+import app.entities.User;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -12,10 +12,10 @@ public class UserController {
     public static void addRoutes(Javalin app, ConnectionPool connectionPool) {
         app.post("/login", ctx -> login(ctx, connectionPool));
         app.get("/login", ctx -> ctx.render("/login.html"));
-        //app.get("/index", ctx -> ctx.render("index.html"));
-        app.get("/createuser", ctx -> ctx.render("createuser.html"));
+        app.get("/createuser", ctx -> ctx.render("/createuser.html"));
         app.post("/createuser", ctx -> createUser(ctx, connectionPool));
         app.get("/logout", ctx -> logout(ctx));
+        app.get("/account", ctx -> ctx.render("/account.html"));
     }
 
     private static void logout(Context ctx) {

@@ -5,9 +5,16 @@ import app.config.ThymeleafConfig;
 import app.controllers.OrderController;
 import app.controllers.SvgController;
 import app.controllers.UserController;
+import app.entities.Order;
+import app.entities.OrderItem;
 import app.persistence.ConnectionPool;
+import app.persistence.OrderMapper;
+import app.persistence.UserMapper;
+import app.util.Calculator;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinThymeleaf;
+
+import java.util.List;
 
 public class Main {
 

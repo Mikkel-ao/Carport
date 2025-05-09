@@ -23,13 +23,20 @@
             <img class="logo-index" th:src="@{/images/fog_logo_small.png}" alt="foglogo">
         </a>
 
-        <a href="/login" class="account-button">
+        <a th:if="${session.currentUser == null}" th:href="@{/login}" class="account-button">
             <i class="fas fa-user"></i>
             <span>Fog Konto</span>
         </a>
-        <a th:if="${session.currentUser != null}" href="index.html" th:href="@{/logout}">
+
+        <a th:if="${session.currentUser != null}" th:href="@{/account}" class="account-button">
+            <i class="fas fa-user"></i>
+            <span>Fog Konto</span>
+        </a>
+
+        <a th:if="${session.currentUser != null}" th:href="@{/logout}">
             <button>Log ud</button>
         </a>
+
     </div>
 </header>
 
@@ -82,8 +89,12 @@
         <input type="email" name="Email" placeholder="Din email adresse" required>
         <br>
 
-        <input type="checkbox" name="Samtykke-checkbox" required>
-        <nobr>Fog må benytte dine afgivne oplysninger til at kontakte mig i forbindelse med tilbud på QuickByg carport</nobr>
+        <div class="checkbox-consent">
+            <label>
+                <input type="checkbox" required>
+                Fog må benytte dine afgivne oplysninger til at kontakte mig i forbindelse med tilbud på QuickByg carport
+            </label>
+        </div>
 
         <div class="bestil-tilbud-button">
             <!-- TODO: lav så der kommer en besked til brugeren på siden at deres forespørgsel er blevet sendt -->
