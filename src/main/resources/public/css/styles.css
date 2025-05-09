@@ -9,12 +9,17 @@
 
 body {
     margin: 0;
+    font-family: "Times New Roman", Times, serif;
 }
 
 h1 {
     color: #369;
-    font-family: Arial, Helvetica, sans-serif;
     font-size: 3rem;
+}
+
+.header {
+    padding: 20px 0;
+    text-align: center;
 }
 
 .generic-form {
@@ -37,14 +42,15 @@ h1 {
     font-size: 1.2rem;
     padding: 10px;
     border-radius: 5px;
-    background-color: cornflowerblue;
+    background-color: #245484;
     color: white;
     border: none;
+    font-family: inherit;
 }
 
 .rounded-btn {
     border: none;
-    background-color: cornflowerblue;
+    background-color: #245484;
     color: white;
     padding: 8px;
     text-align: center;
@@ -54,6 +60,7 @@ h1 {
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 4px;
+    font-family: inherit;
 }
 
 .footer-side {
@@ -104,6 +111,7 @@ h1 {
     font-size: 14px;
     cursor: pointer;
     padding: 5px 10px;
+    font-family: inherit;
 }
 
 .account-button i {
@@ -111,6 +119,55 @@ h1 {
     margin-bottom: 4px;
     color: #383e3e;
 }
+
+.formular-container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+.formular-dropDown,
+input[type="text"],
+input[type="email"],
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.checkbox-consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 15px;
+    font-family: inherit;
+}
+
+.bestil-tilbud-button {
+    text-align: center;
+}
+
+.bestil-tilbud-button button {
+    padding: 10px 20px;
+    background-color: #043c74;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.bestil-tilbud-button button:hover {
+    background-color: #245484;
+}
+
 
 /***** SVG ******/
 
@@ -126,4 +183,3 @@ h1 {
     width: 700px;
     height: auto;
 }
-

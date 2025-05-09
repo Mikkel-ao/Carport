@@ -1,43 +1,33 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
-<title>Carport-login</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
-
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="da">
+<head>
+    <title>Carport-login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
+</head>
 <body class="background-color">
 <div class="page-container">
-    <header>
-        <br>
+    <header class="header">
         <a href="login.html" th:href="@{/login}">
             <img class="logo" src="/public/images/fog_logo_small.png"
                  th:src="@{/images/fog_logo_small.png}" alt="fog_logo">
         </a>
-        <br>
-        <br>
     </header>
 
     <form class="generic-form" method="post" action="/login">
-        <input type="email" name="email" placeholder="Indtast email" required/>
-        <input type="password" name="password" placeholder="Indtast kodeord" required/>
-        <button type="submit">Log ind</button>
-        <div><p class="error" th:unless="${#strings.isEmpty(message)}" th:text="${message}"></p></div>
+        <input type="email" name="email" placeholder="Indtast email" required />
+        <input type="password" name="password" placeholder="Indtast adgangskode" required />
+        <button type="submit" class="rounded-btn">Log ind</button>
+        <div>
+            <p class="error" th:unless="${#strings.isEmpty(message)}" th:text="${message}"></p>
+        </div>
     </form>
 
     <footer class="footer-side">
-        <div>
-            <a href="createuser.html" th:href="@{/createuser}">
-                <button class="rounded-btn">Opret bruger</button>
-            </a>
-        </div>
-
-        <div>
-            <a href="/" th:href="@{/}">
-                <button class="rounded-btn">Til forsiden</button>
-            </a>
-        </div>
+        <a class="rounded-btn" href="createuser.html" th:href="@{/createuser}">Opret bruger</a>
+        <a class="rounded-btn" href="/" th:href="@{/}">Til forsiden</a>
     </footer>
 </div>
-
 </body>
 </html>
