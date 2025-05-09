@@ -86,6 +86,8 @@ public class OrderMapper {
         }
         return orderItemList;
     }
+
+    //TODO: DENNE SKAL FORMENTLIG SLETTES, DA VI BRUGER CREATE ORDER
     public static Order insertOrder(Order order, ConnectionPool connectionPool) throws DatabaseException{
         String sql = "INSERT INTO orders (carport_width, carport_length, status, user_id, customer_price, cost_price)" + "VALUES (?,?,?,?,?,?)";
 
@@ -94,7 +96,7 @@ public class OrderMapper {
 
             ps.setInt(1, order.getCarportWidth());
             ps.setInt(2, order.getCarportLength());
-            ps.setString(3, "pennnding");
+            ps.setString(3, "pending");
             ps.setDouble(4, order.getUser().getUserId());
             ps.setDouble(5, order.getTotalSalesPrice());
             ps.setDouble(6, order.getCostPrice());

@@ -134,7 +134,11 @@ public class OrderController {
         }
 
 
-        //TODO: Skal ikke nødvendigvis returneres, men måske gemmes i en attribute? Vi kan altid hente stykliste ud fra orderId senere hen!
+        /*//TODO: Skal ikke nødvendigvis returneres, men måske gemmes i en attribute? Vi kan altid hente stykliste ud fra orderId senere hen!
+        Order currentOrder = OrderMapper.getOrderById(orderId, connectionPool);
+        currentOrder.setListOfMaterials(orderItems);*/
+
+
         return orderItems;
     }
 
