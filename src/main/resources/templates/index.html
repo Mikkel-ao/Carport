@@ -41,7 +41,29 @@
 </header>
 
 <h1>Index / Carport configuration page</h1>
-<a th:href="@{svg}" href="svg.html">Show SVG drawing</a>
+
+<!-- Form for displaying carport based on user input -->
+<div class="formular-container">
+    <form action="/svg" method="get">
+        <label for="Længde">Længde:</label>
+        <select name="Længde" class="formular-dropDown" required>
+            <option value="" disabled selected>Vælg længde</option>
+            <option th:value="${length}" th:each="length : ${carportLength}" th:text="${length}"></option>
+        </select>
+
+        <label for="Bredde">Bredde:</label>
+        <select name="Bredde" class="formular-dropDown" required>
+            <option value="" disabled selected>Vælg bredde</option>
+            <option th:each="width : ${carportWidth}" th:value="${width}" th:text="${width}"></option>
+        </select>
+
+        <!-- Submit button for the svg -->
+        <div class="submit-button">
+            <button type="submit">Generer tegning</button>
+        </div>
+    </form>
+</div>
+
 
 <!-- kontakt formular starter -->
 <div class="formular-container">
@@ -96,7 +118,7 @@
             </label>
         </div>
 
-        <div class="bestil-tilbud-button">
+        <div class="submit-button">
             <!-- TODO: lav så der kommer en besked til brugeren på siden at deres forespørgsel er blevet sendt -->
             <button type="submit">Bestil tilbud</button>
         </div>

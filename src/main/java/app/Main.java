@@ -36,7 +36,7 @@ public class Main {
         app.get("/", ctx -> ctx.redirect("/index"));
 
         UserController.addRoutes(app, connectionPool);
-        SvgController.addRoutes(app, connectionPool);
+        SvgController.addRoutes(app);
         OrderController.addRoutes(app, connectionPool);
     }
 }

@@ -36,6 +36,7 @@ h1 {
     font-size: 1.2rem;
     color: black;
     border: none;
+    font-family: inherit;
 }
 
 .generic-form button {
@@ -150,11 +151,11 @@ select {
     font-family: inherit;
 }
 
-.bestil-tilbud-button {
+.submit-button {
     text-align: center;
 }
 
-.bestil-tilbud-button button {
+.submit-button button {
     padding: 10px 20px;
     background-color: #043c74;
     color: white;
@@ -164,7 +165,7 @@ select {
     font-family: inherit;
 }
 
-.bestil-tilbud-button button:hover {
+.submit button:hover {
     background-color: #245484;
 }
 

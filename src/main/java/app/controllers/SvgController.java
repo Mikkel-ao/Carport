@@ -1,30 +1,37 @@
 package app.controllers;
-import app.persistence.CarportSvg;
-import java.util.Locale;
 
-import app.persistence.ConnectionPool;
+import app.persistence.CarportSvg;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
+import java.util.Locale;
 
-// TODO: Consider moving this to OrderController instead once it is implemented.
 public class SvgController {
 
-    public static void addRoutes(Javalin app, ConnectionPool connectionPool) {
+    public static void addRoutes(Javalin app) {
         app.get("/svg", SvgController::showSvg);
     }
 
     public static void showSvg(Context ctx) {
         Locale.setDefault(Locale.US);
-        CarportSvg topView = new CarportSvg(600, 780); // Example dimensions
-        CarportSvg topView2 = new CarportSvg(400, 580); // Second smaller one
-        CarportSvg topView3 = new CarportSvg(200, 459); // Second smaller one
 
+        // Retrieves user input from url, "længde" could return "780".
+        String lengthStr = ctx.queryParam("Længde");
+        String widthStr = ctx.queryParam("Bredde");
 
-        ctx.attribute("svg", topView.toString());
-        ctx.attribute("svg2", topView2.toString());
-        ctx.attribute("svg3", topView3.toString());
+        // From string to int to work as parameters for CarportSvg()
+        int length = Integer.parseInt(lengthStr);
+        int width = Integer.parseInt(widthStr);
+
+        //
+        CarportSvg svg = new CarportSvg(width, length);
+
+        // Pass the generated SVG to the template
+        ctx.attribute("svg", svg.toString());
+        ctx.attribute("length", length);
+        ctx.attribute("width", width);
+
+        // Render the SVG page
         ctx.render("svg.html");
     }
 }
-
