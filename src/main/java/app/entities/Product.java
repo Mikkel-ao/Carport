@@ -4,6 +4,7 @@ public class Product {
     int productId;
     String name;
     String unit;
+    double width;
     int pricePrUnit;
 
 
@@ -12,6 +13,18 @@ public class Product {
         this.name = name;
         this.unit = unit;
         this.pricePrUnit = pricePrUnit;
+    }
+
+    public Product(int productId, String name, String unit, double width, int pricePrUnit) {
+        this.productId = productId;
+        this.name = name;
+        this.unit = unit;
+        this.width = width;
+        this.pricePrUnit = pricePrUnit;
+    }
+
+    public double getWidth() {
+        return width;
     }
 
     public int getProductId() {

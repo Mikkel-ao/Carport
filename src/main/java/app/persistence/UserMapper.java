@@ -76,4 +76,26 @@ public class UserMapper {
             throw new DatabaseException(msg, e.getMessage());
         }
     }
+
+    public static User getUserById(int userId, ConnectionPool connectionPool) throws DatabaseException {
+        String sql = "SELECT * FROM public.users where user_id = ?";
+
+        try(
+                Connection connection = connectionPool.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()
+                ){
+            if(rs.next()){
+                String email = rs.getString("email");
+                String password = rs.getString("password");
+                String phoneNumber = rs.getString("phone_number");
+                String role = rs.getString("role");
+                return new User(userId,email,password,phoneNumber,role);
+            }
+            }catch (SQLException e){
+            throw new DatabaseException("Could not get user data", e.getMessage());
+        }
+        //TODO: Handle this more gracefully!
+            return null;
+    }
 }

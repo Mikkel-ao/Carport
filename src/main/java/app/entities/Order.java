@@ -3,7 +3,7 @@ package app.entities;
 import java.util.List;
 
 public class Order {
-    private List<OrderItem> orderItemList;
+    private List<OrderItem> listOfMaterials;
     private int orderId;
     private int carportWidth;
     private int carportLength;
@@ -22,6 +22,15 @@ public class Order {
         this.costPrice = costPrice;
     }
 
+    public Order(List<OrderItem> listOfMaterials, int carportWidth, int carportLength, String status, User user, double totalSalesPrice, double costPrice) {
+        this.listOfMaterials = listOfMaterials;
+        this.carportWidth = carportWidth;
+        this.carportLength = carportLength;
+        this.status = status;
+        this.user = user;
+        this.totalSalesPrice = totalSalesPrice;
+        this.costPrice = costPrice;
+    }
 
     public Order(int carportWidth, int carportLength, String Status, User user, double totalSalesPrice, double costPrice) {
         this.carportWidth = carportWidth;
@@ -64,8 +73,8 @@ public class Order {
         this.status = status;
     }
 
-    public List<OrderItem> getOrderItemList() {
-        return orderItemList;
+    public List<OrderItem> getListOfMaterials() {
+        return listOfMaterials;
     }
 
 
@@ -73,8 +82,8 @@ public class Order {
         return totalSalesPrice;
     }
 
-    public void setOrderItemList(List<OrderItem> orderItemList) {
-        this.orderItemList = orderItemList;
+    public void setListOfMaterials(List<OrderItem> listOfMaterials) {
+        this.listOfMaterials = listOfMaterials;
     }
 
     public User getUser() {

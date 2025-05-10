@@ -11,12 +11,12 @@ import java.sql.SQLException;
 
 public class ProductMapper {
 
+
+
     public static ProductVariant getVariantsByProductAndLength(int productLength, int productId, String keyword, ConnectionPool connectionPool) throws DatabaseException {
 
-        String sql = "SELECT * FROM product_variant\n" +
-                "                INNER JOIN product p USING (product_id)\n" +
-                "INNER JOIN product_description USING (product_id)\n" +
-                "                WHERE product_id = ? AND length = ? AND key_word = ?";
+        String sql = "SELECT * FROM public.complete_product_view\n" +
+                "WHERE product_id = ? AND length = ? AND key_word = ?";
 
         try (Connection connection = connectionPool.getConnection()) {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -32,9 +32,10 @@ public class ProductMapper {
                 String name = rs.getString("name");
                 String unit = rs.getString("unit");
                 int price = rs.getInt("price");
+                double width = rs.getDouble("width_in_mm")/10;
                 String description = rs.getString("description");
 
-                Product product = new Product(product_id, name, unit, price);
+                Product product = new Product(product_id, name, unit, width, price);
                 ProductVariant productVariant = new ProductVariant(variantId, length, description, product);
                 return productVariant;
             }

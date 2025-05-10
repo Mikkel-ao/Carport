@@ -76,5 +76,7 @@ public class Calculator {
         return remainingLength / (rafterCount - 1);
     }
 
+
+
 }
 
