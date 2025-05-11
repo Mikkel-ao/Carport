@@ -85,7 +85,7 @@ public class OrderController {
     }
 
 
-    //TODO: Evt hashMap
+
     public static HashMap<OrderItem, Double> getBeamOrderItemAndPrice(int carportLength, ConnectionPool connectionPool) {
 
         HashMap<OrderItem, Double> orderItemAndPrice = new HashMap<>();
@@ -132,6 +132,8 @@ public class OrderController {
         throw new IllegalArgumentException("No suitable length found");
     }
 
+
+    //TODO: Maybe in ProductMapper instead?
     public static Order createListOfMaterials(Context ctx, ConnectionPool connectionPool) {
 
 

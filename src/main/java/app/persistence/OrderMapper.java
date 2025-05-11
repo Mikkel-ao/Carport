@@ -3,11 +3,99 @@ package app.persistence;
 import app.entities.*;
 import app.exceptions.DatabaseException;
 
+import javax.management.relation.Role;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class OrderMapper {
+
+    public static List<Order> getOrdersByStatus(int userId, String role, String currentStatus, ConnectionPool connectionPool) throws DatabaseException {
+
+        List<Order> orderList = new ArrayList<>();
+
+        User user = UserMapper.getUserById(userId, connectionPool);
+
+        String sql;
+
+        if("admin".equals(role)) {
+            sql = "select * from orders where status=?";
+        } else if("customer".equals(role)) {
+            sql = "select * from orders where status=? and user_id=?";
+        } else {
+            throw new DatabaseException("Invalid role");
+        }
+        try (
+                Connection connection = connectionPool.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql);
+
+        ){ if("admin".equals(role)) {
+            ps.setString(1, currentStatus);
+        }else {
+            ps.setString(1, currentStatus);
+            ps.setInt(2, userId);
+        }
+        ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                int orderId = rs.getInt("order_id");
+                int carportWidth = rs.getInt("carport_width");
+                int carportLength = rs.getInt("carport_length");
+                String status = rs.getString("status");
+                double customerPrice = rs.getDouble("customer_price");
+                double costPrice = rs.getDouble("cost_price");
+
+                orderList.add(new Order(orderId, carportWidth, carportLength, status, user, customerPrice, costPrice));
+            }
+        }
+        catch (SQLException e){
+            throw new DatabaseException("Could not get orders from database!", e.getMessage());
+        }
+        return orderList;
+        }
+
+    }
+
+    public static List<Order> getOrdersByRole(int userId, String role, ConnectionPool connectionPool) throws DatabaseException {
+
+        User user = UserMapper.getUserById(userId, connectionPool);
+
+        List<Order> orderList = new ArrayList<>();
+        String sql;
+
+        if("admin".equals(role)) {
+            sql = "select * from orders";
+        } else if("customer".equals(role)) {
+            sql = "select * from orders where user_id = ?";
+        } else {
+            throw new DatabaseException("Invalid role!");
+        }
+
+        try (
+                Connection connection = connectionPool.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql);
+
+        ){ if("customer".equals(role)) {
+            ps.setInt(1, userId);
+        }
+        ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                int orderId = rs.getInt("order_id");
+                int carportWidth = rs.getInt("carport_width");
+                int carportLength = rs.getInt("carport_length");
+                String status = rs.getString("status");
+                double customerPrice = rs.getDouble("customer_price");
+                double costPrice = rs.getDouble("cost_price");
+
+                orderList.add(new Order(orderId, carportWidth, carportLength, status, user, customerPrice, costPrice));
+            }
+        }
+        catch (SQLException e){
+            throw new DatabaseException("Could not get orders from database!", e.getMessage());
+        }
+        return orderList;
+    }
+
+
     public static List<Order> getAllOrders(ConnectionPool connectionPool)throws DatabaseException {
         List<Order> orderList = new ArrayList<>();
         String sql = "SELECT * FROM orders inner join users using (user_id)";
@@ -41,10 +129,15 @@ public class OrderMapper {
         }
         return orderList;
     }
-    // Used to create Material List for customer.
-    public static List<OrderItem> getOrderItemsByOrderId(int orderId, ConnectionPool connectionPool) throws DatabaseException{
+
+
+
+    // Used to create the list of materials for the customer.
+    public static Order getOrderByOrderId(int orderId, ConnectionPool connectionPool) throws DatabaseException{
         List<OrderItem> orderItemList = new ArrayList<>();
-        String sql = "SELECT * FROM complete_product_view WHERE order_id = ?";
+        Order order = null;
+
+        String sql = "SELECT * FROM complete_order_view WHERE order_id = ?";
         try (
                 Connection connection = connectionPool.getConnection();
                 PreparedStatement ps = connection.prepareStatement(sql);
@@ -53,21 +146,25 @@ public class OrderMapper {
             ps.setInt(1, orderId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
-                //Order
-                int carportWidth = rs.getInt("carport_width");
-                int carportLength = rs.getInt("carport_length");
-                String status = rs.getString("status");
-                double customerPrice = rs.getDouble("customer_price");
-                double costPrice = rs.getDouble("cost_price");
-                Order order = new Order(orderId, carportWidth, carportLength, status, null, customerPrice, costPrice);
+                if(order == null) {
+                    int userId = rs.getInt("user_id");
+                    int carportWidth = rs.getInt("carport_width");
+                    int carportLength = rs.getInt("carport_length");
+                    String status = rs.getString("status");
+                    double customerPrice = rs.getDouble("customer_price");
+                    double costPrice = rs.getDouble("cost_price");
+
+                    User user = UserMapper.getUserById(userId, connectionPool);
+                    order = new Order(orderId, carportWidth, carportLength, status, user, customerPrice, costPrice);
+                }
 
                 //Product
                 int productId = rs.getInt("product_id");
                 String name = rs.getString("name");
                 String unit = rs.getString("unit");
-                int price = rs.getInt("price");
+                int pricePrUnit = rs.getInt("price");
                 int width = rs.getInt("width_in_mm");
-                Product product = new Product(productId, name, unit, price);
+                Product product = new Product(productId, name, unit, width, pricePrUnit);
 
                 //Product Variant
                 int productVariantId = rs.getInt("product_variant_id");
@@ -84,7 +181,10 @@ public class OrderMapper {
         }catch (SQLException e){
             throw new DatabaseException("Kunne ikke få fat på bruger fra database", e.getMessage());
         }
-        return orderItemList;
+        if(order != null) {
+            order.setListOfMaterials(orderItemList);
+        }
+        return order;
     }
 
     //TODO: DENNE SKAL FORMENTLIG SLETTES, DA VI BRUGER CREATE ORDER
@@ -232,6 +332,7 @@ public class OrderMapper {
 
         return widthInCm;
     }
+
     public static List<Integer> getCarportLength(ConnectionPool connectionPool)throws DatabaseException{
         String sql = "SELECT carport_length FROM carport_dimension_website";
         List<Integer> carportLengthList = new ArrayList<>();
