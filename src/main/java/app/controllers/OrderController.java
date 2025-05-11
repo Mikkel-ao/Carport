@@ -85,7 +85,6 @@ public class OrderController {
     }
 
 
-
     public static HashMap<OrderItem, Double> getBeamOrderItemAndPrice(int carportLength, ConnectionPool connectionPool) {
 
         HashMap<OrderItem, Double> orderItemAndPrice = new HashMap<>();
@@ -179,15 +178,17 @@ public class OrderController {
         double totalCustomerPrice = totalCostPrice * 1.39;
 
         //ctx.sessionAttribute("listOfMaterials", listOfMaterials);
-        //TODO: Do not hard-code status this way!
+        //TODO: Måske overload konstruktør til Order, så man ikke behøver status? Denne er først relevant, når den bliver sendt til db (som defaulter til "pending")!
         Order currentOrder = new Order(listOfMaterials, userWidth, userLength, "pending", loggedInUser, totalCustomerPrice, totalCostPrice);
 
         return currentOrder;
     }
 
 
-    public static void saveOrder(Order order, Context ctx, ConnectionPool connectionPool) {
+    //TODO: Denne skal kaldes, når brugeren har accepteret de indtastet mål (og evt set SVG), så ordren bliver smidt i databasen
+    public static void saveOrder(Order order, ConnectionPool connectionPool) {
 
+        //TODO: Måske noget validering på at denne liste findes?
         List<OrderItem> listOfMaterials = order.getListOfMaterials();
 
         int orderId = OrderMapper.createOrder(connectionPool, order.getCarportWidth(), order.getCarportLength(), order.getUser().getUserId(), order.getTotalSalesPrice(), order.getCostPrice());
