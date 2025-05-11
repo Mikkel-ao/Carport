@@ -51,7 +51,6 @@ public class OrderMapper {
             throw new DatabaseException("Could not get orders from database!", e.getMessage());
         }
         return orderList;
-        }
 
     }
 
