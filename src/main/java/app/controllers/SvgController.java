@@ -22,14 +22,11 @@ public class SvgController {
         // From string to int to work as parameters for CarportSvg()
         int length = Integer.parseInt(lengthStr);
         int width = Integer.parseInt(widthStr);
-
-        //
+        
         CarportSvg svg = new CarportSvg(width, length);
 
         // Pass the generated SVG to the template
         ctx.attribute("svg", svg.toString());
-        ctx.attribute("length", length);
-        ctx.attribute("width", width);
 
         // Render the SVG page
         ctx.render("svg.html");
