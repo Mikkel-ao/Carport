@@ -13,6 +13,11 @@
         <a th:href="@{/}">
             <img class="logo-index" th:src="@{/images/fog_logo_small.png}" alt="foglogo">
         </a>
+
+        <a th:if="${session.currentUser != null}" th:href="@{/logout}" class="account-button">
+            <i class="fas fa-user"></i>
+            <span>Log ud</span>
+        </a>
     </div>
 </header>
 <body>

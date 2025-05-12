@@ -8,15 +8,23 @@
   <!-- For icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <header>
   <div class="index-container">
     <a th:href="@{/}">
       <img class="logo-index" th:src="@{/images/fog_logo_small.png}" alt="foglogo">
     </a>
+
+    <a th:if="${session.currentUser != null}" th:href="@{/logout}" class="account-button">
+      <i class="fas fa-user"></i>
+      <span>Log ud</span>
+    </a>
   </div>
 </header>
+
 <body>
 <h1>Customer page</h1>
+
 
 </body>
 </html>
