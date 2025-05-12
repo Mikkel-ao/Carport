@@ -2,6 +2,7 @@ package app.controllers;
 
 import app.DTO.OrderItemAndPrice;
 import app.entities.*;
+import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
 import app.persistence.OrderMapper;
 import app.persistence.ProductMapper;
@@ -24,6 +25,8 @@ public class OrderController {
             ctx.redirect("/add-customer-request?success=true");
         });
         app.get("/add-customer-request", ctx -> ctx.render("index.html"));
+        app.get("/order", ctx -> getOrderDetails(ctx, connectionPool));
+
     }
 
     private static void getCarportDimensions(Context ctx, ConnectionPool connectionPool) {
@@ -206,20 +209,8 @@ public class OrderController {
 
     }
 
-    public static void getOrderDetails(Context ctx, ConnectionPool connectionPool) {
-        int userId = ctx.sessionAttribute("userId");
-        String role = ctx.sessionAttribute("role");
 
-        int orderId = Integer.parseInt(ctx.pathParam("orderId"));
-        Order order = OrderMapper.getOrderByOrderId(orderId, connectionPool);
-
-        if (order == null) {
-            ctx.status(404).result("Order not found");
-            return;
-        }
+    private static void getOrderDetails(Context ctx, ConnectionPool connectionPool) {
 
     }
-
-
-
 }

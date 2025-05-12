@@ -34,20 +34,29 @@
 
 <div class="object-details">
   <h2>Dine oplysninger: </h2>
-  <p><strong>Navn:</strong> <span th:text="${user.fullName}">Full Name</span></p>
-  <p><strong>Email:</strong> <span th:text="${user.email}">Email</span></p>
-  <p><strong>Telefon:</strong> <span th:text="${user.phoneNumber}">Phone Number</span></p>
-  <p><strong>Adresse:</strong> <span th:text="${user.address}">Address</span></p>
-  <p><strong>Postnummer:</strong> <span th:text="${user.zipCode}">Zip Code</span></p>
+  <p><strong>Navn:</strong> <span th:text="${user.fullName}">Fog Fogesen</span></p>
+  <p><strong>Email:</strong> <span th:text="${user.email}">kunde@fog.com</span></p>
+  <p><strong>Telefon:</strong> <span th:text="${user.phoneNumber}">42424242</span></p>
+  <p><strong>Adresse:</strong> <span th:text="${user.address}">Fogsens Allé</span></p>
+  <p><strong>Postnummer:</strong> <span th:text="${user.zipCode}">2300</span></p>
 </div>
 
 <div class="object-details">
   <h2>Dine ordreoplysninger:</h2>
-  <p><strong>Ordre ID:</strong> <span th:text="${order.orderId}"></span></p>
-  <p><strong>Status:</strong> <span th:text="${order.status}"></span></p>
-  <p><strong>Carport bredde:</strong> <span th:text="${order.carportWidth}"></span></p>
-  <p><strong>Carport længde:</strong> <span th:text="${order.carportLength}"></span></p>
-  <p><strong>Salgspris:</strong> <span th:text="${order.totalSalesPrice}">Afventer sælger</span></p>
+
+  <!-- Check if order exists - Avoids server error when trying to access page if order == null -->
+  <div th:if="${order != null}">
+    <p><strong>Ordre ID:</strong> <span th:text="${order.orderId}">123</span></p>
+    <p><strong>Status:</strong> <span th:text="${order.status}">Pending</span></p>
+    <p><strong>Carport bredde:</strong> <span th:text="${order.carportWidth}">600</span></p>
+    <p><strong>Carport længde:</strong> <span th:text="${order.carportLength}">780</span></p>
+    <p><strong>Salgspris:</strong> <span th:text="${order.totalSalesPrice}"></span></p>
+  </div>
+
+  <!-- If true, displays msg in orderdetails container -->
+  <div th:if="${order == null}">
+    <p>Ingen ordre fundet.</p>
+  </div>
 </div>
 
 
