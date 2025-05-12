@@ -32,8 +32,8 @@ public class UserMapper {
 
                 //Comparing the entered password with the now hashed password from the database using BCrypt
                 if (BCrypt.checkpw(password, hashedPassword)) {
-                    return new User(user_id,hashedPassword,email,"12345",role);
-                }else {
+                    return new User(user_id, hashedPassword, email, "12345", role);
+                } else {
                     throw new DatabaseException("Invalid email or password.");
                 }
             } else {
@@ -77,25 +77,27 @@ public class UserMapper {
         }
     }
 
-    public static User getUserById(int userId, ConnectionPool connectionPool) throws DatabaseException {
+    public static User getUserById(int userId, ConnectionPool connectionPool) throws DatabaseException, SQLException {
         String sql = "SELECT * FROM public.users where user_id = ?";
 
-        try(
+        try (
                 Connection connection = connectionPool.getConnection();
                 PreparedStatement ps = connection.prepareStatement(sql);
-                ResultSet rs = ps.executeQuery()
-                ){
-            if(rs.next()){
+        ) {
+            ps.setInt(1, userId);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
                 String email = rs.getString("email");
-                String password = rs.getString("password");
                 String phoneNumber = rs.getString("phone_number");
                 String role = rs.getString("role");
-                return new User(userId,email,password,phoneNumber,role);
+                return new User(userId, email, phoneNumber, role);
             }
-            }catch (SQLException e){
+        } catch (SQLException e) {
             throw new DatabaseException("Could not get user data", e.getMessage());
         }
         //TODO: Handle this more gracefully!
-            return null;
+        return null;
     }
 }
+
