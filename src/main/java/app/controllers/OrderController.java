@@ -38,9 +38,9 @@ public class OrderController {
 
 
         //product length 300 is hard-coded as we do not need to loop through the different lengths as we only have one type of pole
-        ProductVariant poleVariant = ProductMapper.getVariantsByProductAndLength(300, 1, "stolpe", connectionPool);
+        ProductVariant poleVariant = ProductMapper.getVariantsByProductAndLength(300, 1, connectionPool);
         int poleCount = Calculator.calcAmountOfPoles(carportLength, poleVariant.getProduct().getWidth());
-        OrderItem poleOrderItem = new OrderItem(poleVariant, poleCount);
+        OrderItem poleOrderItem = new OrderItem(poleVariant, poleCount, 1);
 
         double price = poleCount * poleVariant.getProduct().getPricePrUnit();
 
@@ -67,12 +67,12 @@ public class OrderController {
             }
         }
 
-        ProductVariant rafterVariant = ProductMapper.getVariantsByProductAndLength(actualLength, 2, "spær", connectionPool);
+        ProductVariant rafterVariant = ProductMapper.getVariantsByProductAndLength(actualLength, 2, connectionPool);
 
         //Caluclating the amount of rafters needed for the wished length of the carport!
         int rafterCount = Calculator.calcAmountOfRafters(carportLength, rafterVariant.getProduct().getWidth());
 
-        OrderItem rafterOrderItem = new OrderItem(rafterVariant, rafterCount);
+        OrderItem rafterOrderItem = new OrderItem(rafterVariant, rafterCount,2);
 
         //Calculating the price with the given length of every single rafter, the count of rafters and the unit price (in meters)
         double price = (double) rafterVariant.getProduct().getPricePrUnit() * rafterCount * rafterVariant.getLength() / 100;
@@ -97,10 +97,10 @@ public class OrderController {
             for (int possibleLength : possibleLengths) {
                 if (possibleLength >= carportLength) {
                     actualLength = possibleLength;
-                    ProductVariant beamVariant = ProductMapper.getVariantsByProductAndLength(actualLength, 2, "rem", connectionPool);
+                    ProductVariant beamVariant = ProductMapper.getVariantsByProductAndLength(actualLength, 2, connectionPool);
                     if (beamVariant != null) {
                         //Hard-coding the quantity to 2, because we are sure we only need one beam in each side of the carport!
-                        OrderItem beamOrderItem = new OrderItem(beamVariant, 2);
+                        OrderItem beamOrderItem = new OrderItem(beamVariant, 2, 3);
                         double price = 2 * (double) beamVariant.getProduct().getPricePrUnit() * beamVariant.getLength() / 100;
                         orderItemAndPriceList.add(new OrderItemAndPrice(beamOrderItem, price));
                     }
@@ -111,19 +111,19 @@ public class OrderController {
         } else {
             //Hard-coding the length on one of the beams (on each side) to 360, because we then know we will be able to reach all the different lengths up to the maximum length of 780cm!
             int firstBeamLength = 360;
-            ProductVariant firstBeamVariant = ProductMapper.getVariantsByProductAndLength(firstBeamLength, 2, "rem", connectionPool);
+            ProductVariant firstBeamVariant = ProductMapper.getVariantsByProductAndLength(firstBeamLength, 2, connectionPool);
             //If the length of the carport exceeds 600cm, we know we will need two beams on each side of the carport!
             if (firstBeamVariant != null) {
-                OrderItem firstBeamOrderItem = new OrderItem(firstBeamVariant, 2);
+                OrderItem firstBeamOrderItem = new OrderItem(firstBeamVariant, 2, 3);
                 double firstBeamPrice = 2 * (double) firstBeamVariant.getProduct().getPricePrUnit() * firstBeamVariant.getLength() / 100;
                 orderItemAndPriceList.add(new OrderItemAndPrice(firstBeamOrderItem, firstBeamPrice));
             }
             //Figuring out what variant the second beam needs to be
             for (int secondBeamLength : possibleLengths) {
                 if (firstBeamLength + secondBeamLength >= carportLength) {
-                    ProductVariant secondBeamVariant = ProductMapper.getVariantsByProductAndLength(secondBeamLength, 2, "rem", connectionPool);
+                    ProductVariant secondBeamVariant = ProductMapper.getVariantsByProductAndLength(secondBeamLength, 2, connectionPool);
                     if (secondBeamVariant != null) {
-                        OrderItem secondBeamOrderItem = new OrderItem(secondBeamVariant, 2);
+                        OrderItem secondBeamOrderItem = new OrderItem(secondBeamVariant, 2, 3);
                         double secondBeamPrice = 2 * (double) secondBeamVariant.getProduct().getPricePrUnit() * secondBeamVariant.getLength() / 100;
                         orderItemAndPriceList.add(new OrderItemAndPrice(secondBeamOrderItem, secondBeamPrice));
                     }

@@ -4,6 +4,8 @@ public class OrderItem {
     int orderItemId;
     ProductVariant productVariant;
     int quantity;
+    String description;
+    int descriptionId;
 
     public OrderItem(int orderItemId, ProductVariant productVariant, int quantity) {
         this.orderItemId = orderItemId;
@@ -11,9 +13,17 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
-    public OrderItem(ProductVariant productVariant, int quantity) {
+    public OrderItem(int orderItemId, ProductVariant productVariant, int quantity, String description) {
+        this.orderItemId = orderItemId;
         this.productVariant = productVariant;
         this.quantity = quantity;
+        this.description = description;
+    }
+
+    public OrderItem(ProductVariant productVariant, int quantity, int descriptionId) {
+        this.productVariant = productVariant;
+        this.quantity = quantity;
+        this.descriptionId = descriptionId;
     }
 
     public int getOrderItemId() {
@@ -32,7 +42,9 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
-
+    public int getDescriptionId() {
+        return descriptionId;
+    }
 
     public ProductVariant getProductVariant() {
         return productVariant;
