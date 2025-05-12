@@ -16,7 +16,7 @@ public class UserController {
         app.post("/createuser", ctx -> createUser(ctx, connectionPool));
         app.get("/logout", ctx -> logout(ctx));
         app.get("/admin", ctx -> ctx.render("/admin.html"));
-        app.get("/customer", ctx -> ctx.render("/customer.html"));
+        app.get("/customer", ctx -> getCustomerDetails(ctx, connectionPool));
     }
 
     private static void logout(Context ctx) {
@@ -68,4 +68,24 @@ public class UserController {
             ctx.render("/createuser.html");
         }
     }
+
+    private static void getCustomerDetails(Context ctx, ConnectionPool connectionPool) {
+        Integer userId = ctx.sessionAttribute("userId");
+
+        // Manual entry via. url leads to login page
+        if (userId == null) {
+            ctx.redirect("/login");
+            return;
+        }
+
+        try {
+            User user = UserMapper.getUserById(userId, connectionPool);
+            ctx.attribute("user", user);
+            ctx.render("/customer.html");
+        } catch (DatabaseException e) {
+            ctx.attribute("message", "Could not retrieve user details.");
+            ctx.render("/login.html");
+        }
+    }
+
 }

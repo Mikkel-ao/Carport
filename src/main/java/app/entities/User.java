@@ -71,8 +71,16 @@ public class User {
         return role;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public String getFullName() {
+        return fullName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getZipCode() {
+        return zipCode;
     }
 
     @Override

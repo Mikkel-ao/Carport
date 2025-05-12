@@ -32,6 +32,16 @@
 <body>
 <h1>Customer page</h1>
 
+<div class="object-details">
+  <h2>Dine oplysninger: </h2>
+  <p><strong>Navn:</strong> <span th:text="${user.fullName}">Full Name</span></p>
+  <p><strong>Email:</strong> <span th:text="${user.email}">Email</span></p>
+  <p><strong>Telefon:</strong> <span th:text="${user.phoneNumber}">Phone Number</span></p>
+  <p><strong>Adresse:</strong> <span th:text="${user.address}">Address</span></p>
+  <p><strong>Postnummer:</strong> <span th:text="${user.zipCode}">Zip Code</span></p>
+</div>
+
+
 
 </body>
 </html>

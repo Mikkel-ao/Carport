@@ -171,6 +171,31 @@ select {
     background-color: #245484;
 }
 
+/***** Container for customer/order details ******/
+
+.object-details {
+    width: 350px;
+    margin: 50px;
+    padding: 25px 30px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    font-family: inherit;
+    text-align: left;
+}
+
+.object-details h2 {
+    font-size: 1.8rem;
+    color: #043c74;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 10px;
+}
+
+.object-details p {
+    margin-bottom: 10px;
+}
+
 
 /***** SVG ******/
 
