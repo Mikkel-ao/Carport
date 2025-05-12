@@ -81,7 +81,7 @@
         <label for="Bredde">Bredde:</label>
         <select name="Bredde" id="Bredde" class="formular-dropDown" required>
             <option value="" disabled selected>Vælg bredde</option>
-            <option th:each="width : ${carportWidth}" th:value="${width}" th:text="${width}"></option>
+            <option th:each="width : ${carportWidth}" th:if="${width != null and width != 0}" th:text="${width}"></option>
         </select>
 
         <!--
