@@ -9,6 +9,7 @@ import app.util.Calculator;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
+import java.sql.SQLException;
 import java.util.*;
 
 public class OrderController {
@@ -91,49 +92,52 @@ public class OrderController {
 
         List<Integer> possibleLengths = OrderMapper.getProductLengths(connectionPool, 2);
 
+
         Collections.sort(possibleLengths);
 
         int actualLength;
 
-        if (carportLength <= 600) {
-            for (int possibleLength : possibleLengths) {
-                if (possibleLength >= carportLength) {
-                    actualLength = possibleLength;
-                    ProductVariant beamVariant = ProductMapper.getVariantsByProductAndLength(actualLength, 2, "rem", connectionPool);
-                    //Hard-coding the quantity to 2, because we are sure we only need one beam in each side of the carport!
-                    OrderItem beamOrderItem = new OrderItem(beamVariant, 2);
-                    double price = 2 * (double) beamVariant.getProduct().getPricePrUnit() * beamVariant.getLength() / 100;
-                    orderItemAndPrice.put(beamOrderItem, price);
-                    break;
-                }
+            if (carportLength <= 600) {
+                for (int possibleLength : possibleLengths) {
+                    if (possibleLength >= carportLength) {
+                        actualLength = possibleLength;
+                        ProductVariant beamVariant = ProductMapper.getVariantsByProductAndLength(actualLength, 2, "rem", connectionPool);
+                        //Hard-coding the quantity to 2, because we are sure we only need one beam in each side of the carport!
+                        OrderItem beamOrderItem = new OrderItem(beamVariant, 2);
+                        double price = 2 * (double) beamVariant.getProduct().getPricePrUnit() * beamVariant.getLength() / 100;
+                        orderItemAndPrice.put(beamOrderItem, price);
+                        break;
+                    }
 
-            }
-        }
-        //If the length of the carport exceeds 600cm, we know we will need two beams on each side of the carport!
-        if (carportLength > 600) {
-            //Hard-coding the length on one of the beams (on each side) to 360, because we then know we will be able to reach all the different lengths up to the maximum length of 780cm!
-            int firstBeamLength = 360;
-            ProductVariant firstBeamVariant = ProductMapper.getVariantsByProductAndLength(firstBeamLength, 2, "rem", connectionPool);
-            OrderItem firstBeamOrderItem = new OrderItem(firstBeamVariant, 2);
-            double firstBeamPrice = 2 * (double) firstBeamVariant.getProduct().getPricePrUnit() * firstBeamVariant.getLength() / 100;
-            orderItemAndPrice.put(firstBeamOrderItem, firstBeamPrice);
-            //Figuring out what variant the second beam needs to be
-            for (int secondBeamLength : possibleLengths) {
-                if (firstBeamLength + secondBeamLength >= carportLength) {
-                    ProductVariant secondBeamVariant = ProductMapper.getVariantsByProductAndLength(secondBeamLength, 2, "rem", connectionPool);
-                    OrderItem secondBeamOrderItem = new OrderItem(secondBeamVariant, 2);
-                    double secondBeamPrice = 2 * (double) secondBeamVariant.getProduct().getPricePrUnit() * secondBeamVariant.getLength() / 100;
-                    orderItemAndPrice.put(secondBeamOrderItem, secondBeamPrice);
                 }
             }
+            //If the length of the carport exceeds 600cm, we know we will need two beams on each side of the carport!
+            if (carportLength > 600) {
+                //Hard-coding the length on one of the beams (on each side) to 360, because we then know we will be able to reach all the different lengths up to the maximum length of 780cm!
+                int firstBeamLength = 360;
+                ProductVariant firstBeamVariant = ProductMapper.getVariantsByProductAndLength(firstBeamLength, 2, "rem", connectionPool);
+                OrderItem firstBeamOrderItem = new OrderItem(firstBeamVariant, 2);
+                double firstBeamPrice = 2 * (double) firstBeamVariant.getProduct().getPricePrUnit() * firstBeamVariant.getLength() / 100;
+                orderItemAndPrice.put(firstBeamOrderItem, firstBeamPrice);
+                //Figuring out what variant the second beam needs to be
+                for (int secondBeamLength : possibleLengths) {
+                    if (firstBeamLength + secondBeamLength >= carportLength) {
+                        ProductVariant secondBeamVariant = ProductMapper.getVariantsByProductAndLength(secondBeamLength, 2, "rem", connectionPool);
+                        if(secondBeamVariant != null) {
+                            OrderItem secondBeamOrderItem = new OrderItem(secondBeamVariant, 2);
+                            double secondBeamPrice = 2 * (double) secondBeamVariant.getProduct().getPricePrUnit() * secondBeamVariant.getLength() / 100;
+                            orderItemAndPrice.put(secondBeamOrderItem, secondBeamPrice);
+                            break;
+                        }
+                    }
+                }
         }
-        //TODO: Proper message for the user on webpage!
-        throw new IllegalArgumentException("No suitable length found");
+            return orderItemAndPrice;
     }
 
 
     //TODO: Maybe in ProductMapper instead?
-    public static Order createListOfMaterials(Context ctx, ConnectionPool connectionPool) {
+    public static Order createListOfMaterials(Context ctx, ConnectionPool connectionPool) throws SQLException {
 
 
         //TODO: Nye navne på disse to ints
@@ -146,6 +150,7 @@ public class OrderController {
         }
 
         User loggedInUser = UserMapper.getUserById(userId, connectionPool);
+
 
         List<OrderItem> listOfMaterials = new ArrayList<>();
 
