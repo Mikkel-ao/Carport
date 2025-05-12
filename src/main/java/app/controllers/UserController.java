@@ -7,6 +7,8 @@ import app.entities.User;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
+import static app.controllers.OrderController.getOrderDetails;
+
 public class UserController {
 
     public static void addRoutes(Javalin app, ConnectionPool connectionPool) {
@@ -16,7 +18,12 @@ public class UserController {
         app.post("/createuser", ctx -> createUser(ctx, connectionPool));
         app.get("/logout", ctx -> logout(ctx));
         app.get("/admin", ctx -> ctx.render("/admin.html"));
-        app.get("/customer", ctx -> getCustomerDetails(ctx, connectionPool));
+        app.get("/customer", ctx -> {
+            getCustomerDetails(ctx, connectionPool);
+            getOrderDetails(ctx, connectionPool);
+            ctx.render("customer.html");
+        });
+
     }
 
     private static void logout(Context ctx) {
@@ -81,11 +88,9 @@ public class UserController {
         try {
             User user = UserMapper.getUserById(userId, connectionPool);
             ctx.attribute("user", user);
-            ctx.render("/customer.html");
         } catch (DatabaseException e) {
             ctx.attribute("message", "Could not retrieve user details.");
             ctx.render("/login.html");
         }
     }
-
 }

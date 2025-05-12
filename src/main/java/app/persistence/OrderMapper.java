@@ -1,10 +1,10 @@
 package app.persistence;
 
+import app.DTO.OrderInfoDTO;
 import app.entities.*;
 import app.exceptions.DatabaseException;
 import app.util.OrderStatus;
 
-import javax.management.relation.Role;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -427,4 +427,30 @@ public class OrderMapper {
         }
     }
 
+    public static OrderInfoDTO getOrderInfo(int orderId, ConnectionPool connectionPool) throws DatabaseException {
+        String sql = "SELECT * FROM public.orders WHERE order_id = ?";
+
+        try (
+                Connection connection = connectionPool.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+            ps.setInt(1, orderId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                int carportWidth = rs.getInt("carport_width");
+                int carportLength = rs.getInt("carport_length");
+                OrderStatus status = OrderStatus.valueOf(rs.getString("status").toUpperCase());
+                double customerPrice = rs.getDouble("customer_price");
+                double costPrice = rs.getDouble("cost_price");
+
+                return new OrderInfoDTO(orderId, carportLength, carportWidth, status, customerPrice, costPrice);
+            } else {
+                throw new DatabaseException("Order with ID " + orderId + " not found.");
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Could not retrieve order from database", e);
+        }
+    }
 }
