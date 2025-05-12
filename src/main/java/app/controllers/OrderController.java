@@ -181,6 +181,8 @@ public class OrderController {
         //TODO: Måske overload konstruktør til Order, så man ikke behøver status? Denne er først relevant, når den bliver sendt til db (som defaulter til "pending")!
         Order currentOrder = new Order(listOfMaterials, userWidth, userLength, "pending", loggedInUser, totalCustomerPrice, totalCostPrice);
 
+        saveOrder(currentOrder, connectionPool);
+
         return currentOrder;
     }
 
