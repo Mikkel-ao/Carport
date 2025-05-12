@@ -30,6 +30,8 @@ public class Main {
             config.fileRenderer(new JavalinThymeleaf(ThymeleafConfig.templateEngine()));
         }).start(7070);
 
+        System.out.println(OrderMapper.getOrderByOrderId(97, connectionPool));
+
         // Routing
         app.get("/", ctx -> ctx.redirect("/index"));
 

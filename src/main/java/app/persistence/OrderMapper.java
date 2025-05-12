@@ -174,8 +174,7 @@ public class OrderMapper {
                 String name = rs.getString("name");
                 String unit = rs.getString("unit");
                 int pricePrUnit = rs.getInt("price");
-                int width = rs.getInt("width_in_mm");
-                Product product = new Product(productId, name, unit, width, pricePrUnit);
+                Product product = new Product(productId, name, unit, pricePrUnit);
 
                 //Product Variant
                 int productVariantId = rs.getInt("product_variant_id");
@@ -186,7 +185,8 @@ public class OrderMapper {
                 int orderItemId = rs.getInt("order_item_id");
                 int quantity = rs.getInt("quantity");
                 String description = rs.getString("description");
-                OrderItem orderItem = new OrderItem(orderItemId, productVariant, quantity, description);
+                int descriptionId = rs.getInt("description_id");
+                OrderItem orderItem = new OrderItem(orderItemId, productVariant, quantity, description, descriptionId);
                 orderItemList.add(orderItem);
             }
         }catch (SQLException e){

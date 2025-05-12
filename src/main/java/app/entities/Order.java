@@ -101,12 +101,14 @@ public class Order {
     @Override
     public String toString() {
         return "Order{" +
-                "orderId=" + orderId +
+                "listOfMaterials=" + listOfMaterials +
+                ", orderId=" + orderId +
                 ", carportWidth=" + carportWidth +
                 ", carportLength=" + carportLength +
                 ", status='" + status + '\'' +
                 ", user=" + user +
-                ", totalPrice=" + totalSalesPrice +
+                ", totalSalesPrice=" + totalSalesPrice +
+                ", costPrice=" + costPrice +
                 '}';
     }
 }
