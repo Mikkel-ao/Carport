@@ -6,6 +6,9 @@ public class User {
     private String email;
     private String phoneNumber;
     private String role;
+    private String fullName;
+    private String address;
+    private String zipCode;
 
     public User(int userId, String password, String email, String phoneNumber, String role) {
         this.userId = userId;
@@ -13,6 +16,15 @@ public class User {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.role = role;
+    }
+
+    public User(String password, String email, String phoneNumber, String fullName, String address, String zipCode) {
+        this.password = password;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.fullName = fullName;
+        this.address = address;
+        this.zipCode = zipCode;
     }
 
     public User(String password, String email, String phoneNumber, String role) {

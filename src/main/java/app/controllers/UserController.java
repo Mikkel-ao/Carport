@@ -47,6 +47,11 @@ public class UserController {
         String email = ctx.formParam("email");
         String password1 = ctx.formParam("password1");
         String password2 = ctx.formParam("password2");
+        String phone = ctx.formParam("phone");
+        String zipCode = ctx.formParam("zipCode");
+        String homeAdress = ctx.formParam("homeAddress");
+        String fullName = ctx.formParam("fullName");
+
 
         if (!password1.equals(password2)) {
             ctx.attribute("message", "Passwords do not match, try again.");
@@ -55,7 +60,7 @@ public class UserController {
         }
 
         try {
-            UserMapper.createUser(email, password1, connectionPool);
+            UserMapper.createUser(email, password1,phone,zipCode,homeAdress,fullName, connectionPool);
             ctx.attribute("message", "User created successfully. Please log in.");
             ctx.render("/login.html");
         } catch (DatabaseException e) {

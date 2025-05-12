@@ -18,10 +18,35 @@
     </header>
 
     <form class="generic-form" method="post">
-        <input type="email" name="email" placeholder="Indtast email" required/>
-        <input type="password" name="password1" placeholder="Indtast kodeord" required/>
-        <input type="password" name="password2" placeholder="Gentag kodeord" required/>
+        <label>
+            <input type="email" name="email" placeholder="Indtast email" required/>
+        </label>
+        <label>
+            <input type="password" name="password1" placeholder="Indtast kodeord" required/>
+        </label>
+        <label>
+            <input type="password" name="password2" placeholder="Gentag kodeord" required/>
+        </label>
+        <h4>Kontaktoplysninger:</h4>
+        <label>
+            <input type="text" name="fullName" placeholder="Fornavn og efternavn" required>
+        </label>
+        <label>
+            <input type="text" name="homeAddress" placeholder="Adresse (vej + nummer)" required>
+        </label>
+        <label>
+            <input type="text" name="zipCode" placeholder="Postnummer" required>
+        </label>
+        <label>
+            <input type="text" name="phone" placeholder="Telefon nummer" required>
+        </label>
         <button type="submit" formaction="/createuser">Opret bruger</button>
+        <div class="checkbox-consent">
+            <label>
+                <input type="checkbox" required>
+                Fog må benytte dine afgivne oplysninger til at kontakte mig i forbindelse med tilbud på QuickByg carport
+            </label>
+        </div>
         <div><p class="error" th:unless="${#strings.isEmpty(message)}" th:text="${message}"></p></div>
     </form>
 
