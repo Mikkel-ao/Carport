@@ -2,6 +2,7 @@ package app.persistence;
 
 import app.entities.*;
 import app.exceptions.DatabaseException;
+import app.util.OrderStatus;
 
 import javax.management.relation.Role;
 import java.sql.*;
@@ -10,7 +11,7 @@ import java.util.List;
 
 public class OrderMapper {
 
-    public static List<Order> getOrdersByStatus(int userId, String role, String currentStatus, ConnectionPool connectionPool) throws DatabaseException {
+    public static List<Order> getOrdersByStatus(int userId, String role, OrderStatus currentStatus, ConnectionPool connectionPool) throws DatabaseException {
 
         List<Order> orderList = new ArrayList<>();
 
@@ -36,9 +37,9 @@ public class OrderMapper {
                 PreparedStatement ps = connection.prepareStatement(sql);
 
         ){ if("admin".equals(role)) {
-            ps.setString(1, currentStatus);
+            ps.setString(1, currentStatus.name());
         }else {
-            ps.setString(1, currentStatus);
+            ps.setString(1, currentStatus.name());
             ps.setInt(2, userId);
         }
         ResultSet rs = ps.executeQuery();
@@ -46,7 +47,7 @@ public class OrderMapper {
                 int orderId = rs.getInt("order_id");
                 int carportWidth = rs.getInt("carport_width");
                 int carportLength = rs.getInt("carport_length");
-                String status = rs.getString("status");
+                OrderStatus status = OrderStatus.valueOf(rs.getString("status").toUpperCase());
                 double customerPrice = rs.getDouble("customer_price");
                 double costPrice = rs.getDouble("cost_price");
 
@@ -93,7 +94,7 @@ public class OrderMapper {
                 int orderId = rs.getInt("order_id");
                 int carportWidth = rs.getInt("carport_width");
                 int carportLength = rs.getInt("carport_length");
-                String status = rs.getString("status");
+                OrderStatus status = OrderStatus.valueOf(rs.getString("status").toUpperCase());
                 double customerPrice = rs.getDouble("customer_price");
                 double costPrice = rs.getDouble("cost_price");
 
@@ -126,7 +127,7 @@ public class OrderMapper {
                 int orderId = rs.getInt("order_id");
                 int carportWidth = rs.getInt("carport_width");
                 int carportLength = rs.getInt("carport_length");
-                String status = rs.getString("status");
+                OrderStatus status = OrderStatus.valueOf(rs.getString("status").toUpperCase());
                 double customerPrice = rs.getDouble("customer_price");
                 double costPrice = rs.getDouble("cost_price");
 
@@ -161,7 +162,7 @@ public class OrderMapper {
                     int userId = rs.getInt("user_id");
                     int carportWidth = rs.getInt("carport_width");
                     int carportLength = rs.getInt("carport_length");
-                    String status = rs.getString("status");
+                    OrderStatus status = OrderStatus.valueOf(rs.getString("status").toUpperCase());
                     double customerPrice = rs.getDouble("customer_price");
                     double costPrice = rs.getDouble("cost_price");
 
@@ -207,7 +208,7 @@ public class OrderMapper {
 
             ps.setInt(1, order.getCarportWidth());
             ps.setInt(2, order.getCarportLength());
-            ps.setString(3, "pending");
+            ps.setString(3, OrderStatus.PENDING.name());
             ps.setDouble(4, order.getUser().getUserId());
             ps.setDouble(5, order.getTotalSalesPrice());
             ps.setDouble(6, order.getCostPrice());
@@ -239,14 +240,14 @@ public class OrderMapper {
     }
 
     // Måske vi skal lave 3 mapper metoder. En til hver af de 3 stadier status kan have (annulleret, venter, købt)??
-    public static void updateOrderStatus(int orderId, String newStatus, ConnectionPool connectionPool) throws DatabaseException {
+    public static void updateOrderStatus(int orderId, OrderStatus newStatus, ConnectionPool connectionPool) throws DatabaseException {
         String sql = "UPDATE orders SET status = ? WHERE order_id = ?";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
             // Set the parameters for the UPDATE query
-            ps.setString(1, newStatus);  // Set the new status
+            ps.setString(1, newStatus.name());  // Set the new status
             ps.setInt(2, orderId);  // Set the order_id to target the right record
 
             // Execute the update

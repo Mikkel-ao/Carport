@@ -1,5 +1,7 @@
 package app.entities;
 
+import app.util.OrderStatus;
+
 import java.util.List;
 
 public class Order {
@@ -7,12 +9,12 @@ public class Order {
     private int orderId;
     private int carportWidth;
     private int carportLength;
-    private String status;
+    private OrderStatus status;
     private User user;
     private double totalSalesPrice;
     private double costPrice;
 
-    public Order(int orderId, int carportWidth, int carportLength, String status, User user, double totalPrice, double costPrice) {
+    public Order(int orderId, int carportWidth, int carportLength, OrderStatus status, User user, double totalPrice, double costPrice) {
         this.orderId = orderId;
         this.carportWidth = carportWidth;
         this.carportLength = carportLength;
@@ -22,7 +24,7 @@ public class Order {
         this.costPrice = costPrice;
     }
 
-    public Order(List<OrderItem> listOfMaterials, int carportWidth, int carportLength, String status, User user, double totalSalesPrice, double costPrice) {
+    public Order(List<OrderItem> listOfMaterials, int carportWidth, int carportLength, OrderStatus status, User user, double totalSalesPrice, double costPrice) {
         this.listOfMaterials = listOfMaterials;
         this.carportWidth = carportWidth;
         this.carportLength = carportLength;
@@ -32,7 +34,7 @@ public class Order {
         this.costPrice = costPrice;
     }
 
-    public Order(int carportWidth, int carportLength, String Status, User user, double totalSalesPrice, double costPrice) {
+    public Order(int carportWidth, int carportLength, OrderStatus Status, User user, double totalSalesPrice, double costPrice) {
         this.carportWidth = carportWidth;
         this.carportLength = carportLength;
         this.status = Status;
@@ -65,11 +67,11 @@ public class Order {
         this.carportLength = carportLength;
     }
 
-    public String getStatus() {
+    public OrderStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(OrderStatus status) {
         this.status = status;
     }
 
@@ -101,12 +103,14 @@ public class Order {
     @Override
     public String toString() {
         return "Order{" +
-                "orderId=" + orderId +
+                "listOfMaterials=" + listOfMaterials +
+                ", orderId=" + orderId +
                 ", carportWidth=" + carportWidth +
                 ", carportLength=" + carportLength +
-                ", status='" + status + '\'' +
+                ", status=" + status +
                 ", user=" + user +
-                ", totalPrice=" + totalSalesPrice +
+                ", totalSalesPrice=" + totalSalesPrice +
+                ", costPrice=" + costPrice +
                 '}';
     }
 }

@@ -7,6 +7,7 @@ import app.persistence.OrderMapper;
 import app.persistence.ProductMapper;
 import app.persistence.UserMapper;
 import app.util.Calculator;
+import app.util.OrderStatus;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -183,7 +184,7 @@ public class OrderController {
 
         //ctx.sessionAttribute("listOfMaterials", listOfMaterials);
         //TODO: Måske overload konstruktør til Order, så man ikke behøver status? Denne er først relevant, når den bliver sendt til db (som defaulter til "pending")!
-        Order currentOrder = new Order(listOfMaterials, userWidth, userLength, "pending", loggedInUser, totalCustomerPrice, totalCostPrice);
+        Order currentOrder = new Order(listOfMaterials, userWidth, userLength, OrderStatus.PENDING, loggedInUser, totalCustomerPrice, totalCostPrice);
 
         saveOrder(currentOrder, connectionPool);
 
