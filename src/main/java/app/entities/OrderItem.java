@@ -7,10 +7,12 @@ public class OrderItem {
     String description;
     int descriptionId;
 
-    public OrderItem(int orderItemId, ProductVariant productVariant, int quantity) {
+    public OrderItem(int orderItemId, ProductVariant productVariant, int quantity, String description, int descriptionId) {
         this.orderItemId = orderItemId;
         this.productVariant = productVariant;
         this.quantity = quantity;
+        this.description = description;
+        this.descriptionId = descriptionId;
     }
 
     public OrderItem(int orderItemId, ProductVariant productVariant, int quantity, String description) {
@@ -60,6 +62,8 @@ public class OrderItem {
                 "orderItemId=" + orderItemId +
                 ", productVariant=" + productVariant +
                 ", quantity=" + quantity +
+                ", description='" + description + '\'' +
+                ", descriptionId=" + descriptionId +
                 '}';
     }
 }
