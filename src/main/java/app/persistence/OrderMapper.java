@@ -427,6 +427,7 @@ public class OrderMapper {
         }
     }
 
+    // Method for getting object with content resembling columns in orders table
     public static OrderInfoDTO getOrderInfo(int orderId, ConnectionPool connectionPool) throws DatabaseException {
         String sql = "SELECT * FROM public.orders WHERE order_id = ?";
 
@@ -452,5 +453,35 @@ public class OrderMapper {
         } catch (SQLException e) {
             throw new DatabaseException("Could not retrieve order from database", e);
         }
+    }
+
+    // Method for getting user's orders in a way that resembles the columns from orders table
+    public static List<OrderInfoDTO> getOrdersForUser(int userId, ConnectionPool connectionPool) throws DatabaseException {
+        String sql = "SELECT * FROM public.orders WHERE user_id = ?";
+        List<OrderInfoDTO> orderList = new ArrayList<>();
+
+        try (
+                Connection connection = connectionPool.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int orderId = rs.getInt("order_id");
+                    int carportWidth = rs.getInt("carport_width");
+                    int carportLength = rs.getInt("carport_length");
+                    OrderStatus status = OrderStatus.valueOf(rs.getString("status").toUpperCase());
+                    double customerPrice = rs.getDouble("customer_price");
+                    double costPrice = rs.getDouble("cost_price");
+
+                    OrderInfoDTO order = new OrderInfoDTO(orderId, carportWidth, carportLength, status, customerPrice, costPrice);
+                    orderList.add(order);
+                }
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException("Could not retrieve orders from database", e);
+        }
+
+        return orderList;
     }
 }

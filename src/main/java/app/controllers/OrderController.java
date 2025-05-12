@@ -16,8 +16,6 @@ import io.javalin.http.Context;
 import java.sql.SQLException;
 import java.util.*;
 
-import static app.persistence.OrderMapper.getOrderInfo;
-
 public class OrderController {
 
     public static void addRoutes(Javalin app, ConnectionPool connectionPool) {
@@ -212,16 +210,15 @@ public class OrderController {
 
     }
 
-    // TODO Routing for this method is currently in UserController - Two Get requests.
+    // TODO: Routing for this method is currently in UserController - Two get requests
     public static void getOrderDetails(Context ctx, ConnectionPool connectionPool) {
-        // TODO: Needs to gather currentUser's orderIds
-        int orderId = 100; // Hardcoded order ID for now, replace with dynamic data later
+        Integer userId = ctx.sessionAttribute("userId");
 
         try {
-            OrderInfoDTO order = getOrderInfo(orderId, connectionPool);
-            ctx.attribute("order", order);
+            List<OrderInfoDTO> orders = OrderMapper.getOrdersForUser(userId, connectionPool);
+            ctx.attribute("orders", orders);
         } catch (DatabaseException e) {
-            ctx.attribute("message", "Could not retrieve user details.");
+            ctx.attribute("message", "Could not retrieve order details.");
             ctx.render("/login.html");
         }
     }

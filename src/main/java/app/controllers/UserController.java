@@ -79,12 +79,6 @@ public class UserController {
     private static void getCustomerDetails(Context ctx, ConnectionPool connectionPool) {
         Integer userId = ctx.sessionAttribute("userId");
 
-        // Manual entry via. url leads to login page
-        if (userId == null) {
-            ctx.redirect("/login");
-            return;
-        }
-
         try {
             User user = UserMapper.getUserById(userId, connectionPool);
             ctx.attribute("user", user);
