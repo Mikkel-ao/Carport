@@ -32,7 +32,7 @@ public class Main {
         }).start(7070);
 
         System.out.println(OrderMapper.getOrderByOrderId(97, connectionPool));
-        System.out.println(UserMapper.getUserById(30, connectionPool));
+        System.out.println(UserMapper.getUserById(33, connectionPool));
 
         // Routing
         app.get("/", ctx -> ctx.redirect("/index"));
