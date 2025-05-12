@@ -17,11 +17,7 @@ public class OrderMapper {
 
         User user = null;
 
-        try {
-            user = UserMapper.getUserById(userId, connectionPool);
-        } catch (SQLException e){
-            throw new DatabaseException("Could not get user by ID", e.getMessage());
-        }
+        user = UserMapper.getUserById(userId, connectionPool);
 
         String sql;
 
@@ -65,11 +61,7 @@ public class OrderMapper {
 
         User user = null;
 
-        try {
-            user = UserMapper.getUserById(userId, connectionPool);
-        } catch (SQLException e){
-            throw new DatabaseException("Could not get user by ID", e.getMessage());
-        }
+        user = UserMapper.getUserById(userId, connectionPool);
 
         List<Order> orderList = new ArrayList<>();
         String sql;

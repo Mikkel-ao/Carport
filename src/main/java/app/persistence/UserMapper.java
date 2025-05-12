@@ -80,27 +80,33 @@ public class UserMapper {
         }
     }
 
-    public static User getUserById(int userId, ConnectionPool connectionPool) throws DatabaseException, SQLException {
-        String sql = "SELECT * FROM public.users where user_id = ?";
+    public static User getUserById(int userId, ConnectionPool connectionPool) {
+        String sql = "SELECT * FROM public.users WHERE user_id = ?";
 
         try (
                 Connection connection = connectionPool.getConnection();
-                PreparedStatement ps = connection.prepareStatement(sql);
+                PreparedStatement ps = connection.prepareStatement(sql)
         ) {
             ps.setInt(1, userId);
-
             ResultSet rs = ps.executeQuery();
+
             if (rs.next()) {
                 String email = rs.getString("email");
                 String phoneNumber = rs.getString("phone_number");
                 String role = rs.getString("role");
-                return new User(userId, email, phoneNumber, role);
+                String zipCode = rs.getString("zip_code");
+                String address = rs.getString("home_address");
+                String fullName = rs.getString("full_name");
+
+                return new User(userId, email, phoneNumber, role, zipCode, address, fullName);
+            } else {
+                throw new DatabaseException("User with ID " + userId + " not found.");
             }
+
         } catch (SQLException e) {
-            throw new DatabaseException("Could not get user data", e.getMessage());
+            throw new DatabaseException("Could not retrieve user from database", e);
         }
-        //TODO: Handle this more gracefully!
-        return null;
     }
+
 }
 

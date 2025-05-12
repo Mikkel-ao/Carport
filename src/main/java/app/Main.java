@@ -14,6 +14,7 @@ import app.util.Calculator;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinThymeleaf;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class Main {
@@ -31,6 +32,7 @@ public class Main {
         }).start(7070);
 
         System.out.println(OrderMapper.getOrderByOrderId(97, connectionPool));
+        System.out.println(UserMapper.getUserById(30, connectionPool));
 
         // Routing
         app.get("/", ctx -> ctx.redirect("/index"));
