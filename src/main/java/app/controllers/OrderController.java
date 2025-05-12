@@ -1,5 +1,6 @@
 package app.controllers;
 
+import app.DTO.OrderItemAndPrice;
 import app.entities.*;
 import app.persistence.ConnectionPool;
 import app.persistence.OrderMapper;
@@ -33,9 +34,8 @@ public class OrderController {
         ctx.render("index.html");
     }
 
-    public static HashMap<OrderItem, Double> getPoleOrderItemAndPrice(int carportLength, ConnectionPool connectionPool) {
+    public static OrderItemAndPrice getPoleOrderItemAndPrice(int carportLength, ConnectionPool connectionPool) {
 
-        HashMap<OrderItem, Double> OrderItemAndPrice = new HashMap<>();
 
         //product length 300 is hard-coded as we do not need to loop through the different lengths as we only have one type of pole
         ProductVariant poleVariant = ProductMapper.getVariantsByProductAndLength(300, 1, "stolpe", connectionPool);
@@ -44,16 +44,13 @@ public class OrderController {
 
         double price = poleCount * poleVariant.getProduct().getPricePrUnit();
 
-        OrderItemAndPrice.put(poleOrderItem, price);
+        OrderItemAndPrice poleOrderItemAndPrice = new OrderItemAndPrice(poleOrderItem, price);
 
-        return OrderItemAndPrice;
+        return poleOrderItemAndPrice;
 
     }
 
-    public static HashMap<OrderItem, Double> getRafterOrderItemAndPrice(int carportLength, int carportWidth, ConnectionPool connectionPool) {
-
-
-        HashMap<OrderItem, Double> orderItemAndPrice = new HashMap<>();
+    public static OrderItemAndPrice getRafterOrderItemAndPrice(int carportLength, int carportWidth, ConnectionPool connectionPool) {
 
         //This is the lengths of each rafter (not to be confused with the width of the carport)
         List<Integer> possibleLengths = OrderMapper.getProductLengths(connectionPool, 2);
@@ -80,16 +77,15 @@ public class OrderController {
         //Calculating the price with the given length of every single rafter, the count of rafters and the unit price (in meters)
         double price = (double) rafterVariant.getProduct().getPricePrUnit() * rafterCount * rafterVariant.getLength() / 100;
 
-        orderItemAndPrice.put(rafterOrderItem, price);
+        OrderItemAndPrice orderItemAndPrice = new OrderItemAndPrice(rafterOrderItem, price);
 
         return orderItemAndPrice;
     }
 
 
-    public static HashMap<OrderItem, Double> getBeamOrderItemAndPrice(int carportLength, ConnectionPool connectionPool) {
+    public static List<OrderItemAndPrice> getBeamOrderItemAndPrice(int carportLength, ConnectionPool connectionPool) {
 
-        HashMap<OrderItem, Double> orderItemAndPrice = new HashMap<>();
-
+        List<OrderItemAndPrice> orderItemAndPriceList = new ArrayList<>();
         List<Integer> possibleLengths = OrderMapper.getProductLengths(connectionPool, 2);
 
 
@@ -97,42 +93,45 @@ public class OrderController {
 
         int actualLength;
 
-            if (carportLength <= 600) {
-                for (int possibleLength : possibleLengths) {
-                    if (possibleLength >= carportLength) {
-                        actualLength = possibleLength;
-                        ProductVariant beamVariant = ProductMapper.getVariantsByProductAndLength(actualLength, 2, "rem", connectionPool);
+        if (carportLength <= 600) {
+            for (int possibleLength : possibleLengths) {
+                if (possibleLength >= carportLength) {
+                    actualLength = possibleLength;
+                    ProductVariant beamVariant = ProductMapper.getVariantsByProductAndLength(actualLength, 2, "rem", connectionPool);
+                    if (beamVariant != null) {
                         //Hard-coding the quantity to 2, because we are sure we only need one beam in each side of the carport!
                         OrderItem beamOrderItem = new OrderItem(beamVariant, 2);
                         double price = 2 * (double) beamVariant.getProduct().getPricePrUnit() * beamVariant.getLength() / 100;
-                        orderItemAndPrice.put(beamOrderItem, price);
-                        break;
+                        orderItemAndPriceList.add(new OrderItemAndPrice(beamOrderItem, price));
                     }
-
+                    break;
                 }
+
             }
+        } else {
+            //Hard-coding the length on one of the beams (on each side) to 360, because we then know we will be able to reach all the different lengths up to the maximum length of 780cm!
+            int firstBeamLength = 360;
+            ProductVariant firstBeamVariant = ProductMapper.getVariantsByProductAndLength(firstBeamLength, 2, "rem", connectionPool);
             //If the length of the carport exceeds 600cm, we know we will need two beams on each side of the carport!
-            if (carportLength > 600) {
-                //Hard-coding the length on one of the beams (on each side) to 360, because we then know we will be able to reach all the different lengths up to the maximum length of 780cm!
-                int firstBeamLength = 360;
-                ProductVariant firstBeamVariant = ProductMapper.getVariantsByProductAndLength(firstBeamLength, 2, "rem", connectionPool);
+            if (firstBeamVariant != null) {
                 OrderItem firstBeamOrderItem = new OrderItem(firstBeamVariant, 2);
                 double firstBeamPrice = 2 * (double) firstBeamVariant.getProduct().getPricePrUnit() * firstBeamVariant.getLength() / 100;
-                orderItemAndPrice.put(firstBeamOrderItem, firstBeamPrice);
-                //Figuring out what variant the second beam needs to be
-                for (int secondBeamLength : possibleLengths) {
-                    if (firstBeamLength + secondBeamLength >= carportLength) {
-                        ProductVariant secondBeamVariant = ProductMapper.getVariantsByProductAndLength(secondBeamLength, 2, "rem", connectionPool);
-                        if(secondBeamVariant != null) {
-                            OrderItem secondBeamOrderItem = new OrderItem(secondBeamVariant, 2);
-                            double secondBeamPrice = 2 * (double) secondBeamVariant.getProduct().getPricePrUnit() * secondBeamVariant.getLength() / 100;
-                            orderItemAndPrice.put(secondBeamOrderItem, secondBeamPrice);
-                            break;
-                        }
+                orderItemAndPriceList.add(new OrderItemAndPrice(firstBeamOrderItem, firstBeamPrice));
+            }
+            //Figuring out what variant the second beam needs to be
+            for (int secondBeamLength : possibleLengths) {
+                if (firstBeamLength + secondBeamLength >= carportLength) {
+                    ProductVariant secondBeamVariant = ProductMapper.getVariantsByProductAndLength(secondBeamLength, 2, "rem", connectionPool);
+                    if (secondBeamVariant != null) {
+                        OrderItem secondBeamOrderItem = new OrderItem(secondBeamVariant, 2);
+                        double secondBeamPrice = 2 * (double) secondBeamVariant.getProduct().getPricePrUnit() * secondBeamVariant.getLength() / 100;
+                        orderItemAndPriceList.add(new OrderItemAndPrice(secondBeamOrderItem, secondBeamPrice));
                     }
+                    break;
                 }
+            }
         }
-            return orderItemAndPrice;
+        return orderItemAndPriceList;
     }
 
 
@@ -156,27 +155,27 @@ public class OrderController {
 
 
         //Adding poles to the list of materials
-        HashMap<OrderItem, Double> poleData = getPoleOrderItemAndPrice(userLength, connectionPool);
-        OrderItem poleOrderItem = poleData.keySet().iterator().next();
+        OrderItemAndPrice poleData = getPoleOrderItemAndPrice(userLength, connectionPool);
+        OrderItem poleOrderItem = poleData.getOrderItem();
         listOfMaterials.add(poleOrderItem);
-        double poleCostPrice = poleData.get(poleOrderItem);
+        double poleCostPrice = poleData.getPrice();
 
 
         //Adding rafters to the list of materials
-        HashMap<OrderItem, Double> rafterData = getRafterOrderItemAndPrice(userLength, userWidth, connectionPool);
-        //Using this approach as we only expect to find one entry in the hashMap
-        OrderItem rafterOrderItem = rafterData.keySet().iterator().next();
+        OrderItemAndPrice rafterData = getRafterOrderItemAndPrice(userLength, userWidth, connectionPool);
+        //Retrieving the order item from the DTO
+        OrderItem rafterOrderItem = rafterData.getOrderItem();
         //Adding rafter order items to the list!
         listOfMaterials.add(rafterOrderItem);
-        //Retrieving the price from the hash map
-        double rafterCostPrice = rafterData.get(rafterOrderItem);
+        //Retrieving the price from the DTO
+        double rafterCostPrice = rafterData.getPrice();
 
         //Adding beams to the list of materials
-        HashMap<OrderItem, Double> beamData = getBeamOrderItemAndPrice(userLength, connectionPool);
+        List<OrderItemAndPrice> beamData = getBeamOrderItemAndPrice(userLength, connectionPool);
         double beamCostPrice = 0;
-        for (Map.Entry<OrderItem, Double> entry : beamData.entrySet()) {
-            listOfMaterials.add(entry.getKey());
-            beamCostPrice += entry.getValue();
+        for (OrderItemAndPrice beamOrderItemAndPrice : beamData) {
+            listOfMaterials.add(beamOrderItemAndPrice.getOrderItem());
+            beamCostPrice += beamOrderItemAndPrice.getPrice();
         }
 
         double totalCostPrice = poleCostPrice + rafterCostPrice + beamCostPrice;
