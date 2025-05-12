@@ -19,6 +19,9 @@
       <i class="fas fa-user"></i>
       <span>Log ud</span>
     </a>
+
+    <span th:if="${session.email != null}" th:text="${session.email}" class="email-address"></span>
+
   </div>
 </header>
 

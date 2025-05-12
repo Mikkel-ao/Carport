@@ -27,6 +27,7 @@
         <label>
             <input type="password" name="password2" placeholder="Gentag kodeord" required/>
         </label>
+
         <h4>Kontaktoplysninger:</h4>
         <label>
             <input type="text" name="fullName" placeholder="Fornavn og efternavn" required>
@@ -40,13 +41,13 @@
         <label>
             <input type="text" name="phone" placeholder="Telefon nummer" required>
         </label>
-        <button type="submit" formaction="/createuser">Opret bruger</button>
         <div class="checkbox-consent">
             <label>
                 <input type="checkbox" required>
                 Fog må benytte dine afgivne oplysninger til at kontakte mig i forbindelse med tilbud på QuickByg carport
             </label>
         </div>
+        <button type="submit" formaction="/createuser">Opret bruger</button>
         <div><p class="error" th:unless="${#strings.isEmpty(message)}" th:text="${message}"></p></div>
     </form>
 

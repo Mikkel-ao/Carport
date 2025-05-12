@@ -133,6 +133,7 @@ h1 {
 .formular-dropDown,
 input[type="text"],
 input[type="email"],
+input[type="password"],
 select {
     width: 100%;
     padding: 10px;
@@ -142,6 +143,7 @@ select {
     box-sizing: border-box;
     font-family: inherit;
 }
+
 
 .checkbox-consent {
     display: flex;

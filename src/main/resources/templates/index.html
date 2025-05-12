@@ -38,6 +38,9 @@
             <span>Fog Konto</span>
         </a>
 
+        <span th:if="${session.email != null}" th:text="${session.email}" class="email-address"></span>
+
+
     </div>
 </header>
 
