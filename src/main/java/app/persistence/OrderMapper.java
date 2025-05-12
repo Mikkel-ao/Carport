@@ -180,13 +180,13 @@ public class OrderMapper {
                 //Product Variant
                 int productVariantId = rs.getInt("product_variant_id");
                 int length = rs.getInt("length");
-                String description = rs.getString("description");
-                ProductVariant productVariant = new ProductVariant(productVariantId, length, description, product);
+                ProductVariant productVariant = new ProductVariant(productVariantId, length, product);
 
                 //OrderItem
                 int orderItemId = rs.getInt("order_item_id");
                 int quantity = rs.getInt("quantity");
-                OrderItem orderItem = new OrderItem(orderItemId, productVariant, quantity);
+                String description = rs.getString("description");
+                OrderItem orderItem = new OrderItem(orderItemId, productVariant, quantity, description);
                 orderItemList.add(orderItem);
             }
         }catch (SQLException e){
@@ -223,13 +223,14 @@ public class OrderMapper {
         }
     }
     public static void insertOrderItem(int orderId, OrderItem orderItem, ConnectionPool connectionPool)throws DatabaseException{
-        String sql = "INSERT INTO order_item (order_id, product_variant_id, quantity)" + "VALUES (?,?,?)";
+        String sql = "INSERT INTO order_item (order_id, product_variant_id, quantity, product_description_id)" + "VALUES (?,?,?,?)";
 
         try(Connection connection = connectionPool.getConnection()){
                 try (PreparedStatement ps = connection.prepareStatement(sql)){
                     ps.setInt(1, orderId);
                     ps.setInt(2, orderItem.getProductVariant().getProductVariantId());
                     ps.setInt(3, orderItem.getQuantity());
+                    ps.setInt(4, orderItem.getDescriptionId());
                     ps.executeUpdate();
 
             }

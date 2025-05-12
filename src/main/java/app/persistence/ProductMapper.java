@@ -13,16 +13,16 @@ public class ProductMapper {
 
 
 
-    public static ProductVariant getVariantsByProductAndLength(int productLength, int productId, String keyword, ConnectionPool connectionPool) throws DatabaseException {
+    public static ProductVariant getVariantsByProductAndLength(int productLength, int productId, ConnectionPool connectionPool) throws DatabaseException {
 
         String sql = "SELECT * FROM public.complete_product_view\n" +
-                "WHERE product_id = ? AND length = ? AND key_word = ?";
+                "WHERE product_id = ? AND length = ?";
 
         try (Connection connection = connectionPool.getConnection()) {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, productId);
             ps.setInt(2, productLength);
-            ps.setString(3, keyword);
+            //ps.setString(3, keyword);
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -33,10 +33,10 @@ public class ProductMapper {
                 String unit = rs.getString("unit");
                 int price = rs.getInt("price");
                 double width = rs.getDouble("width_in_mm")/10;
-                String description = rs.getString("description");
+
 
                 Product product = new Product(product_id, name, unit, width, price);
-                ProductVariant productVariant = new ProductVariant(variantId, length, description, product);
+                ProductVariant productVariant = new ProductVariant(variantId, length, product);
                 return productVariant;
             }
         } catch (SQLException e) {
