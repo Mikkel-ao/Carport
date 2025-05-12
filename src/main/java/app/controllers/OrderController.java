@@ -206,4 +206,20 @@ public class OrderController {
 
     }
 
+    public static void getOrderDetails(Context ctx, ConnectionPool connectionPool) {
+        int userId = ctx.sessionAttribute("userId");
+        String role = ctx.sessionAttribute("role");
+
+        int orderId = Integer.parseInt(ctx.pathParam("orderId"));
+        Order order = OrderMapper.getOrderByOrderId(orderId, connectionPool);
+
+        if (order == null) {
+            ctx.status(404).result("Order not found");
+            return;
+        }
+
+    }
+
+
+
 }

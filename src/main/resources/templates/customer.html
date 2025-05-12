@@ -41,6 +41,15 @@
   <p><strong>Postnummer:</strong> <span th:text="${user.zipCode}">Zip Code</span></p>
 </div>
 
+<div class="object-details">
+  <h2>Dine ordreoplysninger:</h2>
+  <p><strong>Ordre ID:</strong> <span th:text="${order.orderId}"></span></p>
+  <p><strong>Status:</strong> <span th:text="${order.status}"></span></p>
+  <p><strong>Carport bredde:</strong> <span th:text="${order.carportWidth}"></span></p>
+  <p><strong>Carport længde:</strong> <span th:text="${order.carportLength}"></span></p>
+  <p><strong>Salgspris:</strong> <span th:text="${order.totalSalesPrice}">Afventer sælger</span></p>
+</div>
+
 
 
 </body>
