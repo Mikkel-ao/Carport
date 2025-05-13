@@ -19,12 +19,17 @@
             <span>Log ud</span>
         </a>
 
-        <span th:if="${session.email != null}" th:text="${session.email}" class="email-address"></span>
-
     </div>
 </header>
 <body>
 <h1>Admin page</h1>
+<div class="object-details">
+    <h2>Dine oplysninger: </h2>
+    <p><strong>Navn:</strong> <span th:text="${user.fullName}">Fog Fogesen</span></p>
+    <p><strong>Email:</strong> <span th:text="${user.email}">admin@fog.com</span></p>
+    <p><strong>Rolle:</strong> <span th:text="${user.role}">Admin</span></p>
+
+</div>
 
 </body>
 </html>
