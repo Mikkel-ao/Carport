@@ -50,9 +50,21 @@
             <p><strong>Carport længde:</strong> <span th:text="${order.carportLength}">780</span></p>
             <p><strong>Kostpris:</strong> <span th:text="${order.costPrice}"></span></p>
             <p><strong>Salgspris:</strong> <span th:text="${order.totalSalesPrice}"></span></p>
+
+            <!-- Form and submit button for passing orderId to generate stykliste -->
+            <form th:action="@{/orderdetails(orderId=${order.orderId})}" method="get">
+                <div class="submit-button">
+                    <button type="submit">Se stykliste</button>
+                </div>
+            </form>
             <br>
             <hr/>
+
         </div>
+
+
+
+
     </div>
 </body>
 </html>
