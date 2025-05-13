@@ -426,8 +426,10 @@ public class OrderMapper {
                 OrderStatus status = OrderStatus.valueOf(rs.getString("status").toUpperCase());
                 double customerPrice = rs.getDouble("customer_price");
                 double costPrice = rs.getDouble("cost_price");
+                Timestamp timestamp = rs.getTimestamp("order_date");
 
-                return new OrderInfoDTO(orderId, carportLength, carportWidth, status, customerPrice, costPrice);
+
+                return new OrderInfoDTO(orderId, carportLength, carportWidth, status, customerPrice, costPrice, timestamp);
             } else {
                 throw new DatabaseException("Order with ID " + orderId + " not found.");
             }
@@ -455,8 +457,9 @@ public class OrderMapper {
                     OrderStatus status = OrderStatus.valueOf(rs.getString("status").toUpperCase());
                     double customerPrice = rs.getDouble("customer_price");
                     double costPrice = rs.getDouble("cost_price");
+                    Timestamp timestamp = rs.getTimestamp("order_date");
 
-                    OrderInfoDTO order = new OrderInfoDTO(orderId, carportWidth, carportLength, status, customerPrice, costPrice);
+                    OrderInfoDTO order = new OrderInfoDTO(orderId, carportWidth, carportLength, status, customerPrice, costPrice, timestamp);
                     orderList.add(order);
                 }
             }
