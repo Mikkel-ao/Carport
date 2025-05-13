@@ -46,8 +46,9 @@ public class OrderMapper {
                 OrderStatus status = OrderStatus.valueOf(rs.getString("status").toUpperCase());
                 double customerPrice = rs.getDouble("customer_price");
                 double costPrice = rs.getDouble("cost_price");
+                Timestamp timestamp = rs.getTimestamp("order_date");
 
-                orderList.add(new Order(orderId, carportWidth, carportLength, status, user, customerPrice, costPrice));
+                orderList.add(new Order(orderId, carportWidth, carportLength, status, user, customerPrice, costPrice, timestamp));
             }
         }
         catch (SQLException e){
@@ -89,8 +90,9 @@ public class OrderMapper {
                 OrderStatus status = OrderStatus.valueOf(rs.getString("status").toUpperCase());
                 double customerPrice = rs.getDouble("customer_price");
                 double costPrice = rs.getDouble("cost_price");
+                Timestamp timestamp = rs.getTimestamp("order_date");
 
-                orderList.add(new Order(orderId, carportWidth, carportLength, status, user, customerPrice, costPrice));
+                orderList.add(new Order(orderId, carportWidth, carportLength, status, user, customerPrice, costPrice, timestamp));
             }
         }
         catch (SQLException e){
@@ -122,9 +124,10 @@ public class OrderMapper {
                 OrderStatus status = OrderStatus.valueOf(rs.getString("status").toUpperCase());
                 double customerPrice = rs.getDouble("customer_price");
                 double costPrice = rs.getDouble("cost_price");
+                Timestamp timestamp = rs.getTimestamp("order_date");
 
                 User user = new User(userId, password, email, phoneNumber, role);
-                Order order = new Order(orderId, carportWidth, carportLength, status, user, customerPrice, costPrice);
+                Order order = new Order(orderId, carportWidth, carportLength, status, user, customerPrice, costPrice, timestamp);
 
                 orderList.add(order);
             }
@@ -157,9 +160,10 @@ public class OrderMapper {
                     OrderStatus status = OrderStatus.valueOf(rs.getString("status").toUpperCase());
                     double customerPrice = rs.getDouble("customer_price");
                     double costPrice = rs.getDouble("cost_price");
+                    Timestamp timestamp = rs.getTimestamp("order_date");
 
                     User user = UserMapper.getUserById(userId, connectionPool);
-                    order = new Order(orderId, carportWidth, carportLength, status, user, customerPrice, costPrice);
+                    order = new Order(orderId, carportWidth, carportLength, status, user, customerPrice, costPrice, timestamp);
                 }
 
                 //Product
@@ -191,30 +195,7 @@ public class OrderMapper {
         return order;
     }
 
-    //TODO: DENNE SKAL FORMENTLIG SLETTES, DA VI BRUGER CREATE ORDER
-    public static Order insertOrder(Order order, ConnectionPool connectionPool) throws DatabaseException{
-        String sql = "INSERT INTO orders (carport_width, carport_length, status, user_id, customer_price, cost_price)" + "VALUES (?,?,?,?,?,?)";
 
-        try (Connection connection = connectionPool.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)){
-
-            ps.setInt(1, order.getCarportWidth());
-            ps.setInt(2, order.getCarportLength());
-            ps.setString(3, OrderStatus.PENDING.name());
-            ps.setDouble(4, order.getUser().getUserId());
-            ps.setDouble(5, order.getTotalSalesPrice());
-            ps.setDouble(6, order.getCostPrice());
-            ps.executeUpdate();
-            ResultSet keySet = ps.getGeneratedKeys();
-            if (keySet.next()){
-                return new Order(keySet.getInt(1), order.getCarportWidth(),order.getCarportLength(),order.getStatus(),order.getUser(),order.getTotalSalesPrice(), order.getCostPrice());
-            }else {
-                return null;
-            }
-        } catch (SQLException e) {
-            throw new DatabaseException("Kunne ikke indsætte order i Database", e.getMessage());
-        }
-    }
     public static void insertOrderItem(int orderId, OrderItem orderItem, ConnectionPool connectionPool)throws DatabaseException{
         String sql = "INSERT INTO order_item (order_id, product_variant_id, quantity, product_description_id)" + "VALUES (?,?,?,?)";
 
@@ -403,7 +384,7 @@ public class OrderMapper {
 
     //Method for creating an order and retrieve the auto-generated order id
     public static int createOrder(ConnectionPool connectionPool, int width, int length, int userId, double customerPrice, double costPrice) throws DatabaseException {
-        String sql = "INSERT INTO orders (carport_width, carport_length, user_id, customer_price, cost_price) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO orders (carport_width, carport_length, user_id, customer_price, cost_price, order_date) VALUES (?, ?, ?, ?, ?,?)";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) { //Instructs database to return auto-generated keys (user_id) when executing insert statement!
@@ -413,7 +394,7 @@ public class OrderMapper {
             ps.setInt(3, userId);
             ps.setDouble(4, customerPrice);
             ps.setDouble(5, costPrice);
-            //ps.setTimestamp(2, new Timestamp(System.currentTimeMillis())); //Setting "order_date" in sql query (which is datatype TimeStamp) to the current time!
+            ps.setTimestamp(6, new Timestamp(System.currentTimeMillis())); //Setting "order_date" in sql query (which is datatype TimeStamp) to the current time!
             ps.executeUpdate(); //Executing sql query
 
             ResultSet rs = ps.getGeneratedKeys(); //Retrieving the auto-generated key from the database
