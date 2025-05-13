@@ -49,7 +49,10 @@
       <p><strong>Status:</strong> <span th:text="${order.status}">Pending</span></p>
       <p><strong>Carport bredde:</strong> <span th:text="${order.carportWidth}">600</span></p>
       <p><strong>Carport længde:</strong> <span th:text="${order.carportLength}">780</span></p>
-      <p><strong>Salgspris:</strong> <span th:text="${order.totalSalesPrice}"></span></p>
+      <p th:if="${order.status.toString() != 'pending'}">
+        <strong>Salgspris:</strong> <span th:text="${order.totalSalesPrice}"></span>
+      </p>
+      <br>
       <hr/>
     </div>
   </div>
