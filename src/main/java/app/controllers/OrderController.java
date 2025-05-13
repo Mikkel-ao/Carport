@@ -26,7 +26,10 @@ public class OrderController {
             ctx.redirect("/add-customer-request?success=true");
         });
         app.get("/add-customer-request", ctx -> ctx.render("index.html"));
+        app.post("/orderdetails", ctx -> showListOfMaterials(ctx, connectionPool));
 
+        //TODO: This route must be deleted, but is only here for testing purposes!
+        app.get("/orderdetails", ctx -> showListOfMaterials(ctx, connectionPool));
 
     }
 
@@ -221,5 +224,19 @@ public class OrderController {
             ctx.attribute("message", "Could not retrieve order details.");
             ctx.render("/login.html");
         }
+    }
+
+    public static void showListOfMaterials(Context ctx, ConnectionPool connectionPool) {
+
+        //int orderId = ctx.sessionAttribute("orderId");
+
+        int orderId = 110;
+
+        Order order = OrderMapper.getOrderByOrderId(orderId, connectionPool);
+        List<OrderItem> orderDetails = order.getListOfMaterials();
+        ctx.attribute("orderDetails", orderDetails);
+        ctx.attribute("orderId", orderId);
+        ctx.render("orderdetails.html");
+
     }
 }
