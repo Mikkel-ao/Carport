@@ -46,9 +46,19 @@
       <p><strong>Status:</strong> <span th:text="${order.status}">Pending</span></p>
       <p><strong>Carport bredde:</strong> <span th:text="${order.carportWidth}">600</span></p>
       <p><strong>Carport længde:</strong> <span th:text="${order.carportLength}">780</span></p>
+
+      <!-- TODO: !!! When status enums are implemented make sure customer is only showed these at the right time -->
       <p th:if="${order.status.toString() != 'pending'}">
         <strong>Salgspris:</strong> <span th:text="${order.totalSalesPrice}"></span>
       </p>
+      <form th:if="${order.status.toString() != 'pending'}"
+            th:action="@{/orderdetails/{orderId}(orderId=${order.orderId})}"
+            method="get">
+        <div class="submit-button">
+          <button type="submit">Se stykliste</button>
+        </div>
+      </form>
+
       <br>
       <hr/>
     </div>
