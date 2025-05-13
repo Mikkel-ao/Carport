@@ -26,7 +26,6 @@ public class UserController {
             getOrderDetails(ctx, connectionPool);
             ctx.render("customer.html");
         });
-
     }
 
     private static void logout(Context ctx) {
