@@ -26,10 +26,8 @@ public class OrderController {
             ctx.redirect("/add-customer-request?success=true");
         });
         app.get("/add-customer-request", ctx -> ctx.render("index.html"));
-        app.post("/orderdetails", ctx -> showListOfMaterials(ctx, connectionPool));
 
-        //TODO: This route must be deleted, but is only here for testing purposes!
-        app.get("/orderdetails", ctx -> showListOfMaterials(ctx, connectionPool));
+        app.get("/orderdetails/{orderId}", ctx -> showListOfMaterials(ctx, connectionPool));
 
     }
 
@@ -247,9 +245,7 @@ public class OrderController {
 
     public static void showListOfMaterials(Context ctx, ConnectionPool connectionPool) {
 
-        //int orderId = ctx.sessionAttribute("orderId");
-
-        int orderId = 110;
+        int orderId = Integer.parseInt(ctx.pathParam("orderId"));
 
         Order order = OrderMapper.getOrderByOrderId(orderId, connectionPool);
         List<OrderItem> orderDetails = order.getListOfMaterials();

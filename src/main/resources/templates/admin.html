@@ -52,7 +52,7 @@
             <p><strong>Salgspris:</strong> <span th:text="${order.totalSalesPrice}"></span></p>
 
             <!-- Form and submit button for passing orderId to generate stykliste -->
-            <form th:action="@{/orderdetails(orderId=${order.orderId})}" method="get">
+            <form th:action="@{/orderdetails/{orderId}(orderId=${order.orderId})}" method="get">
                 <div class="submit-button">
                     <button type="submit">Se stykliste</button>
                 </div>
