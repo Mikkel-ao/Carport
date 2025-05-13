@@ -2,6 +2,8 @@ package app.entities;
 
 import app.util.OrderStatus;
 
+
+import java.sql.Timestamp;
 import java.util.List;
 
 public class Order {
@@ -13,8 +15,9 @@ public class Order {
     private User user;
     private double totalSalesPrice;
     private double costPrice;
+    private Timestamp timeStamp;
 
-    public Order(int orderId, int carportWidth, int carportLength, OrderStatus status, User user, double totalPrice, double costPrice) {
+    public Order(int orderId, int carportWidth, int carportLength, OrderStatus status, User user, double totalPrice, double costPrice, Timestamp timeStamp) {
         this.orderId = orderId;
         this.carportWidth = carportWidth;
         this.carportLength = carportLength;
@@ -22,6 +25,7 @@ public class Order {
         this.user = user;
         this.totalSalesPrice = totalPrice;
         this.costPrice = costPrice;
+        this.timeStamp = timeStamp;
     }
 
     public Order(List<OrderItem> listOfMaterials, int carportWidth, int carportLength, OrderStatus status, User user, double totalSalesPrice, double costPrice) {
@@ -100,6 +104,10 @@ public class Order {
         return costPrice;
     }
 
+    public Timestamp getTimeStamp() {
+        return timeStamp;
+    }
+
     @Override
     public String toString() {
         return "Order{" +
@@ -111,6 +119,7 @@ public class Order {
                 ", user=" + user +
                 ", totalSalesPrice=" + totalSalesPrice +
                 ", costPrice=" + costPrice +
+                ", timeStamp=" + timeStamp +
                 '}';
     }
 }
