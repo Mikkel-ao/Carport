@@ -51,6 +51,15 @@ public class User {
         this.zipCode = zipCode;
     }
 
+    public User(int userId, String fullName, String email, String phoneNumber, String address, String zipCode) {
+        this.userId = userId;
+        this.fullName = fullName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.zipCode = zipCode;
+    }
+
     public int getUserId() {
         return userId;
     }
