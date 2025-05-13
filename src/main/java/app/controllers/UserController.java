@@ -8,6 +8,7 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 
 import static app.controllers.OrderController.getOrderDetails;
+import static app.controllers.OrderController.showAllOrders;
 
 public class UserController {
 
@@ -17,8 +18,10 @@ public class UserController {
         app.get("/createuser", ctx -> ctx.render("/createuser.html"));
         app.post("/createuser", ctx -> createUser(ctx, connectionPool));
         app.get("/logout", ctx -> logout(ctx));
+        // TODO: Find better solution to importing static OrderCotroller methods for routing.
         app.get("/admin", ctx -> {
             getCustomerDetails(ctx, connectionPool);
+            showAllOrders(ctx, connectionPool);
             ctx.render("/admin.html");
         });
         app.get("/customer", ctx -> {

@@ -210,7 +210,6 @@ public class OrderController {
 
     }
 
-    // TODO: Routing for this method is currently in UserController - Two get requests
     public static void getOrderDetails(Context ctx, ConnectionPool connectionPool) {
         Integer userId = ctx.sessionAttribute("userId");
 
@@ -220,6 +219,25 @@ public class OrderController {
         } catch (DatabaseException e) {
             ctx.attribute("message", "Could not retrieve order details.");
             ctx.render("/login.html");
+        }
+    }
+
+    // Method that displays all orders for Admin user
+    public static void showAllOrders(Context ctx, ConnectionPool connectionPool) {
+        Integer userId = ctx.sessionAttribute("userId");
+
+        try {
+            User user = UserMapper.getUserById(userId, connectionPool);
+            if (user.getRole().equalsIgnoreCase("admin")) {
+                List<Order> orders = OrderMapper.getAllOrders(connectionPool);
+                ctx.attribute("orders", orders);
+                ctx.render("admin.html");
+            } else {
+                ctx.status(403).result("Access denied: Admins only.");
+            }
+        } catch (DatabaseException e) {
+            ctx.attribute("message", "Could not retrieve orders.");
+            ctx.render("/index.html");
         }
     }
 }

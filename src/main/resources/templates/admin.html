@@ -31,5 +31,23 @@
 
 </div>
 
+<div class="object-details">
+    <h2>Dine ordreoplysninger:</h2>
+
+    <!-- Check if order(s) exists - Avoids server error when trying to access page if order == null -->
+    <div th:if="${orders != null and !#lists.isEmpty(orders)}">
+        <div th:each="order : ${orders}">
+            <p><strong>Ordre ID:</strong> <span th:text="${order.orderId}">123</span></p>
+            <p><strong>Kunde:</strong> <span th:text="${order.user}">123</span></p>
+
+            <p><strong>Status:</strong> <span th:text="${order.status}">Pending</span></p>
+            <p><strong>Carport bredde:</strong> <span th:text="${order.carportWidth}">600</span></p>
+            <p><strong>Carport længde:</strong> <span th:text="${order.carportLength}">780</span></p>
+            <p><strong>Kostpris:</strong> <span th:text="${order.costPrice}"></span></p>
+            <p><strong>Salgspris:</strong> <span th:text="${order.totalSalesPrice}"></span></p>
+            <br>
+            <hr/>
+        </div>
+    </div>
 </body>
 </html>
