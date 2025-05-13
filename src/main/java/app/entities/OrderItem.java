@@ -48,6 +48,10 @@ public class OrderItem {
         return descriptionId;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public ProductVariant getProductVariant() {
         return productVariant;
     }
