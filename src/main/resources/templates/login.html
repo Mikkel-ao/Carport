@@ -5,7 +5,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
+    <!-- For icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+<header>
+    <div class="index-container">
+        <a th:href="@{/}">
+            <img class="logo-index" th:src="@{/images/fog_logo_small.png}" alt="foglogo">
+        </a>
+
+        <a th:href="@{/}" class="account-button">
+            <i class="fas fa-house"></i>
+            <span>Hjem</span>
+        </a>
+
+        <a th:if="${session.currentUser == null}" th:href="@{/createuser}" class="account-button">
+            <i class="fas fa-user-plus"></i>
+            <span>Opret bruger</span>
+        </a>
+
+    </div>
+</header>
+
 <body class="background-color">
 <div class="page-container">
     <header class="header">
@@ -24,10 +45,6 @@
         </div>
     </form>
 
-    <footer class="footer-side">
-        <a class="rounded-btn" href="createuser.html" th:href="@{/createuser}">Opret bruger</a>
-        <a class="rounded-btn" href="/" th:href="@{/}">Til forsiden</a>
-    </footer>
 </div>
 </body>
 </html>
