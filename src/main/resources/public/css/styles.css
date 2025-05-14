@@ -174,7 +174,7 @@ select {
 /***** Container for customer/order details ******/
 
 .object-details {
-    width: 350px;
+    width: 475px;
     margin: 50px;
     padding: 25px 30px;
     border: 1px solid #ccc;
