@@ -29,6 +29,13 @@ public class OrderController {
 
         app.get("/orderdetails/{orderId}", ctx -> showListOfMaterials(ctx, connectionPool));
 
+        app.post("/updatePrice", ctx -> updatePrice(ctx, connectionPool));
+
+        app.post("/sendOffer", ctx -> sendOffer(ctx, connectionPool));
+
+        app.post("/payOrder", ctx -> payOrder(ctx, connectionPool));
+
+
     }
 
     private static void getCarportDimensions(Context ctx, ConnectionPool connectionPool) {
@@ -254,6 +261,8 @@ public class OrderController {
         ctx.render("orderdetails.html");
 
     }
+
+    //TODO: Muligvis overflødge metoder
     //This method is used for updating the status of an order (done by the admin/seller).
     public static void changeStatus(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
         String newStatus = ctx.formParam("newStatus");
@@ -287,4 +296,37 @@ public class OrderController {
             ctx.attribute("message","Could not update status on order: " + orderId + "\n" + e.getMessage());
         }
     }
+
+    public static void updatePrice(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
+
+        int orderId = Integer.parseInt(ctx.formParam("orderId"));
+
+        double newPrice = Double.parseDouble(ctx.formParam("newPrice"));
+
+        OrderMapper.UpdatePrice(newPrice, orderId, connectionPool);
+
+        //TODO: TRY-CATCH AND BETTER REDIRECT
+        ctx.redirect("/admin");
+    }
+
+    public static void sendOffer(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
+
+        int orderId = Integer.parseInt(ctx.formParam("orderId"));
+
+        OrderMapper.updateOrderStatus(orderId, OrderStatus.CONFIRMED, connectionPool);
+
+        //TODO: TRY-CATCH AND BETTER REDIRECT
+        ctx.redirect("/admin");
+    }
+
+    public static void payOrder(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
+
+        int orderId = Integer.parseInt(ctx.formParam("orderId"));
+
+        OrderMapper.updateOrderStatus(orderId, OrderStatus.PAID, connectionPool);
+
+        //TODO: TRY-CATCH AND BETTER REDIRECT
+        ctx.redirect("/customer");
+    }
+
 }

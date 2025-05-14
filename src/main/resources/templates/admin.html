@@ -49,7 +49,7 @@
             <p><strong>Status:</strong> <span th:text="${order.status}">Pending</span></p>
             <p><strong>Carport bredde:</strong> <span th:text="${order.carportWidth}">600</span></p>
             <p><strong>Carport længde:</strong> <span th:text="${order.carportLength}">780</span></p>
-            <p><strong>Kostpris:</strong> <span th:text="${order.costPrice}"></span></p>
+            <p><strong>Indkøbspris:</strong> <span th:text="${order.costPrice}"></span></p>
             <p><strong>Salgspris:</strong> <span th:text="${order.totalSalesPrice}"></span></p>
 
             <!-- Form and submit button for passing orderId to generate stykliste -->
@@ -58,14 +58,25 @@
                     <button type="submit">Se stykliste</button>
                 </div>
             </form>
+
+            <form th:if="${order.status.toString() == 'pending'}" th:action="@{/updatePrice}" method="post">
+                <input type="hidden" name="orderId" th:value="${order.orderId}"/>
+                <label for="newPrice">Ny pris:</label>
+                <input type="number" id="newPrice" name="newPrice" step="1" required/>
+                <button type="submit">Opdatér salgspris</button>
+            </form>
+
+            <form th:if="${order.status.toString() == 'pending'}" th:action="@{/sendOffer}" method="post">
+                <input type="hidden" name="orderId" th:value="${order.orderId}"/>
+                <button type="submit">Send tilbud</button>
+            </form>
             <br>
             <hr/>
 
         </div>
 
 
-
-
     </div>
+
 </body>
 </html>

@@ -88,6 +88,10 @@ public class Order {
         return totalSalesPrice;
     }
 
+    public void setTotalSalesPrice(double totalSalesPrice) {
+        this.totalSalesPrice = totalSalesPrice;
+    }
+
     public void setListOfMaterials(List<OrderItem> listOfMaterials) {
         this.listOfMaterials = listOfMaterials;
     }
