@@ -3,7 +3,10 @@ package app.util;
 public enum OrderStatus {
     PENDING,
     CONFIRMED,
-    CANCELLED;
+    CANCELLED,
+    REJECTED,
+    PAID,
+    ACCEPT;
 
     @Override
     public String toString() {

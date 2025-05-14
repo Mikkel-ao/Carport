@@ -254,4 +254,37 @@ public class OrderController {
         ctx.render("orderdetails.html");
 
     }
+    //This method is used for updating the status of an order (done by the admin/seller).
+    public static void changeStatus(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
+        String newStatus = ctx.formParam("newStatus");
+        int orderId = Integer.parseInt(ctx.formParam("orderId"));
+
+        OrderStatus status = null;
+        try {
+            if ("confirmed".equalsIgnoreCase(newStatus)) {
+                status = OrderStatus.CONFIRMED;
+            } else if ("rejected".equalsIgnoreCase(newStatus)) {
+                status = OrderStatus.REJECTED;
+            }
+            OrderMapper.updateOrderStatus(orderId, status, connectionPool);
+        } catch (DatabaseException e) {
+            ctx.attribute("message","Could not update status on order: " + orderId + "\n" + e.getMessage());
+        }
+    }
+    //This method is used for when admin/seller has confirmed the customers order.
+    // Now the customer can accept/buy and the status will update accordingly.
+    public static void updateToPaid(Context ctx, ConnectionPool connectionPool) throws DatabaseException{
+        String newStatus = ctx.formParam("newStatus");
+        int orderId = Integer.parseInt(ctx.formParam("orderId"));
+
+        OrderStatus status = null;
+        try {
+            if ("paid".equalsIgnoreCase(newStatus)) {
+                status = OrderStatus.PAID;
+            }
+            OrderMapper.updateOrderStatus(orderId, status, connectionPool);
+        } catch (DatabaseException e) {
+            ctx.attribute("message","Could not update status on order: " + orderId + "\n" + e.getMessage());
+        }
+    }
 }
