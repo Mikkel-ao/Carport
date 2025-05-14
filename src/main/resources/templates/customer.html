@@ -54,10 +54,17 @@
       <p><strong>Carport længde:</strong> <span th:text="${order.carportLength}">780</span></p>
 
       <!-- TODO: !!! When status enums are implemented make sure customer is only showed these at the right time -->
-      <p th:if="${order.status.toString() != 'pending'}">
-        <strong>Salgspris:</strong> <span th:text="${order.totalSalesPrice}"></span>
+      <p th:if="${order.status.toString() == 'confirmed' or order.status.toString() == 'paid'} ">
+        <strong>Pris:</strong> <span th:text="${#numbers.formatInteger(order.totalSalesPrice, 0)} + ' kr.'"></span>
       </p>
-      <form th:if="${order.status.toString() != 'pending'}"
+      <form th:if="${order.status.toString() == 'confirmed'}"
+            th:action="@{/payOrder}" method="post">
+        <input type="hidden" name="orderId" th:value="${order.orderId}"/>
+        <div class="submit-button">
+          <button type="submit">Betal</button>
+        </div>
+      </form>
+      <form th:if="${order.status.toString() == 'paid'}"
             th:action="@{/orderdetails/{orderId}(orderId=${order.orderId})}"
             method="get">
         <div class="submit-button">

@@ -250,13 +250,13 @@ public class OrderMapper {
             throw new DatabaseException("Fejl ved fjernelsen af cancelled ordre", e.getMessage());
         }
     }
-    public static void UpdatePrice(int newPrice, int orderId, ConnectionPool connectionPool)throws DatabaseException{
-        String sql = "UPDATE orders SET total_price = ? WHERE order_id = ?";
+    public static void UpdatePrice(double newPrice, int orderId, ConnectionPool connectionPool)throws DatabaseException{
+        String sql = "UPDATE orders SET customer_price = ? WHERE order_id = ?";
 
         try(Connection connection = connectionPool.getConnection();
             PreparedStatement ps = connection.prepareStatement(sql)){
 
-            ps.setInt(1, newPrice);
+            ps.setDouble(1, newPrice);
             ps.setInt(2, orderId);
 
             int rowsUpdated = ps.executeUpdate();
