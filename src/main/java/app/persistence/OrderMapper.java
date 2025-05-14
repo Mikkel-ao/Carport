@@ -438,7 +438,7 @@ public class OrderMapper {
 
     // Method for getting user's orders in a way that resembles the columns from orders table
     public static List<OrderInfoDTO> getOrdersForUser(int userId, ConnectionPool connectionPool) throws DatabaseException {
-        String sql = "SELECT * FROM public.orders WHERE user_id = ?";
+        String sql = "SELECT * FROM orders WHERE user_id = ?";
         List<OrderInfoDTO> orderList = new ArrayList<>();
 
         try (
