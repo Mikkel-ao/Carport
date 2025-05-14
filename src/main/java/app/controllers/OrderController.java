@@ -240,39 +240,15 @@ public class OrderController {
         }
     }
 
-    /*
-    public static void showListOfMaterials(Context ctx, ConnectionPool connectionPool) {
-
-        int orderId = Integer.parseInt(ctx.pathParam("orderId"));
-
-        Order order = OrderMapper.getOrderByOrderId(orderId, connectionPool);
-        List<OrderItem> orderDetails = order.getListOfMaterials();
-        ctx.attribute("orderDetails", orderDetails);
-        ctx.attribute("orderId", orderId);
-        ctx.render("orderdetails.html");
-
-    }
-    */
-
     public static void showListOfMaterials(Context ctx, ConnectionPool connectionPool) {
         int orderId = Integer.parseInt(ctx.pathParam("orderId"));
 
-        // Get the order
         Order order = OrderMapper.getOrderByOrderId(orderId, connectionPool);
 
-        // Get materials
         List<OrderItem> orderDetails = order.getListOfMaterials();
 
-        // Generate SVG
-        int width = order.getCarportWidth();
-        int length = order.getCarportLength();
-        CarportSvg svg = new CarportSvg(width, length);  // Assumes you have a utility class for SVG generation
-
-        // Set attributes
-        ctx.attribute("svg", svg.toString());
         ctx.attribute("orderDetails", orderDetails);
         ctx.attribute("orderId", orderId);
-
         ctx.render("orderdetails.html");
     }
 

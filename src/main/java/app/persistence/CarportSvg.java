@@ -16,9 +16,9 @@ public class CarportSvg {
         this.length = length;
         // TODO: Find a simpler solution for displaying images correctly
         // carportSvg = new Svg(0, 0, "0 0 855 690", "700px");
+
         String viewBox = "0 0 " + (length+100) + " " + (width+100); // +100 to allow content outside of carport measurements
         carportSvg = new Svg(0, 0, viewBox, "100%");
-
 
         drawBase();
         addPosts();

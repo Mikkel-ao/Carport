@@ -9,26 +9,23 @@ import java.util.Locale;
 public class SvgController {
 
     public static void addRoutes(Javalin app) {
-        app.get("/svg", SvgController::showSvg);
+        app.post("/svg", SvgController::showSvg);
     }
 
     public static void showSvg(Context ctx) {
         Locale.setDefault(Locale.US);
 
-        // Retrieves user input from url, "længde" could return "780".
-        String lengthStr = ctx.queryParam("Længde");
-        String widthStr = ctx.queryParam("Bredde");
+        String lengthStr = ctx.formParam("Længde");
+        String widthStr = ctx.formParam("Bredde");
 
-        // From string to int to work as parameters for CarportSvg()
         int length = Integer.parseInt(lengthStr);
         int width = Integer.parseInt(widthStr);
-        
+
         CarportSvg svg = new CarportSvg(width, length);
 
-        // Pass the generated SVG to the template
+        // Set the svg as an attribute to render it
         ctx.attribute("svg", svg.toString());
 
-        // Render the SVG page
         ctx.render("svg.html");
     }
 }
