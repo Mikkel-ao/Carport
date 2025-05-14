@@ -81,30 +81,30 @@ class MapperTest {
 
             stmt.execute("""
             CREATE VIEW test.complete_order_view AS
-            SELECT product_variant.product_id,
-                product_variant.product_variant_id,
-                orders.order_id,
-                orders.carport_width,
-                orders.carport_length,
-                orders.status,
-                orders.user_id,
-                orders.customer_price,
-                orders.cost_price,
-                orders.order_date,
-                order_item.order_item_id,
-                order_item.quantity,
-                product_variant.length,
-                product.name,
-                product.unit,
-                product.price,
-                product_description.description,
-                product_description.description_id,
-                product_description.key_word
-               FROM orders
-                 JOIN order_item ON orders.order_id = order_item.order_id
-                 JOIN product_variant ON order_item.product_variant_id = product_variant.product_variant_id
-                 JOIN product ON product.product_id = product_variant.product_id
-                 JOIN product_description ON product_description.description_id = order_item.product_description_id;
+            SELECT pv.product_id,
+                pv.product_variant_id,
+                o.order_id,
+                o.carport_width,
+                o.carport_length,
+                o.status,
+                o.user_id,
+                o.customer_price,
+                o.cost_price,
+                o.order_date,
+                oi.order_item_id,
+                oi.quantity,
+                pv.length,
+                p.name,
+                p.unit,
+                p.price,
+                pd.description,
+                pd.description_id,
+                pd.key_word
+               FROM test.orders o
+                 JOIN test.order_item oi ON o.order_id = oi.order_id
+                 JOIN test.product_variant pv ON oi.product_variant_id = pv.product_variant_id
+                 JOIN test.product p ON p.product_id = pv.product_id
+                 JOIN test.product_description pd ON pd.description_id = oi.product_description_id;
         """);
             // Optionally recreate views (example, if needed)
             // stmt.execute("CREATE VIEW test.complete_order_view_test AS SELECT * FROM ...");
@@ -136,6 +136,34 @@ class MapperTest {
                 INSERT INTO test.orders (carport_width, carport_length, user_id, customer_price, cost_price, order_date)
                 VALUES (600, 780, 1, 2000, 1000, CURRENT_TIMESTAMP)
             """);
+            stmt.execute("""
+        INSERT INTO test.carport_dimension_website (carport_length, carport_width)
+        VALUES (780, 600)
+    """);
+
+            // Insert into product
+            stmt.execute("""
+        INSERT INTO test.product (name, unit, price, width_in_mm)
+        VALUES ('Beam', 'pcs', 150, 45)
+    """);
+
+            // Insert into product_description
+            stmt.execute("""
+        INSERT INTO test.product_description (key_word, description, product_id)
+        VALUES ('support', 'Support beam for carport roof', 1)
+    """);
+
+            // Insert into product_variant
+            stmt.execute("""
+        INSERT INTO test.product_variant (length, product_id)
+        VALUES (4000, 1)
+    """);
+
+            // Insert into order_item
+            stmt.execute("""
+        INSERT INTO test.order_item (order_id, product_variant_id, quantity, product_description_id)
+        VALUES (1, 1, 6, 1)
+    """);
 
             // Reset sequences
            // stmt.execute("SELECT setval('test.orders_order_id_seq', COALESCE((SELECT MAX(order_id) + 1 FROM test.orders), 1), false)");
