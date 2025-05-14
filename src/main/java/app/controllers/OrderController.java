@@ -8,6 +8,7 @@ import app.persistence.ConnectionPool;
 import app.persistence.OrderMapper;
 import app.persistence.ProductMapper;
 import app.persistence.UserMapper;
+import app.service.EmailService;
 import app.util.Calculator;
 import app.util.OrderStatus;
 import io.javalin.Javalin;
@@ -313,7 +314,14 @@ public class OrderController {
 
         int orderId = Integer.parseInt(ctx.formParam("orderId"));
 
+        Order order = OrderMapper.getOrderByOrderId(orderId, connectionPool);
+        String customerEmail = order.getUser().getEmail();
+
         OrderMapper.updateOrderStatus(orderId, OrderStatus.CONFIRMED, connectionPool);
+
+        EmailService.sendEmail(customerEmail);
+
+
 
         //TODO: TRY-CATCH AND BETTER REDIRECT
         ctx.redirect("/admin");
