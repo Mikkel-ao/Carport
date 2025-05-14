@@ -4,10 +4,7 @@ import app.DTO.OrderInfoDTO;
 import app.DTO.OrderItemAndPrice;
 import app.entities.*;
 import app.exceptions.DatabaseException;
-import app.persistence.ConnectionPool;
-import app.persistence.OrderMapper;
-import app.persistence.ProductMapper;
-import app.persistence.UserMapper;
+import app.persistence.*;
 import app.util.Calculator;
 import app.util.OrderStatus;
 import io.javalin.Javalin;
@@ -243,6 +240,7 @@ public class OrderController {
         }
     }
 
+    /*
     public static void showListOfMaterials(Context ctx, ConnectionPool connectionPool) {
 
         int orderId = Integer.parseInt(ctx.pathParam("orderId"));
@@ -254,6 +252,30 @@ public class OrderController {
         ctx.render("orderdetails.html");
 
     }
+    */
+
+    public static void showListOfMaterials(Context ctx, ConnectionPool connectionPool) {
+        int orderId = Integer.parseInt(ctx.pathParam("orderId"));
+
+        // Get the order
+        Order order = OrderMapper.getOrderByOrderId(orderId, connectionPool);
+
+        // Get materials
+        List<OrderItem> orderDetails = order.getListOfMaterials();
+
+        // Generate SVG
+        int width = order.getCarportWidth();
+        int length = order.getCarportLength();
+        CarportSvg svg = new CarportSvg(width, length);  // Assumes you have a utility class for SVG generation
+
+        // Set attributes
+        ctx.attribute("svg", svg.toString());
+        ctx.attribute("orderDetails", orderDetails);
+        ctx.attribute("orderId", orderId);
+
+        ctx.render("orderdetails.html");
+    }
+
     //This method is used for updating the status of an order (done by the admin/seller).
     public static void changeStatus(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
         String newStatus = ctx.formParam("newStatus");
