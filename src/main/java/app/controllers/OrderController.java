@@ -251,15 +251,15 @@ public class OrderController {
     }
 
     public static void showListOfMaterials(Context ctx, ConnectionPool connectionPool) {
-
         int orderId = Integer.parseInt(ctx.pathParam("orderId"));
 
         Order order = OrderMapper.getOrderByOrderId(orderId, connectionPool);
+
         List<OrderItem> orderDetails = order.getListOfMaterials();
+
         ctx.attribute("orderDetails", orderDetails);
         ctx.attribute("orderId", orderId);
         ctx.render("orderdetails.html");
-
     }
 
     //TODO: Muligvis overflødge metoder

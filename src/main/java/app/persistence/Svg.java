@@ -2,8 +2,9 @@ package app.persistence;
 
 public class Svg {
     private static final String SVG_TEMPLATE = "<svg version=\"1.1\"\n" +
+            "     xmlns=\"http://www.w3.org/2000/svg\"\n" +
             "     x=\"%d\" y=\"%d\"\n" +
-            "     viewBox=\"%s\"  width=\"%s\" \n" +
+            "     viewBox=\"%s\" width=\"%s\"\n" +
             "     preserveAspectRatio=\"xMinYMin\">";
 
     private static final String SVG_ARROW_DEFS = "<defs>\n" +
@@ -11,12 +12,14 @@ public class Svg {
             "        <path d=\"M0,6 L12,0 L12,12 L0,6\" style=\"fill: #000000;\" />\n" +
             "    </marker>\n" +
             "    <marker id=\"endArrow\" markerWidth=\"12\" markerHeight=\"12\" refX=\"12\" refY=\"6\" orient=\"auto\">\n" +
-            "        <path d=\"M0,0 L12,6 L0,12 L0,0 \" style=\"fill: #000000;\" />\n" +
+            "        <path d=\"M0,0 L12,6 L0,12 L0,0\" style=\"fill: #000000;\" />\n" +
             "    </marker>\n" +
             "</defs>";
 
-    private static final String SVG_RECT_TEMPLATE = "<rect x=\"%.2f\" y=\"%.2f\" height=\"%f\" width=\"%f\" style=\"%s\" />";
-    private StringBuilder svg = new StringBuilder();
+    private static final String SVG_RECT_TEMPLATE = "<rect x=\"%.2f\" y=\"%.2f\" width=\"%.2f\" height=\"%.2f\" style=\"%s\" />";
+
+    private final StringBuilder svg = new StringBuilder();
+    private boolean closed = false;
 
     public Svg(int x, int y, String viewBox, String width) {
         svg.append(String.format(SVG_TEMPLATE, x, y, viewBox, width));
@@ -24,7 +27,7 @@ public class Svg {
     }
 
     public void addRectangle(double x, double y, double height, double width, String style) {
-        svg.append(String.format(SVG_RECT_TEMPLATE, x, y, height, width, style));
+        svg.append(String.format(SVG_RECT_TEMPLATE, x, y, width, height, style));
     }
 
     public void addLine(int x1, int y1, int x2, int y2, String style) {
@@ -44,15 +47,16 @@ public class Svg {
     }
 
     public void addSvg(Svg innerSvg) {
-        svg.append(innerSvg.toString());
+        String content = innerSvg.toString().replaceFirst("</svg>$", ""); // strip closing tag if present
+        svg.append(content);
     }
 
     @Override
     public String toString() {
-        if (!svg.toString().endsWith("</svg>")) {
+        if (!closed) {
             svg.append("</svg>");
+            closed = true;
         }
         return svg.toString();
     }
-
 }

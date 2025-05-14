@@ -72,6 +72,13 @@
         </div>
       </form>
 
+      <form th:action="@{/svg}" method="post">
+        <input type="hidden" name="Længde" th:value="${order.carportLength}" />
+        <input type="hidden" name="Bredde" th:value="${order.carportWidth}" />
+        <div class="submit-button">
+          <button type="submit">Se tegning</button>
+        </div>
+      </form>
       <br>
       <hr/>
     </div>

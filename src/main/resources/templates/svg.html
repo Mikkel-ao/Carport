@@ -20,8 +20,8 @@
         </a>
 
         <a th:if="${session.role == 'admin'}" th:href="@{/admin}" class="account-button">
-            <i class="fas fa-user"></i>
-            <span>Fog Konto</span>
+            <i class="fas fa-clipboard-list"></i>
+            <span>Ordreoversigt</span>
         </a>
 
         <a th:if="${session.role == 'customer'}" th:href="@{/customer}" class="account-button">

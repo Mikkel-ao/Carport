@@ -59,7 +59,7 @@
 
 <!-- Form for displaying carport based on user input -->
 <div class="formular-container">
-    <form action="/svg" method="get">
+    <form action="/svg" method="post">
         <label for="Længde">Længde:</label>
         <select name="Længde" class="formular-dropDown" required>
             <option value="" disabled selected>Vælg længde</option>
@@ -69,7 +69,7 @@
         <label for="Bredde">Bredde:</label>
         <select name="Bredde" class="formular-dropDown" required>
             <option value="" disabled selected>Vælg bredde</option>
-            <option th:each="width : ${carportWidth}" th:if="${width != null and width != 0}" th:text="${width}"></option>
+            <option th:each="width : ${carportWidth}" th:if="${width != null and width != 0}" th:value="${width}" th:text="${width}"></option>
         </select>
 
         <!-- Submit button for the svg -->
@@ -77,6 +77,7 @@
             <button type="submit">Generer tegning</button>
         </div>
     </form>
+
 </div>
 
 

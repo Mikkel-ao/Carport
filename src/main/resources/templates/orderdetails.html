@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>User page</title>
+  <title>Orderdetails</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
@@ -44,25 +44,18 @@
 
 
 <div class="object-details">
-  <table>
-    <thead>
-    <tr>
-      <th>Navn</th>
-      <th>Længde</th>
-      <th>Antal</th>
-      <th>Beskrivelse</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="orderItem : ${orderDetails}">
-      <td><span th:text="${orderItem.productVariant.product.name}"></span></td>
-      <td><span th:text="${orderItem.productVariant.length + ' cm'}"></span></td>
-      <td><span th:text="${orderItem.quantity} + ' stk'"></span></td>
-      <td><span th:text="${orderItem.description}"></span></td>
-    </tr>
-    </tbody>
-  </table>
+  <h2>Stykliste</h2>
+  <div th:each="orderItem : ${orderDetails}">
+    <p><strong>Navn:</strong> <span th:text="${orderItem.productVariant.product.name}">Planke</span></p>
+    <p><strong>Længde:</strong> <span th:text="${orderItem.productVariant.length}">120</span> cm</p>
+    <p><strong>Antal:</strong> <span th:text="${orderItem.quantity}">4</span> stk</p>
+    <p><strong>Beskrivelse:</strong> <span th:text="${orderItem.description}">Til tag</span></p>
+    <hr/>
+  </div>
 </div>
+
+
+
 </body>
 </html>
 
