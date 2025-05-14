@@ -14,8 +14,13 @@
             <img class="logo-index" th:src="@{/images/fog_logo_small.png}" alt="foglogo">
         </a>
 
+        <a th:href="@{/}" class="account-button">
+            <i class="fas fa-house"></i>
+            <span>Hjem</span>
+        </a>
+
         <a th:if="${session.currentUser != null}" th:href="@{/logout}" class="account-button">
-            <i class="fas fa-user"></i>
+            <i class="fas fa-right-from-bracket"></i>
             <span>Log ud</span>
         </a>
 
