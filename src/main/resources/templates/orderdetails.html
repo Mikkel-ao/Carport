@@ -46,7 +46,7 @@
 <div class="object-details">
     <h2>Stykliste</h2>
     <div th:each="orderItem : ${orderDetails}">
-        <p><strong>Navn:</strong> <span th:text="${orderItem.productVariant.product.name}">Planke</span></p>
+        <p><strong>Produktnavn:</strong> <span th:text="${orderItem.productVariant.product.name}">Planke</span></p>
         <p><strong>Længde:</strong> <span th:text="${orderItem.productVariant.length}">120</span> cm</p>
         <p><strong>Antal:</strong> <span th:text="${orderItem.quantity}">4</span> stk</p>
         <p><strong>Beskrivelse:</strong> <span th:text="${orderItem.description}">Til tag</span></p>
