@@ -231,6 +231,7 @@ select {
     height: auto;
 }
 
+
 /**** Card containers ****/
 .orders-section {
     max-width: 1400px;
@@ -249,8 +250,9 @@ select {
 
 .order-card-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
+    padding: 20px;
 }
 
 .order-card {
@@ -258,6 +260,7 @@ select {
     border: 1px solid #ddd;
     border-radius: 10px;
     padding: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    font-family: inherit;
 }
+
 
