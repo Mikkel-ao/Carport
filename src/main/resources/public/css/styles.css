@@ -248,6 +248,7 @@ select {
     padding-bottom: 10px;
 }
 
+/* For seperating the cards/containers in a grid like form */
 .order-card-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -262,5 +263,39 @@ select {
     padding: 20px;
     font-family: inherit;
 }
+
+.price-form {
+    margin-bottom: 15px;
+}
+
+.input-container {
+    margin-bottom: 10px;
+}
+
+.grid-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.grid-buttons form {
+    margin: 0;
+}
+
+.grid-buttons button {
+    width: 100%;
+    padding: 10px;
+    background-color: #043c74;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.grid-buttons button:hover {
+    background-color: #245484;
+}
+
 
 

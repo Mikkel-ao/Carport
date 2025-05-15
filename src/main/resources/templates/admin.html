@@ -54,38 +54,35 @@
             <p><strong>Indkøbspris:</strong> <span th:text="${order.costPrice}"></span></p>
             <p><strong>Salgspris:</strong> <span th:text="${order.totalSalesPrice}"></span></p>
 
-            <form th:action="@{/orderdetails/{orderId}(orderId=${order.orderId})}" method="get">
+            <br>
+            <!-- Price input at the top -->
+            <form th:if="${order.status.toString() == 'pending'}" th:action="@{/updatePrice}" method="post" class="price-form">
+                <input type="hidden" name="orderId" th:value="${order.orderId}"/>
+                <div class="input-container">
+                    <input type="number" id="newPrice" name="newPrice" step="1" required placeholder="Ny pris"/>
+                </div>
                 <div class="submit-button">
-                    <button type="submit">Se stykliste</button>
+                    <button type="submit">Opdatér salgspris</button>
                 </div>
             </form>
 
-            <div class="button-container">
-                <form th:if="${order.status.toString() == 'pending'}" th:action="@{/updatePrice}" method="post">
-                    <input type="hidden" name="orderId" th:value="${order.orderId}"/>
-                    <div class="input-container">
-                        <input type="number" id="newPrice" name="newPrice" step="1" required placeholder="Ny pris"/>
-                    </div>
-                    <div class="submit-button">
-                        <button type="submit">Opdatér salgspris</button>
-                    </div>
-                </form>
-
+            <!-- Grouping the other 3 buttons in a 2x2 layout -->
+            <div class="grid-buttons">
                 <form th:if="${order.status.toString() == 'pending'}" th:action="@{/sendOffer}" method="post">
                     <input type="hidden" name="orderId" th:value="${order.orderId}"/>
-                    <div class="submit-button">
-                        <button type="submit">Send tilbud</button>
-                    </div>
+                    <button type="submit">Send tilbud</button>
+                </form>
+
+                <form th:action="@{/orderdetails/{orderId}(orderId=${order.orderId})}" method="get">
+                    <button type="submit">Se stykliste</button>
+                </form>
+
+                <form th:action="@{/svg}" method="post">
+                    <input type="hidden" name="Længde" th:value="${order.carportLength}" />
+                    <input type="hidden" name="Bredde" th:value="${order.carportWidth}" />
+                    <button type="submit">Se tegning</button>
                 </form>
             </div>
-
-            <form th:action="@{/svg}" method="post">
-                <input type="hidden" name="Længde" th:value="${order.carportLength}" />
-                <input type="hidden" name="Bredde" th:value="${order.carportWidth}" />
-                <div class="submit-button">
-                    <button type="submit">Se tegning</button>
-                </div>
-            </form>
         </div>
     </div>
 </div>
