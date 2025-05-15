@@ -15,12 +15,6 @@ public class OrderItem {
         this.descriptionId = descriptionId;
     }
 
-    public OrderItem(int orderItemId, ProductVariant productVariant, int quantity, String description) {
-        this.orderItemId = orderItemId;
-        this.productVariant = productVariant;
-        this.quantity = quantity;
-        this.description = description;
-    }
 
     public OrderItem(ProductVariant productVariant, int quantity, int descriptionId) {
         this.productVariant = productVariant;

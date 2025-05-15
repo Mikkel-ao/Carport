@@ -45,7 +45,7 @@ public class UserMapper {
     }
 
     //Creates a new user by inserting username and password into the database
-    public static void createUser(String email, String password,String phoneNumber,String zipCode, String homeAdress, String fullName, ConnectionPool connectionPool) throws DatabaseException {
+    public static void createUser(String email, String password, String phoneNumber, String zipCode, String homeAdress, String fullName, ConnectionPool connectionPool) throws DatabaseException {
         String sql = "INSERT INTO users (email, password, phone_number,role,zip_code,home_address,full_name) VALUES (?, ?, ?, ?,?,?,?)";
         //Encrypts the password and stores it in a variable. Doing the encrypting before storing in database for security
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
@@ -80,8 +80,8 @@ public class UserMapper {
         }
     }
 
-    public static User getUserById(int userId, ConnectionPool connectionPool) {
-        String sql = "SELECT * FROM users WHERE user_id = ?";
+    public static User getUserById(int userId, ConnectionPool connectionPool) throws DatabaseException {
+        String sql = "SELECT * FROM public.users WHERE user_id = ?";
 
         try (
                 Connection connection = connectionPool.getConnection();
@@ -99,14 +99,12 @@ public class UserMapper {
                 String fullName = rs.getString("full_name");
 
                 return new User(userId, email, phoneNumber, role, zipCode, address, fullName);
-            } else {
-                throw new DatabaseException("User with ID " + userId + " not found.");
             }
-
         } catch (SQLException e) {
             throw new DatabaseException("Could not retrieve user from database", e);
         }
+        throw new DatabaseException("Could not retrieve user from database");
     }
-
 }
+
 
