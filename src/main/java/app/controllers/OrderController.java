@@ -19,61 +19,87 @@ import java.util.*;
 
 public class OrderController {
 
+    //Adding routes
     public static void addRoutes(Javalin app, ConnectionPool connectionPool) {
         app.get("/index", ctx -> getCarportDimensions(ctx, connectionPool));
-
-        app.post("/add-customer-request", ctx -> {
-            createListOfMaterials(ctx, connectionPool);
-            ctx.redirect("/add-customer-request?success=true");
-        });
+        app.post("/add-customer-request", ctx -> handleCustomerRequest(ctx, connectionPool));
         app.get("/add-customer-request", ctx -> ctx.render("index.html"));
-
         app.get("/orderdetails/{orderId}", ctx -> showListOfMaterials(ctx, connectionPool));
-
         app.post("/updatePrice", ctx -> updatePrice(ctx, connectionPool));
-
         app.post("/sendOffer", ctx -> sendOffer(ctx, connectionPool));
-
         app.post("/payOrder", ctx -> payOrder(ctx, connectionPool));
 
 
     }
 
+    //Retrieving all possible carport lengths and widths from the database, putting them in Lists and saving the Lists in session attributes
     private static void getCarportDimensions(Context ctx, ConnectionPool connectionPool) {
-        List<Integer> carportLength = OrderMapper.getCarportLength(connectionPool);
-        List<Integer> carportWidth = OrderMapper.getCarportWidth(connectionPool);
+        try {
+            List<Integer> carportLength = OrderMapper.getCarportLength(connectionPool);
+            List<Integer> carportWidth = OrderMapper.getCarportWidth(connectionPool);
 
-        ctx.attribute("carportLength", carportLength);
-        ctx.attribute("carportWidth", carportWidth);
-        ctx.render("index.html");
+            ctx.attribute("carportLength", carportLength);
+            ctx.attribute("carportWidth", carportWidth);
+        } catch (DatabaseException e) {
+            //Printing stacktrace for the developer to locate the bug
+            e.printStackTrace();
+            //Sending an error message to the user, if the carport dimensions could not be retrieved from the database
+            ctx.attribute("errorMessage", "Kunne ikke hente carport dimensioner fra databasen - prøv venligst igen senere!");
+            ctx.render("index.html");
+        }
     }
 
-    public static OrderItemAndPrice getPoleOrderItemAndPrice(int carportLength, ConnectionPool connectionPool) {
+    //Method for displaying a confirmation message when a user successfully places an order
+    private static void handleCustomerRequest(Context ctx, ConnectionPool connectionPool) throws SQLException {
+        try {
+            createListOfMaterials(ctx, connectionPool);
+            ctx.redirect("/add-customer-request?success=true");
+        } catch (DatabaseException e) {
+            //Printing stacktrace for the developer to locate the bug
+            e.printStackTrace();
+            //Sending an error message to the user, if the carport order could not be placed
+            ctx.attribute("errorMessage", "Din ordre blev ikke gennemført - prøv igen senere eller kontakt Fog for yderligere information");
+            ctx.render("index.html");
+        }
+    }
 
+    //Private (support) method that returns pole variant, quantity and price (in a DTO) for the given length of carport wished by the user
+    private static OrderItemAndPrice getPoleOrderItemAndPrice(int carportLength, ConnectionPool connectionPool) {
 
-        //product length 300 is hard-coded as we do not need to loop through the different lengths as we only have one type of pole
+        //No try-catch blocks in this method, as we are catching the exception in the method using this method
+
+        //Product length is hard-coded to 300, as we do not need to loop through the different lengths as we only have one type of pole
         ProductVariant poleVariant = ProductMapper.getVariantsByProductAndLength(300, 1, connectionPool);
+
+        //Using the calculator method for deciding how many poles are need for the given length
         int poleCount = Calculator.calcAmountOfPoles(carportLength, poleVariant.getProduct().getWidth());
+
+        //Creating an OrderItem object consisting of a ProductVariant and quantity, and description
         OrderItem poleOrderItem = new OrderItem(poleVariant, poleCount, 1);
 
+        //Calculating the cost price of the poles all together
         double price = poleCount * poleVariant.getProduct().getPricePrUnit();
 
+        //Creating an OrderItemAndPrice object consisting of an OrderItem and a price (double)
         OrderItemAndPrice poleOrderItemAndPrice = new OrderItemAndPrice(poleOrderItem, price);
 
         return poleOrderItemAndPrice;
 
     }
 
-    public static OrderItemAndPrice getRafterOrderItemAndPrice(int carportLength, int carportWidth, ConnectionPool connectionPool) {
+    //Private (support) method that returns rafter variant, quantity and price (in a DTO) for the given length of carport wished by the user
+    private static OrderItemAndPrice getRafterOrderItemAndPrice(int carportLength, int carportWidth, ConnectionPool connectionPool) {
 
-        //This is the lengths of each rafter (not to be confused with the width of the carport)
+        //No try-catch blocks in this method, as we are catching the exceptions in the method using this method
+
+        //Retrieving all possible rafter lengths from database putting them in a List
         List<Integer> possibleLengths = OrderMapper.getProductLengths(connectionPool, 2);
 
-        //Making sure that the order is correct and ascending
+        //Making sure that the order is correct and ascending so we will get the correct length when looping through the List
         Collections.sort(possibleLengths);
 
         int actualLength = 0;
-
+        //Deciding the correct length, by iterating through the list finding the first rafter length, that is the same or longer than the carport width!
         for (int possibleLength : possibleLengths) {
             if (possibleLength >= carportWidth) {
                 actualLength = possibleLength;
@@ -81,32 +107,40 @@ public class OrderController {
             }
         }
 
+        //Retrieving the correct product variant with the actual rafter length from the database
         ProductVariant rafterVariant = ProductMapper.getVariantsByProductAndLength(actualLength, 2, connectionPool);
 
         //Caluclating the amount of rafters needed for the wished length of the carport!
         int rafterCount = Calculator.calcAmountOfRafters(carportLength, rafterVariant.getProduct().getWidth());
 
-        OrderItem rafterOrderItem = new OrderItem(rafterVariant, rafterCount,2);
+        //Creating an OrderItem object consisting of the ProductVariant, quantity and description
+        OrderItem rafterOrderItem = new OrderItem(rafterVariant, rafterCount, 2);
 
-        //Calculating the price with the given length of every single rafter, the count of rafters and the unit price (in meters)
+        //Calculating the price with the given length of the rafters, the count of rafters and the unit price (in meters)
         double price = (double) rafterVariant.getProduct().getPricePrUnit() * rafterCount * rafterVariant.getLength() / 100;
 
+        //Creating an OrderItemAndPrice object consisting of an OrderItem and a price (double)
         OrderItemAndPrice orderItemAndPrice = new OrderItemAndPrice(rafterOrderItem, price);
 
         return orderItemAndPrice;
     }
 
+    //Private (support) method that returuns beam variant(s), quantity and price (in a DTO) for the given length of carport wished by the user
+    private static List<OrderItemAndPrice> getBeamOrderItemAndPrice(int carportLength, ConnectionPool connectionPool) {
 
-    public static List<OrderItemAndPrice> getBeamOrderItemAndPrice(int carportLength, ConnectionPool connectionPool) {
+        //No try-catch blocks in this method, as we are catching the exceptions in the method using this method
 
+        //Initializing a List of DTO ORderItemAndPrice as we might need more than one variant of the beam
         List<OrderItemAndPrice> orderItemAndPriceList = new ArrayList<>();
+        //Retrieving all possible rafter lengths from database putting them in a List
         List<Integer> possibleLengths = OrderMapper.getProductLengths(connectionPool, 2);
 
-
+        //Making sure that the order is correct and ascending so we will get the correct length when looping through the List
         Collections.sort(possibleLengths);
 
         int actualLength;
 
+        //Looping through the List finding the right beam length, if the wished length is less or equal to 600cm
         if (carportLength <= 600) {
             for (int possibleLength : possibleLengths) {
                 if (possibleLength >= carportLength) {
@@ -115,30 +149,36 @@ public class OrderController {
                     if (beamVariant != null) {
                         //Hard-coding the quantity to 2, because we are sure we only need one beam in each side of the carport!
                         OrderItem beamOrderItem = new OrderItem(beamVariant, 2, 3);
+                        //Calculating the price with the given length of the beam, and the unit price (in meters) and times two (because we need one beam in each side)
                         double price = 2 * (double) beamVariant.getProduct().getPricePrUnit() * beamVariant.getLength() / 100;
+                        //Adding the beam OrderItem and price to a List
                         orderItemAndPriceList.add(new OrderItemAndPrice(beamOrderItem, price));
                     }
                     break;
                 }
 
             }
+            //If wished carport length is larger than 600cm we enter this else-block!
         } else {
-            //Hard-coding the length on one of the beams (on each side) to 360, because we then know we will be able to reach all the different lengths up to the maximum length of 780cm!
+            //Hard-coding the length on one of the beams (on each side) to 360, because we then know we will be able to reach all the different lengths up to the maximum length of 780cm when adding a second beam!
             int firstBeamLength = 360;
             ProductVariant firstBeamVariant = ProductMapper.getVariantsByProductAndLength(firstBeamLength, 2, connectionPool);
-            //If the length of the carport exceeds 600cm, we know we will need two beams on each side of the carport!
             if (firstBeamVariant != null) {
                 OrderItem firstBeamOrderItem = new OrderItem(firstBeamVariant, 2, 3);
+                //Calculating the price with the given length of the beam, and the unit price (in meters) and times two (because we need one beam in each side)
                 double firstBeamPrice = 2 * (double) firstBeamVariant.getProduct().getPricePrUnit() * firstBeamVariant.getLength() / 100;
+                //Adding the beam OrderItem and price to a List
                 orderItemAndPriceList.add(new OrderItemAndPrice(firstBeamOrderItem, firstBeamPrice));
             }
-            //Figuring out what variant the second beam needs to be
+            //Selecting the second beam by looping through the list and picking the first beam that (when added with the first beam) reaches the wished length!
             for (int secondBeamLength : possibleLengths) {
                 if (firstBeamLength + secondBeamLength >= carportLength) {
                     ProductVariant secondBeamVariant = ProductMapper.getVariantsByProductAndLength(secondBeamLength, 2, connectionPool);
                     if (secondBeamVariant != null) {
                         OrderItem secondBeamOrderItem = new OrderItem(secondBeamVariant, 2, 3);
+                        //Calculating the price with the given length of the beam, and the unit price (in meters) and times two (because we need one beam in each side)
                         double secondBeamPrice = 2 * (double) secondBeamVariant.getProduct().getPricePrUnit() * secondBeamVariant.getLength() / 100;
+                        //Adding the beam OrderItem and price to a List
                         orderItemAndPriceList.add(new OrderItemAndPrice(secondBeamOrderItem, secondBeamPrice));
                     }
                     break;
@@ -278,12 +318,13 @@ public class OrderController {
             }
             OrderMapper.updateOrderStatus(orderId, status, connectionPool);
         } catch (DatabaseException e) {
-            ctx.attribute("message","Could not update status on order: " + orderId + "\n" + e.getMessage());
+            ctx.attribute("message", "Could not update status on order: " + orderId + "\n" + e.getMessage());
         }
     }
+
     //This method is used for when admin/seller has confirmed the customers order.
     // Now the customer can accept/buy and the status will update accordingly.
-    public static void updateToPaid(Context ctx, ConnectionPool connectionPool) throws DatabaseException{
+    public static void updateToPaid(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
         String newStatus = ctx.formParam("newStatus");
         int orderId = Integer.parseInt(ctx.formParam("orderId"));
 
@@ -294,7 +335,7 @@ public class OrderController {
             }
             OrderMapper.updateOrderStatus(orderId, status, connectionPool);
         } catch (DatabaseException e) {
-            ctx.attribute("message","Could not update status on order: " + orderId + "\n" + e.getMessage());
+            ctx.attribute("message", "Could not update status on order: " + orderId + "\n" + e.getMessage());
         }
     }
 
@@ -320,7 +361,6 @@ public class OrderController {
         OrderMapper.updateOrderStatus(orderId, OrderStatus.CONFIRMED, connectionPool);
 
         EmailService.sendEmail(customerEmail);
-
 
 
         //TODO: TRY-CATCH AND BETTER REDIRECT

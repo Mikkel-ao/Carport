@@ -57,6 +57,10 @@
 
 <h1>Index / Carport configuration page</h1>
 
+<div th:if="${errorMessage}" style="color: red;">
+    <p th:text="${errorMessage}"></p>
+</div>
+
 <!-- Form for displaying carport based on user input -->
 <div class="formular-container">
     <form action="/svg" method="post">
