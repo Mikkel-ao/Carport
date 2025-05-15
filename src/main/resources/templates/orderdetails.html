@@ -1,61 +1,64 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Orderdetails</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
-  <!-- For icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <title>Orderdetails</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
+    <!-- For icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <header>
-  <div class="index-container">
-    <a th:href="@{/}">
-      <img class="logo-index" th:src="@{/images/fog_logo_small.png}" alt="foglogo">
-    </a>
+    <div class="index-container">
+        <a th:href="@{/}">
+            <img class="logo-index" th:src="@{/images/fog_logo_small.png}" alt="foglogo">
+        </a>
 
-    <a th:href="@{/}" class="account-button">
-      <i class="fas fa-house"></i>
-      <span>Hjem</span>
-    </a>
+        <a th:href="@{/}" class="account-button">
+            <i class="fas fa-house"></i>
+            <span>Hjem</span>
+        </a>
 
-    <a th:if="${session.role == 'customer'}" th:href="@{/customer}" class="account-button">
-      <i class="fas fa-user"></i>
-      <span>Fog konto</span>
-    </a>
+        <a th:if="${session.role == 'customer'}" th:href="@{/customer}" class="account-button">
+            <i class="fas fa-user"></i>
+            <span>Fog konto</span>
+        </a>
 
-    <a th:if="${session.role == 'admin'}" th:href="@{/admin}" class="account-button">
-      <i class="fas fa-clipboard-list"></i>
-      <span>Ordreoversigt</span>
-    </a>
+        <a th:if="${session.role == 'admin'}" th:href="@{/admin}" class="account-button">
+            <i class="fas fa-clipboard-list"></i>
+            <span>Ordreoversigt</span>
+        </a>
 
-    <a th:if="${session.currentUser != null}" th:href="@{/logout}" class="account-button">
-      <i class="fas fa-right-from-bracket"></i>
-      <span>Log ud</span>
-    </a>
+        <a th:if="${session.currentUser != null}" th:href="@{/logout}" class="account-button">
+            <i class="fas fa-right-from-bracket"></i>
+            <span>Log ud</span>
+        </a>
 
-  </div>
+    </div>
 </header>
 
 <body>
 
-<h1><h1>Ordredetaljer #<span th:text="${orderId}"></span></h1></h1>
+<h2 class="order-details-header">Ordredetaljer <span th:text="${orderId}"></span></h2>
 
 
 <div class="object-details">
-  <h2>Stykliste</h2>
-  <div th:each="orderItem : ${orderDetails}">
-    <p><strong>Navn:</strong> <span th:text="${orderItem.productVariant.product.name}">Planke</span></p>
-    <p><strong>Længde:</strong> <span th:text="${orderItem.productVariant.length}">120</span> cm</p>
-    <p><strong>Antal:</strong> <span th:text="${orderItem.quantity}">4</span> stk</p>
-    <p><strong>Beskrivelse:</strong> <span th:text="${orderItem.description}">Til tag</span></p>
-    <hr/>
-  </div>
+    <h2>Stykliste</h2>
+    <div th:each="orderItem : ${orderDetails}">
+        <p><strong>Produktnavn:</strong> <span th:text="${orderItem.productVariant.product.name}">Planke</span></p>
+        <p><strong>Længde:</strong> <span th:text="${orderItem.productVariant.length}">120</span> cm</p>
+        <p><strong>Antal:</strong> <span th:text="${orderItem.quantity}">4</span> stk</p>
+        <p><strong>Beskrivelse:</strong> <span th:text="${orderItem.description}">Til tag</span></p>
+        <hr/>
+    </div>
 </div>
-
-
-
 </body>
+<footer class="index-site-footer">
+    <a href="https://www.johannesfog.dk/om-fog/forretninger/kontakt" class="footer-button" target="_blank"
+       rel="noopener">
+        Kontakt
+    </a>
+</footer>
 </html>
 

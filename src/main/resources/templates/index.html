@@ -11,6 +11,8 @@
 
 <body class="background-color">
 
+<p></p>
+
 <header>
     <div class="index-container">
         <!-- If the user is logged in, go to index -->
@@ -55,22 +57,37 @@
     </div>
 </header>
 
-<h1>Index / Carport configuration page</h1>
+<div class="h2-index-Quick-build">
+    <h2>Bestil Quick-Byg tilbud - carport med fladt tag</h2>
+</div>
 
+<div class="form-description-wrapper">
+    <p class="form-description">Udfyld nedenstående formular med dine ønsket længder og bredder til din skæddersyet
+        carport.</p>
+    <p class="form-description">For vi kan kontakte dig, og yde den bedste service beder vi dig oprette en fog konto.</p>
+    <p class="form-description">Tilbud og skitsetegning lægges på din fog konto hurtigst muligt af vores professionelle
+        sælger. </p>
+    <p class="form-description"> Du kan også genere en skitse inden du trykker bestil tilbud.</p>
+</div>
 <!-- Form for displaying carport based on user input -->
 <div class="formular-container">
     <form action="/svg" method="post">
         <label for="Længde">Længde:</label>
-        <select name="Længde" class="formular-dropDown" required>
-            <option value="" disabled selected>Vælg længde</option>
-            <option th:value="${length}" th:each="length : ${carportLength}" th:text="${length}"></option>
-        </select>
+        <label>
+            <select name="Længde" class="formular-dropDown" required>
+                <option value="" disabled selected>Vælg længde</option>
+                <option th:value="${length}" th:each="length : ${carportLength}" th:text="${length}"></option>
+            </select>
+        </label>
 
         <label for="Bredde">Bredde:</label>
-        <select name="Bredde" class="formular-dropDown" required>
-            <option value="" disabled selected>Vælg bredde</option>
-            <option th:each="width : ${carportWidth}" th:if="${width != null and width != 0}" th:value="${width}" th:text="${width}"></option>
-        </select>
+        <label>
+            <select name="Bredde" class="formular-dropDown" required>
+                <option value="" disabled selected>Vælg bredde</option>
+                <option th:each="width : ${carportWidth}" th:if="${width != null and width != 0}" th:value="${width}"
+                        th:text="${width}"></option>
+            </select>
+        </label>
 
         <!-- Submit button for the svg -->
         <div class="submit-button">
@@ -97,7 +114,8 @@
         <label for="Bredde">Bredde:</label>
         <select name="Bredde" id="Bredde" class="formular-dropDown" required>
             <option value="" disabled selected>Vælg bredde</option>
-            <option th:each="width : ${carportWidth}" th:if="${width != null and width != 0}" th:text="${width}"></option>
+            <option th:each="width : ${carportWidth}" th:if="${width != null and width != 0}"
+                    th:text="${width}"></option>
         </select>
 
         <!--
@@ -124,4 +142,10 @@
 </div>
 
 </body>
+<footer class="index-site-footer">
+    <a href="https://www.johannesfog.dk/om-fog/forretninger/kontakt" class="footer-button" target="_blank"
+       rel="noopener">
+        Kontakt
+    </a>
+</footer>
 </html>
