@@ -182,6 +182,7 @@ select {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     font-family: inherit;
     text-align: left;
+    justify-content: center;
 }
 
 .object-details h2 {
@@ -274,6 +275,7 @@ select {
 
 .grid-buttons {
     display: grid;
+    /* Creates 2 equal width columns, 1fr decides that each column takes half of container's width. */
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
 }
@@ -295,6 +297,15 @@ select {
 
 .grid-buttons button:hover {
     background-color: #245484;
+}
+
+
+.order-card-vertical {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
 }
 
 

@@ -7,8 +7,8 @@
   <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
   <!-- For icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-</head>
 
+<body>
 <header>
   <div class="index-container">
     <a th:href="@{/}">
@@ -24,12 +24,9 @@
       <i class="fas fa-right-from-bracket"></i>
       <span>Log ud</span>
     </a>
-
-
   </div>
 </header>
 
-<body>
 <h1>Customer page</h1>
 
 <div class="object-details">
@@ -41,57 +38,53 @@
   <p><strong>Postnummer:</strong> <span th:text="${user.zipCode}">2300</span></p>
 </div>
 
-<div class="object-details">
+<div class="orders-section">
   <h2>Dine ordreoplysninger:</h2>
 
-  <!-- Check if order(s) exists - Avoids server error when trying to access page if order == null -->
-  <div th:if="${orders != null and !#lists.isEmpty(orders)}">
-    <div th:each="order : ${orders}">
+  <div th:if="${orders != null and !#lists.isEmpty(orders)}" class="order-card-vertical">
+    <div th:each="order : ${orders}" class="order-card">
       <p><strong>Ordre ID:</strong> <span th:text="${order.orderId}">123</span></p>
-      <p><strong>Dato:</strong> <span th:text="${order.timestamp}"></span></p>
+      <p><strong>Dato:</strong> <span th:text="${order.timestamp}">2024-01-01</span></p>
       <p><strong>Status:</strong> <span th:text="${order.status}">Pending</span></p>
       <p><strong>Carport bredde:</strong> <span th:text="${order.carportWidth}">600</span></p>
       <p><strong>Carport længde:</strong> <span th:text="${order.carportLength}">780</span></p>
 
-      <!-- TODO: !!! When status enums are implemented make sure customer is only showed these at the right time -->
-      <p th:if="${order.status.toString() == 'confirmed' or order.status.toString() == 'paid'} ">
+      <p th:if="${order.status.toString() == 'confirmed' or order.status.toString() == 'paid'}">
         <strong>Pris:</strong> <span th:text="${#numbers.formatInteger(order.totalSalesPrice, 0)} + ' kr.'"></span>
       </p>
-      <form th:if="${order.status.toString() == 'confirmed'}"
-            th:action="@{/payOrder}" method="post">
-        <input type="hidden" name="orderId" th:value="${order.orderId}"/>
-        <div class="submit-button">
-          <button type="submit">Betal</button>
-        </div>
-      </form>
-      <form th:if="${order.status.toString() == 'paid'}"
-            th:action="@{/orderdetails/{orderId}(orderId=${order.orderId})}"
-            method="get">
-        <div class="submit-button">
-          <button type="submit">Se stykliste</button>
-        </div>
-      </form>
 
-      <form th:action="@{/svg}" method="post">
-        <input type="hidden" name="Længde" th:value="${order.carportLength}" />
-        <input type="hidden" name="Bredde" th:value="${order.carportWidth}" />
-        <div class="submit-button">
-          <button type="submit">Se tegning</button>
-        </div>
-      </form>
       <br>
-      <hr/>
+
+      <div class="grid-buttons">
+        <form th:if="${order.status.toString() == 'confirmed'}" th:action="@{/payOrder}" method="post">
+          <input type="hidden" name="orderId" th:value="${order.orderId}"/>
+          <div class="submit-button">
+            <button type="submit">Betal</button>
+          </div>
+        </form>
+
+        <form th:if="${order.status.toString() == 'paid'}"
+              th:action="@{/orderdetails/{orderId}(orderId=${order.orderId})}" method="get">
+          <div class="submit-button">
+            <button type="submit">Se stykliste</button>
+          </div>
+        </form>
+
+        <form th:action="@{/svg}" method="post">
+          <input type="hidden" name="Længde" th:value="${order.carportLength}" />
+          <input type="hidden" name="Bredde" th:value="${order.carportWidth}" />
+          <div class="submit-button">
+            <button type="submit">Se tegning</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 
-  <!-- If true, displays msg in orderdetails container -->
   <div th:if="${orders == null or #lists.isEmpty(orders)}">
     <p>Ingen ordre fundet.</p>
   </div>
 </div>
-
-
-
 
 </body>
 </html>
