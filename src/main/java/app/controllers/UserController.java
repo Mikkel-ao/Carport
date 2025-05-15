@@ -7,8 +7,7 @@ import app.entities.User;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
-import static app.controllers.OrderController.getOrderDetails;
-import static app.controllers.OrderController.showAllOrders;
+import static app.controllers.OrderController.showAllOrdersForAdmin;
 
 public class UserController {
 
@@ -18,17 +17,6 @@ public class UserController {
         app.get("/createuser", ctx -> ctx.render("/createuser.html"));
         app.post("/createuser", ctx -> createUser(ctx, connectionPool));
         app.get("/logout", ctx -> logout(ctx));
-        // TODO: Find better solution to importing static OrderCotroller methods for routing.
-        app.get("/admin", ctx -> {
-            getCustomerDetails(ctx, connectionPool);
-            showAllOrders(ctx, connectionPool);
-            ctx.render("/admin.html");
-        });
-        app.get("/customer", ctx -> {
-            getCustomerDetails(ctx, connectionPool);
-            getOrderDetails(ctx, connectionPool);
-            ctx.render("customer.html");
-        });
     }
 
     private static void logout(Context ctx) {
@@ -78,18 +66,6 @@ public class UserController {
         } catch (DatabaseException e) {
             ctx.attribute("message", "User already exists. Try again or log in.");
             ctx.render("/createuser.html");
-        }
-    }
-
-    private static void getCustomerDetails(Context ctx, ConnectionPool connectionPool) {
-        Integer userId = ctx.sessionAttribute("userId");
-
-        try {
-            User user = UserMapper.getUserById(userId, connectionPool);
-            ctx.attribute("user", user);
-        } catch (DatabaseException e) {
-            ctx.attribute("message", "Could not retrieve user details.");
-            ctx.render("/login.html");
         }
     }
 }

@@ -14,7 +14,6 @@ import app.util.OrderStatus;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
-import java.sql.SQLException;
 import java.util.*;
 
 public class OrderController {
@@ -28,7 +27,8 @@ public class OrderController {
         app.post("/updatePrice", ctx -> updatePrice(ctx, connectionPool));
         app.post("/sendOffer", ctx -> sendOffer(ctx, connectionPool));
         app.post("/payOrder", ctx -> payOrder(ctx, connectionPool));
-
+        app.get("/customer", ctx -> getOrderDetailsForUser(ctx, connectionPool));
+        app.get("/admin", ctx -> showAllOrdersForAdmin(ctx, connectionPool));
 
     }
 
@@ -40,33 +40,33 @@ public class OrderController {
 
             ctx.attribute("carportLength", carportLength);
             ctx.attribute("carportWidth", carportWidth);
+            ctx.render("index.html");
         } catch (DatabaseException e) {
             //Printing stacktrace for the developer to locate the bug
             e.printStackTrace();
-            //Sending an error message to the user, if the carport dimensions could not be retrieved from the database
+            //Displaying an error message to the user, if the carport dimensions could not be retrieved from the database
             ctx.attribute("errorMessage", "Kunne ikke hente carport dimensioner fra databasen - prøv venligst igen senere!");
             ctx.render("index.html");
         }
     }
 
     //Method for displaying a confirmation message when a user successfully places an order
-    private static void handleCustomerRequest(Context ctx, ConnectionPool connectionPool) throws SQLException {
+    //This method catches the DatabaseException for createListOfMaterials method and all of its supporting methods!
+    private static void handleCustomerRequest(Context ctx, ConnectionPool connectionPool) {
         try {
             createListOfMaterials(ctx, connectionPool);
             ctx.redirect("/add-customer-request?success=true");
         } catch (DatabaseException e) {
             //Printing stacktrace for the developer to locate the bug
             e.printStackTrace();
-            //Sending an error message to the user, if the carport order could not be placed
+            //Displaying an error message to the user, if the carport order could not be placed
             ctx.attribute("errorMessage", "Din ordre blev ikke gennemført - prøv igen senere eller kontakt Fog for yderligere information");
             ctx.render("index.html");
         }
     }
 
     //Private (support) method that returns pole variant, quantity and price (in a DTO) for the given length of carport wished by the user
-    private static OrderItemAndPrice getPoleOrderItemAndPrice(int carportLength, ConnectionPool connectionPool) {
-
-        //No try-catch blocks in this method, as we are catching the exception in the method using this method
+    private static OrderItemAndPrice getPoleOrderItemAndPrice(int carportLength, ConnectionPool connectionPool) throws DatabaseException {
 
         //Product length is hard-coded to 300, as we do not need to loop through the different lengths as we only have one type of pole
         ProductVariant poleVariant = ProductMapper.getVariantsByProductAndLength(300, 1, connectionPool);
@@ -88,9 +88,7 @@ public class OrderController {
     }
 
     //Private (support) method that returns rafter variant, quantity and price (in a DTO) for the given length of carport wished by the user
-    private static OrderItemAndPrice getRafterOrderItemAndPrice(int carportLength, int carportWidth, ConnectionPool connectionPool) {
-
-        //No try-catch blocks in this method, as we are catching the exceptions in the method using this method
+    private static OrderItemAndPrice getRafterOrderItemAndPrice(int carportLength, int carportWidth, ConnectionPool connectionPool) throws DatabaseException {
 
         //Retrieving all possible rafter lengths from database putting them in a List
         List<Integer> possibleLengths = OrderMapper.getProductLengths(connectionPool, 2);
@@ -126,9 +124,8 @@ public class OrderController {
     }
 
     //Private (support) method that returuns beam variant(s), quantity and price (in a DTO) for the given length of carport wished by the user
-    private static List<OrderItemAndPrice> getBeamOrderItemAndPrice(int carportLength, ConnectionPool connectionPool) {
+    private static List<OrderItemAndPrice> getBeamOrderItemAndPrice(int carportLength, ConnectionPool connectionPool) throws DatabaseException {
 
-        //No try-catch blocks in this method, as we are catching the exceptions in the method using this method
 
         //Initializing a List of DTO ORderItemAndPrice as we might need more than one variant of the beam
         List<OrderItemAndPrice> orderItemAndPriceList = new ArrayList<>();
@@ -189,34 +186,33 @@ public class OrderController {
     }
 
 
-    //TODO: Maybe in ProductMapper instead?
-    public static Order createListOfMaterials(Context ctx, ConnectionPool connectionPool) throws SQLException {
+    //Method that retrieves the wished length and width from front end and then uses different support methods to create an order and save it in the database!
+    public static Order createListOfMaterials(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
 
 
-        //TODO: Nye navne på disse to ints
-        int userLength = Integer.parseInt(ctx.formParam("Længde"));
-        int userWidth = Integer.parseInt(ctx.formParam("Bredde"));
+        //Retrieving information from front end
+        int chosenLength = Integer.parseInt(ctx.formParam("Længde"));
+        int chosenWidth = Integer.parseInt(ctx.formParam("Bredde"));
 
         Integer userId = ctx.sessionAttribute("userId");
-        if (userId == null) {
-            throw new IllegalStateException("User not logged in or session expired");
-        }
 
+        //TODO: Handle not logged in User
         User loggedInUser = UserMapper.getUserById(userId, connectionPool);
 
 
+        //Initializing a list consisting of OrderItems which will end up being the list of materials
         List<OrderItem> listOfMaterials = new ArrayList<>();
 
 
-        //Adding poles to the list of materials
-        OrderItemAndPrice poleData = getPoleOrderItemAndPrice(userLength, connectionPool);
+        //Adding poles to the list of materials using the private support method
+        OrderItemAndPrice poleData = getPoleOrderItemAndPrice(chosenLength, connectionPool);
         OrderItem poleOrderItem = poleData.getOrderItem();
         listOfMaterials.add(poleOrderItem);
         double poleCostPrice = poleData.getPrice();
 
 
-        //Adding rafters to the list of materials
-        OrderItemAndPrice rafterData = getRafterOrderItemAndPrice(userLength, userWidth, connectionPool);
+        //Adding rafters to the list of materials using the private support method
+        OrderItemAndPrice rafterData = getRafterOrderItemAndPrice(chosenLength, chosenWidth, connectionPool);
         //Retrieving the order item from the DTO
         OrderItem rafterOrderItem = rafterData.getOrderItem();
         //Adding rafter order items to the list!
@@ -225,55 +221,72 @@ public class OrderController {
         double rafterCostPrice = rafterData.getPrice();
 
         //Adding beams to the list of materials
-        List<OrderItemAndPrice> beamData = getBeamOrderItemAndPrice(userLength, connectionPool);
+        List<OrderItemAndPrice> beamData = getBeamOrderItemAndPrice(chosenLength, connectionPool);
         double beamCostPrice = 0;
+        //Looping through the list of beams adding every beam order item to the list of materials
         for (OrderItemAndPrice beamOrderItemAndPrice : beamData) {
             listOfMaterials.add(beamOrderItemAndPrice.getOrderItem());
+            //Adding up the price of the beams to get to total cost price of the beams
             beamCostPrice += beamOrderItemAndPrice.getPrice();
         }
 
+        //Adding the cost price of poles, rafters and beams
         double totalCostPrice = poleCostPrice + rafterCostPrice + beamCostPrice;
+        //Multiplying the cost price with 1.39, to get the default sales price, which is 39% higher than the cost price!
         double totalCustomerPrice = totalCostPrice * 1.39;
 
-        //ctx.sessionAttribute("listOfMaterials", listOfMaterials);
-        //TODO: Måske overload konstruktør til Order, så man ikke behøver status? Denne er først relevant, når den bliver sendt til db (som defaulter til "pending")!
-        Order currentOrder = new Order(listOfMaterials, userWidth, userLength, OrderStatus.PENDING, loggedInUser, totalCustomerPrice, totalCostPrice);
+        //Initializing an order with all of the above information to save in the database!
+        Order currentOrder = new Order(listOfMaterials, chosenWidth, chosenLength, OrderStatus.PENDING, loggedInUser, totalCustomerPrice, totalCostPrice);
 
+        //Calling the saveOrder method, that saves the order in the database
         saveOrder(currentOrder, connectionPool);
 
         return currentOrder;
+
     }
 
 
-    //TODO: Denne skal kaldes, når brugeren har accepteret de indtastet mål (og evt set SVG), så ordren bliver smidt i databasen
-    public static void saveOrder(Order order, ConnectionPool connectionPool) {
+    public static void saveOrder(Order order, ConnectionPool connectionPool) throws DatabaseException {
 
-        //TODO: Måske noget validering på at denne liste findes?
+
+        //Initializing list of materials
         List<OrderItem> listOfMaterials = order.getListOfMaterials();
 
+        //Creating an order and retrieving the newly made order id
         int orderId = OrderMapper.createOrder(connectionPool, order.getCarportWidth(), order.getCarportLength(), order.getUser().getUserId(), order.getTotalSalesPrice(), order.getCostPrice());
 
-        for (OrderItem orderItem : listOfMaterials) {
-            OrderMapper.insertOrderItem(orderId, orderItem, connectionPool);
+        //Looping through the list of OrderItems and saving them line for line in the database "order_item" table
+        if (!listOfMaterials.isEmpty()) {
+            for (OrderItem orderItem : listOfMaterials) {
+                OrderMapper.insertOrderItem(orderId, orderItem, connectionPool);
+            }
         }
-
     }
 
-    // TODO: Routing for this method is currently in UserController - Two get requests
-    public static void getOrderDetails(Context ctx, ConnectionPool connectionPool) {
+    //Method for retrieving and displaying the order details from the database
+    public static void getOrderDetailsForUser(Context ctx, ConnectionPool connectionPool) {
+
         Integer userId = ctx.sessionAttribute("userId");
 
+        //Retrieving the order and user details (DTO because we do not want to show all details to the user) and passing them along to the next page!
         try {
+            User user = UserMapper.getUserById(userId, connectionPool);
             List<OrderInfoDTO> orders = OrderMapper.getOrdersForUser(userId, connectionPool);
+            ctx.attribute("user", user);
             ctx.attribute("orders", orders);
+            ctx.render("customer.html");
         } catch (DatabaseException e) {
-            ctx.attribute("message", "Could not retrieve order details.");
-            ctx.render("/login.html");
+            //Printing stacktrace for the developer to locate the bug
+            e.printStackTrace();
+            //Sending an error message to the user if the order list could not be retrieved
+            ctx.attribute("errorMessage", "Kunne ikke hente ordrer");
+            ctx.render("/index.html");
         }
     }
 
-    // Method that displays all orders for Admin user
-    public static void showAllOrders(Context ctx, ConnectionPool connectionPool) {
+    // Method for retrieving and displaying all orders based on privilege (admin)
+    public static void showAllOrdersForAdmin(Context ctx, ConnectionPool connectionPool) {
+
         Integer userId = ctx.sessionAttribute("userId");
 
         try {
@@ -281,64 +294,43 @@ public class OrderController {
             if (user.getRole().equalsIgnoreCase("admin")) {
                 List<Order> orders = OrderMapper.getAllOrders(connectionPool);
                 ctx.attribute("orders", orders);
+                ctx.attribute("user", user);
                 ctx.render("admin.html");
-            } else {
-                ctx.status(403).result("Access denied: Admins only.");
             }
         } catch (DatabaseException e) {
-            ctx.attribute("message", "Could not retrieve orders.");
+            //Printing stacktrace for the developer to locate the bug
+            e.printStackTrace();
+            //Displaying an error message to the user if the order list could not be retrieved
+            ctx.attribute("errorMessage", "Kunne ikke hente ordrer!");
             ctx.render("/index.html");
         }
     }
 
+    //Method for displaying the list of materials of a particular order
     public static void showListOfMaterials(Context ctx, ConnectionPool connectionPool) {
+
         int orderId = Integer.parseInt(ctx.pathParam("orderId"));
 
-        Order order = OrderMapper.getOrderByOrderId(orderId, connectionPool);
-
-        List<OrderItem> orderDetails = order.getListOfMaterials();
-
-        ctx.attribute("orderDetails", orderDetails);
-        ctx.attribute("orderId", orderId);
-        ctx.render("orderdetails.html");
-    }
-
-    //TODO: Muligvis overflødge metoder
-    //This method is used for updating the status of an order (done by the admin/seller).
-    public static void changeStatus(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
-        String newStatus = ctx.formParam("newStatus");
-        int orderId = Integer.parseInt(ctx.formParam("orderId"));
-
-        OrderStatus status = null;
+        //Trying to retrieve an order from database and save the list in an attribute and pass it along to next page
         try {
-            if ("confirmed".equalsIgnoreCase(newStatus)) {
-                status = OrderStatus.CONFIRMED;
-            } else if ("rejected".equalsIgnoreCase(newStatus)) {
-                status = OrderStatus.REJECTED;
-            }
-            OrderMapper.updateOrderStatus(orderId, status, connectionPool);
+            Order order = OrderMapper.getOrderByOrderId(orderId, connectionPool);
+
+            List<OrderItem> orderDetails = order.getListOfMaterials();
+
+            ctx.attribute("orderDetails", orderDetails);
+            ctx.attribute("orderId", orderId);
+            ctx.render("orderdetails.html");
         } catch (DatabaseException e) {
-            ctx.attribute("message", "Could not update status on order: " + orderId + "\n" + e.getMessage());
+            //Printing stacktrace for the developer to locate the bug
+            e.printStackTrace();
+            //Displaying an error message to the user if the list of materials could not be retrieved from database
+            ctx.attribute("errorMessage", "Kunne ikke hente stykliste");
+            ctx.render("/index.html");
         }
     }
 
-    //This method is used for when admin/seller has confirmed the customers order.
-    // Now the customer can accept/buy and the status will update accordingly.
-    public static void updateToPaid(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
-        String newStatus = ctx.formParam("newStatus");
-        int orderId = Integer.parseInt(ctx.formParam("orderId"));
 
-        OrderStatus status = null;
-        try {
-            if ("paid".equalsIgnoreCase(newStatus)) {
-                status = OrderStatus.PAID;
-            }
-            OrderMapper.updateOrderStatus(orderId, status, connectionPool);
-        } catch (DatabaseException e) {
-            ctx.attribute("message", "Could not update status on order: " + orderId + "\n" + e.getMessage());
-        }
-    }
-
+    //Method for updating and saving a new sales price in the database
     public static void updatePrice(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
 
         int orderId = Integer.parseInt(ctx.formParam("orderId"));

@@ -27,6 +27,7 @@
     </div>
 </header>
 
+
 <body class="background-color">
 <div class="page-container">
     <header class="header">
@@ -40,8 +41,8 @@
         <input type="email" name="email" placeholder="Indtast email" required />
         <input type="password" name="password" placeholder="Indtast adgangskode" required />
         <button type="submit" class="rounded-btn">Log ind</button>
-        <div>
-            <p class="error" th:unless="${#strings.isEmpty(message)}" th:text="${message}"></p>
+        <div th:if="${errorMessage}" style="color: red;">
+            <p th:text="${errorMessage}"></p>
         </div>
     </form>
 
