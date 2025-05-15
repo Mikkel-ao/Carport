@@ -131,15 +131,16 @@ h1 {
     background-color: #F7F7F5;
 }
 
-.index-container {
+.toolbar {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-start;
     gap: 10px;
     width: 100%; /* Full width toolbar */
-    background-color: white;
+    background-color: #f0f0f0;
     padding: 10px 20px;
+    border-bottom: 1px solid #ccc
 }
 
 /* Smaller logo size */
