@@ -11,7 +11,7 @@ public class EmailService {
         final String senderEmail = System.getenv("EMAIL");
         final String senderPassword = System.getenv("EMAIL_PASSWORD");
         final String subject = "Fog Carport - Ordrestatus Opdateret";
-        final String messageBody = "Kære kunde. Der er blevet oprettet et tilbud på din caport bestilling.\n\nLog ind på din Fog-konto for at se tilbuddet.\n\nMed Venlig Hilsen\n\nFog";
+        final String messageBody = "Kære kunde. Der er blevet oprettet et tilbud på din carport bestilling.\n\nLog ind på din Fog-konto for at se tilbuddet.\n\nMed Venlig Hilsen\n\nFog";
 
 
         // SMTP Configuration for Outlook
