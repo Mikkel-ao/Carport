@@ -331,42 +331,65 @@ public class OrderController {
 
 
     //Method for updating and saving a new sales price in the database
-    public static void updatePrice(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
+    public static void updatePrice(Context ctx, ConnectionPool connectionPool){
 
         int orderId = Integer.parseInt(ctx.formParam("orderId"));
 
         double newPrice = Double.parseDouble(ctx.formParam("newPrice"));
 
-        OrderMapper.UpdatePrice(newPrice, orderId, connectionPool);
-
-        //TODO: TRY-CATCH AND BETTER REDIRECT
-        ctx.redirect("/admin");
+        //Trying to update price in the database
+        try {
+            OrderMapper.UpdatePrice(newPrice, orderId, connectionPool);
+            ctx.redirect("/admin");
+        } catch (DatabaseException e) {
+            //Printing stacktrace for the developer to locate the bug
+            e.printStackTrace();
+            //Displaying an error message to the admin if the price could not be updated!
+            ctx.attribute("errorMessage", "Kunne ikke opdatere prisen!");
+            ctx.render("/admin.html");
+        }
     }
 
-    public static void sendOffer(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
+    //Method for sending an order to the user by updating the order status and using the EmailService
+    public static void sendOffer(Context ctx, ConnectionPool connectionPool) {
 
         int orderId = Integer.parseInt(ctx.formParam("orderId"));
 
-        Order order = OrderMapper.getOrderByOrderId(orderId, connectionPool);
-        String customerEmail = order.getUser().getEmail();
+        //Retrieving the order from the database and getting the email from the order's user
+        try {
+            Order order = OrderMapper.getOrderByOrderId(orderId, connectionPool);
+            String customerEmail = order.getUser().getEmail();
 
-        OrderMapper.updateOrderStatus(orderId, OrderStatus.CONFIRMED, connectionPool);
+            //Updating status
+            OrderMapper.updateOrderStatus(orderId, OrderStatus.CONFIRMED, connectionPool);
 
-        EmailService.sendEmail(customerEmail);
-
-
-        //TODO: TRY-CATCH AND BETTER REDIRECT
-        ctx.redirect("/admin");
+            //Sending email to customer
+            EmailService.sendEmail(customerEmail);
+            ctx.redirect("/admin");
+        } catch (DatabaseException e) {
+            //Printing stacktrace for the developer to locate the bug
+            e.printStackTrace();
+            //Displaying an error message to the admin if the order could not be sent!
+            ctx.attribute("errorMessage", "Kunne ikke afsende ordren!");
+            ctx.render("/admin.html");
+        }
     }
 
-    public static void payOrder(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
+    //Method for paying order (customer) by changing order status
+    public static void payOrder(Context ctx, ConnectionPool connectionPool) {
 
         int orderId = Integer.parseInt(ctx.formParam("orderId"));
 
-        OrderMapper.updateOrderStatus(orderId, OrderStatus.PAID, connectionPool);
-
-        //TODO: TRY-CATCH AND BETTER REDIRECT
-        ctx.redirect("/customer");
+        //Trying to update the status of the order in the database
+        try {
+            OrderMapper.updateOrderStatus(orderId, OrderStatus.PAID, connectionPool);
+            ctx.redirect("/customer");
+        } catch (DatabaseException e) {
+            //Printing stacktrace for the developer to locate the bug
+            e.printStackTrace();
+            //Displaying an error message to the admin if the order could not be paid!
+            ctx.attribute("errorMessage", "Kunne ikke afsende ordren!");
+            ctx.render("/customer.html");
+        }
     }
-
 }
