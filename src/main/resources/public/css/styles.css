@@ -182,7 +182,6 @@ select {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     font-family: inherit;
     text-align: left;
-    justify-content: center;
 }
 
 .object-details h2 {
@@ -298,7 +297,6 @@ select {
 .grid-buttons button:hover {
     background-color: #245484;
 }
-
 
 .order-card-vertical {
     display: flex;
