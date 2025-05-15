@@ -218,9 +218,15 @@ select {
 
 /***** Container for customer/order details ******/
 
+.order-details-header {
+    flex-direction: column;
+    text-align: center;
+    display: flex;
+}
+
 .object-details {
     width: 475px;
-    margin: 50px;
+    margin: 50px auto;
     padding: 25px 30px;
     border: 1px solid #ccc;
     border-radius: 10px;
