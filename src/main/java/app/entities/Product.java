@@ -7,7 +7,7 @@ public class Product {
     double width;
     int pricePrUnit;
 
-
+    //Overloading the constructor to fit our various needs!
     public Product(int productId, String name, String unit, int pricePrUnit) {
         this.productId = productId;
         this.name = name;
@@ -27,13 +27,6 @@ public class Product {
         return width;
     }
 
-    public int getProductId() {
-        return productId;
-    }
-
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
 
     public String getName() {
         return name;
@@ -43,22 +36,10 @@ public class Product {
         this.name = name;
     }
 
-    public String getUnit() {
-        return unit;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
 
     public int getPricePrUnit() {
         return pricePrUnit;
     }
-
-    public void setPricePrUnit(int pricePrUnit) {
-        this.pricePrUnit = pricePrUnit;
-    }
-
 
 
     @Override
@@ -67,7 +48,8 @@ public class Product {
                 "productId=" + productId +
                 ", name='" + name + '\'' +
                 ", unit='" + unit + '\'' +
-                ", price=" + pricePrUnit +
+                ", width=" + width +
+                ", pricePrUnit=" + pricePrUnit +
                 '}';
     }
 }

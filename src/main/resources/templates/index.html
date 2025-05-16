@@ -61,6 +61,10 @@
     <h2>Bestil Quick-Byg tilbud - carport med fladt tag</h2>
 </div>
 
+<div th:if="${errorMessage}" style="color: red;">
+    <p th:text="${errorMessage}"></p>
+</div>
+
 <div class="form-description-wrapper">
     <p class="form-description">Udfyld nedenstående formular med dine ønsket længder og bredder til din skæddersyet
         carport.</p>

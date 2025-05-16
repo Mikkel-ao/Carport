@@ -10,6 +10,7 @@ public class User {
     private String address;
     private String zipCode;
 
+    //Overloading the constructor to fit our various needs
     public User(int userId, String password, String email, String phoneNumber, String role) {
         this.userId = userId;
         this.password = password;
@@ -64,9 +65,6 @@ public class User {
         return userId;
     }
 
-    public String getPassword() {
-        return password;
-    }
 
     public String getEmail() {
         return email;

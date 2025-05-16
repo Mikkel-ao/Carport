@@ -42,9 +42,9 @@ public class OrderController {
             ctx.attribute("carportWidth", carportWidth);
             ctx.render("index.html");
         } catch (DatabaseException e) {
-            //Printing stacktrace for the developer to locate the bug
+            //Printing stack trace for the developer to locate the bug
             e.printStackTrace();
-            //Displaying an error message to the user, if the carport dimensions could not be retrieved from the database
+            //Displaying an error message to the user if the carport dimensions could not be retrieved from the database
             ctx.attribute("errorMessage", "Kunne ikke hente carport dimensioner fra databasen - prøv venligst igen senere!");
             ctx.render("index.html");
         }
@@ -57,9 +57,9 @@ public class OrderController {
             createListOfMaterials(ctx, connectionPool);
             ctx.redirect("/add-customer-request?success=true");
         } catch (DatabaseException e) {
-            //Printing stacktrace for the developer to locate the bug
+            //Printing stack trace for the developer to locate the bug
             e.printStackTrace();
-            //Displaying an error message to the user, if the carport order could not be placed
+            //Displaying an error message to the user if the carport order could not be placed
             ctx.attribute("errorMessage", "Din ordre blev ikke gennemført - prøv igen senere eller kontakt Fog for yderligere information");
             ctx.render("index.html");
         }
@@ -190,13 +190,13 @@ public class OrderController {
     public static Order createListOfMaterials(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
 
 
-        //Retrieving information from front end
+        //Retrieving information from the front end
         int chosenLength = Integer.parseInt(ctx.formParam("Længde"));
         int chosenWidth = Integer.parseInt(ctx.formParam("Bredde"));
 
         Integer userId = ctx.sessionAttribute("userId");
 
-        //TODO: Handle not logged in User
+
         User loggedInUser = UserMapper.getUserById(userId, connectionPool);
 
 
@@ -276,7 +276,7 @@ public class OrderController {
             ctx.attribute("orders", orders);
             ctx.render("customer.html");
         } catch (DatabaseException e) {
-            //Printing stacktrace for the developer to locate the bug
+            //Printing stack trace for the developer to locate the bug
             e.printStackTrace();
             //Sending an error message to the user if the order list could not be retrieved
             ctx.attribute("errorMessage", "Kunne ikke hente ordrer");
@@ -298,7 +298,7 @@ public class OrderController {
                 ctx.render("admin.html");
             }
         } catch (DatabaseException e) {
-            //Printing stacktrace for the developer to locate the bug
+            //Printing stack trace for the developer to locate the bug
             e.printStackTrace();
             //Displaying an error message to the user if the order list could not be retrieved
             ctx.attribute("errorMessage", "Kunne ikke hente ordrer!");
@@ -321,7 +321,7 @@ public class OrderController {
             ctx.attribute("orderId", orderId);
             ctx.render("orderdetails.html");
         } catch (DatabaseException e) {
-            //Printing stacktrace for the developer to locate the bug
+            //Printing stack trace for the developer to locate the bug
             e.printStackTrace();
             //Displaying an error message to the user if the list of materials could not be retrieved from database
             ctx.attribute("errorMessage", "Kunne ikke hente stykliste");
@@ -342,7 +342,7 @@ public class OrderController {
             OrderMapper.UpdatePrice(newPrice, orderId, connectionPool);
             ctx.redirect("/admin");
         } catch (DatabaseException e) {
-            //Printing stacktrace for the developer to locate the bug
+            //Printing stack trace for the developer to locate the bug
             e.printStackTrace();
             //Displaying an error message to the admin if the price could not be updated!
             ctx.attribute("errorMessage", "Kunne ikke opdatere prisen!");
@@ -367,7 +367,7 @@ public class OrderController {
             EmailService.sendEmail(customerEmail);
             ctx.redirect("/admin");
         } catch (DatabaseException e) {
-            //Printing stacktrace for the developer to locate the bug
+            //Printing stack trace for the developer to locate the bug
             e.printStackTrace();
             //Displaying an error message to the admin if the order could not be sent!
             ctx.attribute("errorMessage", "Kunne ikke afsende ordren!");
@@ -385,7 +385,7 @@ public class OrderController {
             OrderMapper.updateOrderStatus(orderId, OrderStatus.PAID, connectionPool);
             ctx.redirect("/customer");
         } catch (DatabaseException e) {
-            //Printing stacktrace for the developer to locate the bug
+            //Printing stack trace for the developer to locate the bug
             e.printStackTrace();
             //Displaying an error message to the admin if the order could not be paid!
             ctx.attribute("errorMessage", "Kunne ikke afsende ordren!");

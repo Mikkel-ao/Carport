@@ -27,9 +27,6 @@ public class OrderInfoDTO {
         return costPrice;
     }
 
-    public double getTotalSalesPrice() {
-        return customerPrice;
-    }
 
     public double getCustomerPrice() {
         return customerPrice;
@@ -47,13 +44,6 @@ public class OrderInfoDTO {
         return carportWidth;
     }
 
-    public int getOrderId() {
-        return orderId;
-    }
-
-    public Timestamp getTimeStamp() {
-        return timeStamp;
-    }
 
     @Override
     public String toString() {

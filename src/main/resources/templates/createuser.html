@@ -38,6 +38,7 @@
         <br>
     </header>
 
+
     <form class="generic-form" method="post">
         <label>
             <input type="email" name="email" placeholder="Indtast email" required/>
@@ -69,7 +70,9 @@
             </label>
         </div>
         <button type="submit" formaction="/createuser">Opret bruger</button>
-        <div><p class="error" th:unless="${#strings.isEmpty(message)}" th:text="${message}"></p></div>
+        <div th:if="${errorMessage}" style="color: red;">
+            <p th:text="${errorMessage}"></p>
+        </div>
     </form>
 
 </div>

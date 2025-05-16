@@ -44,6 +44,9 @@
         <div th:if="${errorMessage}" style="color: red;">
             <p th:text="${errorMessage}"></p>
         </div>
+        <div th:if="${message}" style="color: green">
+            <p th:text="${message}"></p>
+        </div>
     </form>
 
 </div>

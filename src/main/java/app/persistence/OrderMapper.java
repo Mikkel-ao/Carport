@@ -444,6 +444,7 @@ public class OrderMapper {
         String sql = "SELECT * FROM public.orders WHERE user_id = ? ORDER BY order_id ASC";
         List<OrderInfoDTO> orderList = new ArrayList<>();
 
+        //Declaring Connection and PreparedStatement in the try header so it becomes a "try-with-resources" block, which means it closes the connections automatically
         try (
                 Connection connection = connectionPool.getConnection();
                 PreparedStatement ps = connection.prepareStatement(sql)
