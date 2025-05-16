@@ -11,7 +11,7 @@ body {
 }
 
 h1 {
-    color: #369; /* Blue heading */
+    color: #043c74;
     font-size: 3rem;
 }
 
@@ -133,6 +133,23 @@ h1 {
     background-color: #245484;
 }
 
+/* Grid layout container for buttons inside order cards */
+.grid-buttons {
+    display: grid;
+    /* Create flexible columns that fit based on available space and minimum button width */
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.grid-buttons button {
+    width: 100%; /* Uniform button size despite different text inside */
+}
+
+.grid-buttons form {
+    margin: 0; /* Remove default margins inside forms to align properly */
+}
+
 /***** Submit button container *****/
 .submit-button {
     text-align: center;
@@ -248,13 +265,16 @@ h1 {
     height: auto;
 }
 
-/***** Orders section & cards *****/
+/***** Orders & cards *****/
+
+/* Container for the entire orders section */
 .orders-section {
     max-width: 1400px;
     margin: 40px auto;
     padding: 0 20px;
 }
 
+/* Heading style inside the orders section */
 .orders-section h2 {
     font-size: 1.8rem;
     color: #043c74;
@@ -264,23 +284,29 @@ h1 {
     padding-bottom: 10px;
 }
 
-/***** Order cards with grid/rows layout *****/
+/***** Grid layout - Displays multiple orders card side by side *****/
 .order-card-container {
     display: grid;
+    /* Auto-fit as many columns as possible with a minimum width of 300px */
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
     padding: 20px;
 }
 
+/****** Style for each individual order card ******/
 .order-card {
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 10px;
     padding: 20px;
     font-family: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%; /* Card stretches to match grid height */
 }
 
-/***** Order cards with flex/vertical layout *****/
+/***** Layout for displaying cards vertically ******/
 .order-card-vertical {
     display: flex;
     flex-direction: column;
@@ -289,18 +315,9 @@ h1 {
     padding: 20px;
 }
 
-/***** Grid Buttons inside Order Cards *****/
-.grid-buttons {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-}
-
-.grid-buttons form {
-    margin: 0;
-}
-
 /***** Price Form Spacing *****/
 .price-form {
     margin-bottom: 15px;
 }
+
+
