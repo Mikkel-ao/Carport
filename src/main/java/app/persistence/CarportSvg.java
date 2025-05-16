@@ -15,7 +15,7 @@ public class CarportSvg {
         this.width = width;
         this.length = length;
 
-        // viewBox defines the coordinate system and visible area of the SVG canvas.
+        // viewBox defines the coordinate system and visible area of the SVG canvas
         String viewBox = "0 0 " + (length+100) + " " + (width+100); // +100 allows room for content outside the carport
         carportSvg = new Svg(0, 0, viewBox, "100%");
 
@@ -36,7 +36,7 @@ public class CarportSvg {
         carportSvg.addRectangle(0, width-35, 4.5, length, style);
     }
 
-    // Method for placing "spær" and displaying distance between them.
+    // Method for placing "spær" and displaying distance between them
     private void addRafters() {
         int rafterCount = Calculator.calcAmountOfRafters(length, rafterWidth);
         double spacing = Calculator.calcRafterSpacing(length, rafterWidth);
@@ -46,7 +46,7 @@ public class CarportSvg {
             double x = i * (spacing + rafterWidth);
             carportSvg.addRectangle(x, 0.0, width, rafterWidth, style);
 
-            // Loop that places the arrows and text displaying the distance between rafters.
+            // Loop that places the arrows and text displaying the distance between rafters
             if (i > 0) {
                 double previousRafter = (i - 1) * (spacing + rafterWidth);
                 double start = previousRafter + rafterWidth;
@@ -58,7 +58,7 @@ public class CarportSvg {
         }
     }
 
-    // Method for placing "stolper" at the right locations with allowed spacing between them.
+    // Method for placing "stolper" at the right locations with allowed spacing between them
     private void addPosts() {
         int postCount = Calculator.calcAmountOfPoles(length, postWidth);
         double spacing = Calculator.calcPoleSpacing(length, postWidth);
@@ -86,7 +86,7 @@ public class CarportSvg {
         }
     }
 
-    // Method for adding arrows and text informing about the measurements outside the carport drawing.
+    // Method for adding arrows and text informing about the measurements outside the carport drawing
     private void addDimensions() {
         // Horizontal dimension of the drawing, length of the carport
         carportSvg.addArrow(0, width+10, length, width+10, style);
