@@ -12,6 +12,7 @@ public class SvgController {
         app.post("/svg", SvgController::showSvg);
     }
 
+    // Method for displaying carport SVG drawing at svg.html
     public static void showSvg(Context ctx) {
         Locale.setDefault(Locale.US);
 
@@ -25,7 +26,6 @@ public class SvgController {
 
         // Set the svg as an attribute to render it
         ctx.attribute("svg", svg.toString());
-
         ctx.render("svg.html");
     }
 }

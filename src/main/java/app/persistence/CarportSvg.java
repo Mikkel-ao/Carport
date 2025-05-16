@@ -1,7 +1,7 @@
 package app.persistence;
 
 import app.util.Calculator;
-// TODO: Where should this be placed, package wise?
+
 public class CarportSvg {
     private int width;
     private int length;
@@ -14,10 +14,9 @@ public class CarportSvg {
     public CarportSvg(int width, int length) {
         this.width = width;
         this.length = length;
-        // TODO: Find a simpler solution for displaying images correctly
-        // carportSvg = new Svg(0, 0, "0 0 855 690", "700px");
 
-        String viewBox = "0 0 " + (length+100) + " " + (width+100); // +100 to allow content outside of carport measurements
+        // viewBox defines the coordinate system and visible area of the SVG canvas.
+        String viewBox = "0 0 " + (length+100) + " " + (width+100); // +100 allows room for content outside the carport
         carportSvg = new Svg(0, 0, viewBox, "100%");
 
         drawBase();
@@ -31,45 +30,44 @@ public class CarportSvg {
         carportSvg.addRectangle(0, 0, width, length, style);
     }
 
-    // Rem
+    // Method for placing "remme"
     private void addBeams() {
-        String beamStyle = "stroke-width:1px; stroke:#000000; fill: #ffffff";
-        carportSvg.addRectangle(0, 35, 4.5, length, beamStyle);
-        carportSvg.addRectangle(0, width-35, 4.5, length, beamStyle);
+        carportSvg.addRectangle(0, 35, 4.5, length, style);
+        carportSvg.addRectangle(0, width-35, 4.5, length, style);
     }
 
-    // Spær
+    // Method for placing "spær" and displaying distance between them.
     private void addRafters() {
-        //TODO: for now the rafterWidth is hard-coded until we get a mapper method that pulls it from DB
         int rafterCount = Calculator.calcAmountOfRafters(length, rafterWidth);
         double spacing = Calculator.calcRafterSpacing(length, rafterWidth);
 
+        // Loop for placing rafters
         for (int i = 0; i < rafterCount; i++) {
             double x = i * (spacing + rafterWidth);
             carportSvg.addRectangle(x, 0.0, width, rafterWidth, style);
 
-            // Sets arrows and text measurements
+            // Loop that places the arrows and text displaying the distance between rafters.
             if (i > 0) {
                 double previousRafter = (i - 1) * (spacing + rafterWidth);
                 double start = previousRafter + rafterWidth;
                 double end = x;
-                double mid = (start + end) / 2 - 17; // -17 to adjust for SVG starting at mid location.
+                double middle = (start + end) / 2 - 17; // -17 to adjust for SVG starting at middle location.
                 carportSvg.addArrow((int) start, width - 20, (int) end, width - 20, style);
-                carportSvg.addText((int) mid, (width - 20) + 15, 0, String.format("%.2f", end - start));
+                carportSvg.addText((int) middle, (width - 20) + 15, 0, String.format("%.2f", end - start));
             }
         }
     }
 
-    // Stolpe
+    // Method for placing "stolper" at the right locations with allowed spacing between them.
     private void addPosts() {
         int postCount = Calculator.calcAmountOfPoles(length, postWidth);
         double spacing = Calculator.calcPoleSpacing(length, postWidth);
 
-        // Place first post after 100cm
+        // First posts need to be after 100cm.
         double x = 100;
 
-        // Place the first posts
-        carportSvg.addRectangle(x, 32.5, postWidth, postWidth, style);    // Upper post
+        // Place the first posts - 32.5 & 37.5 is to center posts underneath the beam
+        carportSvg.addRectangle(x, 32.5, postWidth, postWidth, style); // Upper post
         carportSvg.addRectangle(x, width - 37.5, postWidth, postWidth, style); // Lower post
 
         // Posts after the first ones
@@ -79,15 +77,16 @@ public class CarportSvg {
 
             // Ensure the last post is placed within the carport's length
             if (x + postWidth > length - 100) {  // If placing a post exceeds the carport's length
-                x = length - postWidth - 100;  // Place the last post at 100cm from the end
+                x = length - postWidth - 30;  // Place the last post at 30cm from the end
             }
 
             // Placing posts
-            carportSvg.addRectangle(x, 32.5, postWidth, postWidth, style);    // Upper post
+            carportSvg.addRectangle(x, 32.5, postWidth, postWidth, style); // Upper post
             carportSvg.addRectangle(x, width - 37.5, postWidth, postWidth, style); // Lower post
         }
     }
 
+    // Method for adding arrows and text informing about the measurements outside the carport drawing.
     private void addDimensions() {
         // Horizontal dimension of the drawing, length of the carport
         carportSvg.addArrow(0, width+10, length, width+10, style);
