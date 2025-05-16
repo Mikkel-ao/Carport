@@ -9,17 +9,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <header>
-    <div class="toolbar">
+    <div class="navigation-bar">
         <a th:href="@{/}">
             <img class="logo-index" th:src="@{/images/fog_logo_small.png}" alt="foglogo">
         </a>
 
-        <a th:href="@{/}" class="account-button">
+        <a th:href="@{/}" class="icon-button">
             <i class="fas fa-house"></i>
             <span>Hjem</span>
         </a>
 
-        <a th:if="${session.currentUser == null}" th:href="@{/createuser}" class="account-button">
+        <a th:if="${session.currentUser == null}" th:href="@{/createuser}" class="icon-button">
             <i class="fas fa-user-plus"></i>
             <span>Opret bruger</span>
         </a>
@@ -40,7 +40,7 @@
     <form class="generic-form" method="post" action="/login">
         <input type="email" name="email" placeholder="Indtast email" required />
         <input type="password" name="password" placeholder="Indtast adgangskode" required />
-        <button type="submit" class="rounded-btn">Log ind</button>
+        <button type="submit" class="submit-button">Log ind</button>
         <div th:if="${errorMessage}" style="color: red;">
             <p th:text="${errorMessage}"></p>
         </div>

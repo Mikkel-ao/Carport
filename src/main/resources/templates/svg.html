@@ -9,27 +9,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <header>
-    <div class="toolbar">
+    <div class="navigation-bar">
         <a th:href="@{/}">
             <img class="logo-index" th:src="@{/images/fog_logo_small.png}" alt="foglogo">
         </a>
 
-        <a th:href="@{/}" class="account-button">
+        <a th:href="@{/}" class="icon-button">
             <i class="fas fa-house"></i>
             <span>Hjem</span>
         </a>
 
-        <a th:if="${session.role == 'admin'}" th:href="@{/admin}" class="account-button">
+        <a th:if="${session.role == 'admin'}" th:href="@{/admin}" class="icon-button">
             <i class="fas fa-clipboard-list"></i>
             <span>Ordreoversigt</span>
         </a>
 
-        <a th:if="${session.role == 'customer'}" th:href="@{/customer}" class="account-button">
+        <a th:if="${session.role == 'customer'}" th:href="@{/customer}" class="icon-button">
             <i class="fas fa-user"></i>
             <span>Fog Konto</span>
         </a>
 
-        <a th:if="${session.currentUser != null}" th:href="@{/logout}" class="account-button">
+        <a th:if="${session.currentUser != null}" th:href="@{/logout}" class="icon-button">
             <i class="fas fa-right-from-bracket"></i>
             <span>Log ud</span>
         </a>

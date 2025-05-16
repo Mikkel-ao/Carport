@@ -1,18 +1,169 @@
-/* Stylesheet for the application */
-
-/* Universal reset */
+/***** Base Reset *****/
 * {
-    box-sizing: border-box;
+    box-sizing: border-box; /* Ensures padding and borders are included in element width/height */
     margin: 0;
     padding: 0;
 }
 
-.h2-index-Quick-build{
-    color: #000000;
-    text-align: center;
-
+body {
+    margin: 0;
+    font-family: "Times New Roman", Times, serif;
 }
 
+h1 {
+    color: #369; /* Blue heading */
+    font-size: 3rem;
+}
+
+.h2-index {
+    color: #000000;
+    text-align: center;
+}
+
+/***** Background, currently for form pages *****/
+.background-color {
+    background-color: #F7F7F5;
+}
+
+/***** Header Section *****/
+.header {
+    padding: 20px 0;
+    text-align: center;
+}
+
+/***** Navigation Bar (Toolbar) *****/
+.navigation-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    width: 100%;
+    background-color: #f0f0f0;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 20px; /* Space below nav bar */
+}
+
+/***** Logo (links to index.html) *****/
+.logo-index {
+    height: 40px;
+    width: auto;
+}
+
+/***** Icon navigation buttons *****/
+.icon-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: black;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 5px 10px;
+    font-family: inherit;
+}
+
+/***** Styling of the icons *****/
+.icon-button i {
+    font-size: 20px;
+    margin-bottom: 4px;
+    color: #383e3e;
+}
+
+/***** Centered page content Wrapper *****/
+.page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/***** Form container (Like the one on index) *****/
+.formular-container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+/***** Generic form layout and its fields *****/
+.generic-form {
+    max-width: 2000px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.generic-form [type="text"],
+.generic-form [type="email"],
+.generic-form [type="password"],
+.input-container input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1.2rem;
+    color: black;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: inherit;
+}
+
+/***** Generic buttons - Keep consistency, create class for different layout, display etc. *****/
+.generic-form button,
+.submit-button button,
+.grid-buttons button,
+.footer-button {
+    padding: 10px 20px;
+    background-color: #043c74;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: center;
+}
+
+.generic-form button:hover,
+.submit-button button:hover,
+.grid-buttons button:hover,
+.footer-button:hover {
+    background-color: #245484;
+}
+
+/***** Submit button container *****/
+.submit-button {
+    text-align: center;
+}
+
+/***** Input Field Container *****/
+.input-container {
+    margin-bottom: 10px;
+}
+
+/***** Dropdown styling *****/
+.formular-dropDown {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+/***** Checkbox consent - Used for form(s) *****/
+.checkbox-consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 15px;
+    font-family: inherit;
+}
+
+/***** Form descriptions (index.html text paragraph) *****/
 .form-description-wrapper {
     padding: 5px;
 }
@@ -27,6 +178,8 @@
     line-height: 1.6;
 }
 
+
+/***** Footer Section *****/
 .index-site-footer {
     background-color: #f0f0f0;
     padding: 20px;
@@ -35,198 +188,31 @@
     border-top: 1px solid #ccc;
 }
 
-.footer-button {
-    padding: 10px 20px;
-    background-color: #043c74;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-family: inherit;
-    text-decoration: none;
-    display: inline-block;
-}
-
-.footer-button:hover {
-    background-color: #0055aa;
-}
-
-
-body {
-    margin: 0;
-    font-family: "Times New Roman", Times, serif;
-}
-
-h1 {
-    color: #369;
-    font-size: 3rem;
-}
-
-.header {
-    padding: 20px 0;
-    text-align: center;
-}
-
-.generic-form {
-    max-width: 2000px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.generic-form [type=text],
-.generic-form [type=email],
-.generic-form [type=password] {
-    padding: 10px;
-    font-size: 1.2rem;
-    color: black;
-    border: none;
-    font-family: inherit;
-}
-
-.generic-form button {
-    font-size: 1.2rem;
-    padding: 10px;
-    border-radius: 5px;
-    background-color: #245484;
-    color: white;
-    border: none;
-    font-family: inherit;
-}
-
-.rounded-btn {
-    border: none;
-    background-color: #245484;
-    color: white;
-    padding: 8px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 4px;
-    font-family: inherit;
-}
-
 .footer-side {
     display: flex;
     justify-content: center;
-    gap: 20px; /* Space between buttons */
+    gap: 20px;
 }
 
 .footer div {
     display: flex;
 }
 
-.page-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-
-.background-color {
-    background-color: #F7F7F5;
-}
-
-.toolbar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 10px;
-    width: 100%; /* Full width toolbar */
-    background-color: #f0f0f0;
-    padding: 10px 20px;
-    border-bottom: 1px solid #ccc
-}
-
-/* Smaller logo size */
-.logo-index {
-    height: 40px;
-    width: auto;
-}
-
-.account-button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.footer-button {
     text-decoration: none;
-    color: black;
-    font-size: 14px;
-    cursor: pointer;
-    padding: 5px 10px;
-    font-family: inherit;
+    display: inline-block;
 }
 
-.account-button i {
-    font-size: 20px;
-    margin-bottom: 4px;
-    color: #383e3e;
-}
-
-.formular-container {
-    max-width: 500px;
-    margin: 50px auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #fff;
-}
-
-.formular-dropDown,
-input[type="text"],
-input[type="email"],
-input[type="password"],
-select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #aaa;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-family: inherit;
-}
-
-
-.checkbox-consent {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    margin-bottom: 15px;
-    font-family: inherit;
-}
-
-.submit-button {
-    text-align: center;
-}
-
-.submit-button button {
-    padding: 10px 20px;
-    background-color: #043c74;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-family: inherit;
-}
-
-.submit button:hover {
-    background-color: #245484;
-}
-
-/***** Container for customer/order details ******/
-
+/***** Order details layout *****/
 .order-details-header {
+    display: flex;
     flex-direction: column;
     text-align: center;
-    display: flex;
 }
 
 .object-details {
-    width: 475px;
+    width: 100%;
+    max-width: 475px;
     margin: 50px auto;
     padding: 25px 30px;
     border: 1px solid #ccc;
@@ -248,28 +234,7 @@ select {
     margin-bottom: 10px;
 }
 
-/***** Container for buttons on admin page ******/
-.button-container{
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.button-contain form{
-    margin: 0;
-
-}
-
-.input-container input {
-    width: 100%; /* Makes the input field take full width */
-    padding: 10px; /* Adds padding inside the input field */
-    font-size: 16px; /* Makes text inside input field larger */
-    border: 1px solid #ccc; /* Adds a border */
-    border-radius: 5px; /* Rounds the corners */
-}
-
-/***** SVG ******/
-
+/***** SVG wrapper *****/
 .carport-svg-topview {
     display: flex;
     justify-content: center;
@@ -283,8 +248,7 @@ select {
     height: auto;
 }
 
-
-/**** Card containers ****/
+/***** Orders section & cards *****/
 .orders-section {
     max-width: 1400px;
     margin: 40px auto;
@@ -300,7 +264,7 @@ select {
     padding-bottom: 10px;
 }
 
-/* For seperating the cards/containers in a grid like form */
+/***** Order cards with grid/rows layout *****/
 .order-card-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -316,40 +280,7 @@ select {
     font-family: inherit;
 }
 
-.price-form {
-    margin-bottom: 15px;
-}
-
-.input-container {
-    margin-bottom: 10px;
-}
-
-.grid-buttons {
-    display: grid;
-    /* Creates 2 equal width columns, 1fr decides that each column takes half of container's width. */
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-}
-
-.grid-buttons form {
-    margin: 0;
-}
-
-.grid-buttons button {
-    width: 100%;
-    padding: 10px;
-    background-color: #043c74;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-family: inherit;
-    cursor: pointer;
-}
-
-.grid-buttons button:hover {
-    background-color: #245484;
-}
-
+/***** Order cards with flex/vertical layout *****/
 .order-card-vertical {
     display: flex;
     flex-direction: column;
@@ -358,5 +289,18 @@ select {
     padding: 20px;
 }
 
+/***** Grid Buttons inside Order Cards *****/
+.grid-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
 
+.grid-buttons form {
+    margin: 0;
+}
 
+/***** Price Form Spacing *****/
+.price-form {
+    margin-bottom: 15px;
+}
