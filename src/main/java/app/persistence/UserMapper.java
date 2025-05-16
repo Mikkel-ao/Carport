@@ -12,7 +12,7 @@ import java.sql.SQLException;
 public class UserMapper {
 
     //Method for login that authenticates the user by verifying username and password by comparing them to the ones stored in the database
-    public static User login(String email, String password, ConnectionPool connectionPool) throws DatabaseException {
+    /*public static User login(String email, String password, ConnectionPool connectionPool) throws DatabaseException {
         //Not querying for password since it is now hashed and not plain text anymore (email is unique though)
         String sql = "select * from users where email=?";
 
@@ -40,33 +40,41 @@ public class UserMapper {
             throw new DatabaseException("Kunne ikke hente brugerens login informationer!", e.getMessage());
         }
         throw new DatabaseException("Kunne ikke hente brugerens login informationer!");
-    }
+    }*/
 
 
-  /*  //Method for login that authenticates the user by verifying username and password by comparing them to the ones stored in the database
+    //Authenticates the user by verifying username and password from the database
     public static User login(String email, String password, ConnectionPool connectionPool) throws DatabaseException {
+        //Not querying for password since it is now hashed and not plain text anymore
         String sql = "select * from users where email=?";
-        try
-                (
-                        PreparedStatement ps = connection.prepareStatement(sql)
-                ) {
+
+        try (
+                Connection connection = connectionPool.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
             ps.setString(1, email);
+
             ResultSet rs = ps.executeQuery();
-            //If a user with the given email is found in the database, it retrieves the user details if (rs.next()) {
-                int userId = rs.getInt("user_id");
-                //Getting the hashed password
+            //If a user with the given email is found in the database, it retrieves the user details
+            if (rs.next()) {
+                int user_id = rs.getInt("user_id");
+                //Hashed password
                 String hashedPassword = rs.getString("password");
+                String role = rs.getString("role");
+
                 //Comparing the entered password with the now hashed password from the database using BCrypt
                 if (BCrypt.checkpw(password, hashedPassword)) {
-                    User user = getUserById(userId, connectionPool);
-                    return user;
+                    return new User(user_id, hashedPassword, email, "12345", role);
                 } else {
                     throw new DatabaseException("Invalid email or password.");
                 }
-            } catch(SQLException e){
-                throw new DatabaseException("Database error", e.getMessage());
+            } else {
+                throw new DatabaseException("Error on login - please try again.");
             }
-        }*/
+        } catch (SQLException e) {
+            throw new DatabaseException("Database error", e.getMessage());
+        }
+    }
 
         //Creates a new user by inserting username and password into the database
         public static void createUser (String email, String password, String phoneNumber, String zipCode, String
