@@ -19,28 +19,6 @@ public class User {
         this.role = role;
     }
 
-    public User(String password, String email, String phoneNumber, String fullName, String address, String zipCode) {
-        this.password = password;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.fullName = fullName;
-        this.address = address;
-        this.zipCode = zipCode;
-    }
-
-    public User(String password, String email, String phoneNumber, String role) {
-        this.password = password;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.role = role;
-    }
-
-    public User(int userId, String email, String phoneNumber, String role) {
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.role = role;
-        this.userId = userId;
-    }
 
     public User(int userId, String email, String phoneNumber, String role, String zipCode, String address, String fullName) {
         this.userId = userId;
