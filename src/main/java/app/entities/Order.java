@@ -82,7 +82,6 @@ public class Order {
         return costPrice;
     }
 
-
     public int getOrderId() {
         return orderId;
     }
