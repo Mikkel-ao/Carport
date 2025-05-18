@@ -15,7 +15,7 @@ public class OrderMapper {
     //Method for retrieving all orders from the database and returning them in a List of Order object
     public static List<Order> getAllOrders(ConnectionPool connectionPool) throws DatabaseException {
         List<Order> orderList = new ArrayList<>();
-        String sql = "SELECT * FROM orders inner join users using (user_id) ORDER BY order_id ASC";
+        String sql = "SELECT * FROM orders ORDER BY order_id ASC";
 
         //"try-with-resources" block that makes sure to auto close after usage!
         try (
@@ -26,11 +26,6 @@ public class OrderMapper {
             //Retrieving all data needed to create an instance of a User and Order by iterating through each row of the database!
             while (rs.next()) {
                 int userId = rs.getInt("user_id");
-                String fullName = rs.getString("full_name");
-                String email = rs.getString("email");
-                String phoneNumber = rs.getString("phone_number");
-                String address = rs.getString("home_address");
-                String zipCode = rs.getString("zip_code");
                 int orderId = rs.getInt("order_id");
                 int carportWidth = rs.getInt("carport_width");
                 int carportLength = rs.getInt("carport_length");
@@ -39,7 +34,7 @@ public class OrderMapper {
                 double costPrice = rs.getDouble("cost_price");
                 Timestamp timestamp = rs.getTimestamp("order_date");
 
-                User user = new User(userId, fullName, email, phoneNumber, address, zipCode);
+                User user = UserMapper.getUserById(userId, connectionPool);
                 Order order = new Order(orderId, carportWidth, carportLength, status, user, customerPrice, costPrice, timestamp);
 
                 orderList.add(order);

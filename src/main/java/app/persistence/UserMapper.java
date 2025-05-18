@@ -12,9 +12,9 @@ import java.sql.SQLException;
 public class UserMapper {
 
     //Method for login that authenticates the user by verifying username and password by comparing them to the ones stored in the database
-    /*public static User login(String email, String password, ConnectionPool connectionPool) throws DatabaseException {
+    public static User login(String email, String password, ConnectionPool connectionPool) throws DatabaseException {
         //Not querying for password since it is now hashed and not plain text anymore (email is unique though)
-        String sql = "select * from users where email=?";
+        String sql = "select user_id, password, role, phone_number from users where email=?";
 
         //"try-with-resources" block that makes sure to auto close after usage!
         try (
@@ -28,100 +28,66 @@ public class UserMapper {
                 if (rs.next()) {
                     int userId = rs.getInt("user_id");
                     String hashedPassword = rs.getString("password");
-                    String role = rs.getString("role");
-                    String phoneNumber = rs.getString("phone_number");
 
                     if (BCrypt.checkpw(password, hashedPassword)) {
-                        return new User(userId, email, phoneNumber, role);
-                    }
+                        User currentUser = getUserById(userId, connectionPool);
+                        return currentUser;
+                    } else throw new DatabaseException("Forkert email eller kodeord!");
                 }
             }
         } catch (SQLException e) {
             throw new DatabaseException("Kunne ikke hente brugerens login informationer!", e.getMessage());
         }
-        throw new DatabaseException("Kunne ikke hente brugerens login informationer!");
-    }*/
+        throw new DatabaseException("Kunne ikke oprette forbindelse til databasen!");
+    }
 
 
-    //Authenticates the user by verifying username and password from the database
-    public static User login(String email, String password, ConnectionPool connectionPool) throws DatabaseException {
-        //Not querying for password since it is now hashed and not plain text anymore
-        String sql = "select * from users where email=?";
+    //Creates a new user by inserting user information from the front end into the database!
+    public static void createUser(String email, String password, String phoneNumber, String zipCode, String
 
+            homeAdress, String fullName, ConnectionPool connectionPool) throws DatabaseException {
+        String sql = "INSERT INTO users (email, password, phone_number,role,zip_code,home_address,full_name) VALUES (?, ?, ?, ?,?,?,?)";
+
+        //Encrypts the password before storing it in the database for increased security!
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+
+        //"try-with-resources" block that makes sure to auto close after usage!
         try (
                 Connection connection = connectionPool.getConnection();
                 PreparedStatement ps = connection.prepareStatement(sql)
         ) {
             ps.setString(1, email);
+            ps.setString(2, hashedPassword);
+            ps.setString(3, phoneNumber);
+            //Hard-coding every new user to "customer" role, as we already have the admin!
+            ps.setString(4, "customer");
+            ps.setString(5, zipCode);
+            ps.setString(6, homeAdress);
+            ps.setString(7, fullName);
 
-            ResultSet rs = ps.executeQuery();
-            //If a user with the given email is found in the database, it retrieves the user details
-            if (rs.next()) {
-                int user_id = rs.getInt("user_id");
-                //Hashed password
-                String hashedPassword = rs.getString("password");
-                String role = rs.getString("role");
-
-                //Comparing the entered password with the now hashed password from the database using BCrypt
-                if (BCrypt.checkpw(password, hashedPassword)) {
-                    return new User(user_id, hashedPassword, email, "12345", role);
-                } else {
-                    throw new DatabaseException("Invalid email or password.");
-                }
-            } else {
-                throw new DatabaseException("Error on login - please try again.");
+            //Storing the number of rows modified, if no rows were affected an exception is thrown
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected != 1) {
+                throw new DatabaseException("En fejl opstod under oprettelse af brugeren!");
             }
         } catch (SQLException e) {
-            throw new DatabaseException("Database error", e.getMessage());
+            throw new DatabaseException("Kunne ikke oprette forbindelse til databasen!", e.getMessage());
         }
+
     }
 
-        //Creates a new user by inserting username and password into the database
-        public static void createUser (String email, String password, String phoneNumber, String zipCode, String
-        homeAdress, String fullName, ConnectionPool connectionPool) throws DatabaseException {
-            String sql = "INSERT INTO users (email, password, phone_number,role,zip_code,home_address,full_name) VALUES (?, ?, ?, ?,?,?,?)";
-            //Encrypts the password and stores it in a variable. Doing the encrypting before storing in database for security
-            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+    //Method for retrieving user information by the user id
+    public static User getUserById(int userId, ConnectionPool connectionPool) throws DatabaseException {
+        String sql = "SELECT * FROM public.users WHERE user_id = ?";
 
-            System.out.println("Email: " + email);
-            System.out.println("Before hashing Password: " + password);
-            System.out.println("After hashing Password: " + hashedPassword);
+        //"try-with-resources" block that makes sure to auto close after usage!
+        try (
+                Connection connection = connectionPool.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+            ps.setInt(1, userId);
 
-            try (
-                    Connection connection = connectionPool.getConnection();
-                    PreparedStatement ps = connection.prepareStatement(sql)
-            ) {
-                ps.setString(1, email);
-                ps.setString(2, hashedPassword);
-                ps.setString(3, phoneNumber); //Hard-coded values for now
-                ps.setString(4, "customer"); //Hard-coded values for now
-                ps.setString(5, zipCode);
-                ps.setString(6, homeAdress);
-                ps.setString(7, fullName);
-
-                //Storing the number of rows modified, if no rows were inserted, exception is thrown
-                int rowsAffected = ps.executeUpdate();
-                if (rowsAffected != 1) {
-                    throw new DatabaseException("An error occurred on attempt to create a user - try again.");
-                }
-            } catch (SQLException e) {
-                String msg = "Error - try again.";
-                if (e.getMessage().startsWith("ERROR: duplicate key value ")) {
-                    msg = "User " + email + " already exists.";
-                }
-                throw new DatabaseException(msg, e.getMessage());
-            }
-        }
-
-        public static User getUserById ( int userId, ConnectionPool connectionPool) throws DatabaseException {
-            String sql = "SELECT * FROM public.users WHERE user_id = ?";
-
-            try (
-                    Connection connection = connectionPool.getConnection();
-                    PreparedStatement ps = connection.prepareStatement(sql)
-            ) {
-                ps.setInt(1, userId);
-                ResultSet rs = ps.executeQuery();
+            try (ResultSet rs = ps.executeQuery()) {
 
                 if (rs.next()) {
                     String email = rs.getString("email");
@@ -132,12 +98,14 @@ public class UserMapper {
                     String fullName = rs.getString("full_name");
 
                     return new User(userId, email, phoneNumber, role, zipCode, address, fullName);
-                }
-            } catch (SQLException e) {
-                throw new DatabaseException("Could not retrieve user from database", e);
+
+                } else throw new DatabaseException("Kunne ikke hente brugerens user!");
             }
-            throw new DatabaseException("Could not retrieve user from database");
+        } catch (SQLException e) {
+            throw new DatabaseException("Could not retrieve user from database", e);
         }
     }
+}
+
 
 

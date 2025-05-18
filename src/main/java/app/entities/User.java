@@ -2,6 +2,7 @@ package app.entities;
 
 public class User {
     private int userId;
+    //We do not use password for now, but keep it as a private instance variable for potential later use!
     private String password;
     private String email;
     private String phoneNumber;
@@ -9,15 +10,6 @@ public class User {
     private String fullName;
     private String address;
     private String zipCode;
-
-    //Overloading the constructor to fit our various needs
-    public User(int userId, String password, String email, String phoneNumber, String role) {
-        this.userId = userId;
-        this.password = password;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.role = role;
-    }
 
 
     public User(int userId, String email, String phoneNumber, String role, String zipCode, String address, String fullName) {
@@ -29,16 +21,6 @@ public class User {
         this.address = address;
         this.zipCode = zipCode;
     }
-
-    public User(int userId, String fullName, String email, String phoneNumber, String address, String zipCode) {
-        this.userId = userId;
-        this.fullName = fullName;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.zipCode = zipCode;
-    }
-
 
 
     public int getUserId() {
