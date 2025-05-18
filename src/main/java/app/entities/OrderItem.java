@@ -7,6 +7,7 @@ public class OrderItem {
     String description;
     int descriptionId;
 
+
     //Overloading the constructor to fit our various needs!
     public OrderItem(int orderItemId, ProductVariant productVariant, int quantity, String description, int descriptionId) {
         this.orderItemId = orderItemId;
@@ -35,6 +36,14 @@ public class OrderItem {
 
     public ProductVariant getProductVariant() {
         return productVariant;
+    }
+
+    public int getOrderItemId() {
+        return orderItemId;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     @Override

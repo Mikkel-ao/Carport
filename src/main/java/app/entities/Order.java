@@ -83,6 +83,16 @@ public class Order {
     }
 
 
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public Timestamp getTimeStamp() {
+        return timeStamp;
+    }
+
+
+
     @Override
     public String toString() {
         return "Order{" +

@@ -185,7 +185,7 @@ public class OrderController {
     }
 
 
-    //Method that retrieves the wished length and width from front end and then uses different support methods to create an order and save it in the database!
+    //Method that retrieves the wished length and width from the front end and then uses different support methods to create an order and save it in the database!
     public static Order createListOfMaterials(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
 
 

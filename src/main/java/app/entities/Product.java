@@ -36,6 +36,13 @@ public class Product {
         this.name = name;
     }
 
+    public int getProductId() {
+        return productId;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
 
     public int getPricePrUnit() {
         return pricePrUnit;
