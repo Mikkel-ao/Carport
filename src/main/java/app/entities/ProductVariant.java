@@ -27,6 +27,7 @@ public class ProductVariant {
         return product;
     }
 
+
     @Override
     public String toString() {
         return "ProductVariant{" +
