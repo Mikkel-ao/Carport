@@ -310,7 +310,7 @@ public class OrderMapper {
                 }
             }
         } catch (SQLException e) {
-            throw new DatabaseException("Kunne ikke hente ordrerne fra databasen!", e);
+            throw new DatabaseException("Kunne ikke hente ordrerne fra databasen!", e.getMessage());
         }
         return orderList;
     }
@@ -346,7 +346,7 @@ public class OrderMapper {
                 }
             }
         } catch (SQLException e) {
-            throw new DatabaseException("Kunne ikke hente produkt variant fra databasen!", e);
+            throw new DatabaseException("Kunne ikke hente produkt variant fra databasen!", e.getMessage());
         }
         return null;
     }

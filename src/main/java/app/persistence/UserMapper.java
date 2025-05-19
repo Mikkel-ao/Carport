@@ -102,7 +102,7 @@ public class UserMapper {
                 } else throw new DatabaseException("Kunne ikke hente brugerens user!");
             }
         } catch (SQLException e) {
-            throw new DatabaseException("Could not retrieve user from database", e);
+            throw new DatabaseException("Could not retrieve user from database", e.getMessage());
         }
     }
 }
