@@ -13,8 +13,8 @@ public class UserMapper {
 
     //Method for login that authenticates the user by verifying username and password by comparing them to the ones stored in the database
     public static User login(String email, String password, ConnectionPool connectionPool) throws DatabaseException {
-        //Not querying for password since it is now hashed and not plain text anymore (email is unique though)
-        String sql = "select user_id, password, role, phone_number from users where email=?";
+        //Email is unique in the database, which means we are certain that we get the right user_id and (hashed) password!
+        String sql = "select user_id, password from users where email=?";
 
         //"try-with-resources" block that makes sure to auto close after usage!
         try (
@@ -43,10 +43,8 @@ public class UserMapper {
 
 
     //Creates a new user by inserting user information from the front end into the database!
-    public static void createUser(String email, String password, String phoneNumber, String zipCode, String
-
-            homeAdress, String fullName, ConnectionPool connectionPool) throws DatabaseException {
-        String sql = "INSERT INTO users (email, password, phone_number,role,zip_code,home_address,full_name) VALUES (?, ?, ?, ?,?,?,?)";
+    public static void createUser(String email, String password, String phoneNumber, String zipCode, String homeAdress, String fullName, ConnectionPool connectionPool) throws DatabaseException {
+        String sql = "INSERT INTO users (email, password, phone_number,zip_code,home_address,full_name) VALUES (?, ?, ?, ?,?,?)";
 
         //Encrypts the password before storing it in the database for increased security!
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
@@ -59,11 +57,9 @@ public class UserMapper {
             ps.setString(1, email);
             ps.setString(2, hashedPassword);
             ps.setString(3, phoneNumber);
-            //Hard-coding every new user to "customer" role, as we already have the admin!
-            ps.setString(4, "customer");
-            ps.setString(5, zipCode);
-            ps.setString(6, homeAdress);
-            ps.setString(7, fullName);
+            ps.setString(4, zipCode);
+            ps.setString(5, homeAdress);
+            ps.setString(6, fullName);
 
             //Storing the number of rows modified, if no rows were affected an exception is thrown
             int rowsAffected = ps.executeUpdate();
