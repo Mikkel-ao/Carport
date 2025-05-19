@@ -9,22 +9,21 @@ Index --> Login : Trykker "log ind"
 Index --> Opret : Trykker "Opret bruger"
 
 state LoginProces {
-  [*] --> IndtastInfo
-  IndtastInfo --> Autentifikation : Sender indtastning
-  Autentifikation --> LoginSucces : Findes i db
-  Autentifikation --> LoginFejl : Findes ikke i db
-  LoginFejl --> IndtastInfo : Prøv igen
-  LoginSucces --> [*] : Logget ind
-
+  [*] --> Login_IndtastInfo
+  Login_IndtastInfo --> Login_Autentifikation : Sender indtastning
+  Login_Autentifikation --> Login_Succes : Findes i db
+  Login_Autentifikation --> Login_Fejl : Findes ikke i db
+  Login_Fejl --> Login_IndtastInfo : Prøv igen
+  Login_Succes --> [*] : Logget ind
 }
 
 state OpretProces {
-  [*] --> IndtastOplysninger
-  IndtastOplysninger --> Validering : Sender indtastning
-  Validering --> Succes : Opfylder krav
-  Validering --> Fejl : Opfylder ikke krav
-  Fejl --> IndtastOplysninger : Prøv igen
-  Succes --> [*] : Oprettet i databasen
+  [*] --> Opret_IndtastOplysninger
+  Opret_IndtastOplysninger --> Opret_Validering : Sender indtastning
+  Opret_Validering --> Opret_Succes : Opfylder krav
+  Opret_Validering --> Opret_Fejl : Opfylder ikke krav
+  Opret_Fejl --> Opret_IndtastOplysninger : Prøv igen
+  Opret_Succes --> [*] : Oprettet i databasen
 }
 
 Login --> LoginProces
