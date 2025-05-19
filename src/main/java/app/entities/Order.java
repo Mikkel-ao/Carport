@@ -17,6 +17,8 @@ public class Order {
     private double costPrice;
     private Timestamp timeStamp;
 
+
+    //Overloading the constructor to fit our various needs!
     public Order(int orderId, int carportWidth, int carportLength, OrderStatus status, User user, double totalPrice, double costPrice, Timestamp timeStamp) {
         this.orderId = orderId;
         this.carportWidth = carportWidth;
@@ -38,46 +40,21 @@ public class Order {
         this.costPrice = costPrice;
     }
 
-    public Order(int carportWidth, int carportLength, OrderStatus Status, User user, double totalSalesPrice, double costPrice) {
-        this.carportWidth = carportWidth;
-        this.carportLength = carportLength;
-        this.status = Status;
-        this.user = user;
-        this.totalSalesPrice = totalSalesPrice;
-        this.costPrice = costPrice;
-    }
-
-    public int getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
-    }
 
     public int getCarportWidth() {
         return carportWidth;
     }
 
-    public void setCarportWidth(int carportWidth) {
-        this.carportWidth = carportWidth;
-    }
 
     public int getCarportLength() {
         return carportLength;
     }
 
-    public void setCarportLength(int carportLength) {
-        this.carportLength = carportLength;
-    }
 
     public OrderStatus getStatus() {
         return status;
     }
 
-    public void setStatus(OrderStatus status) {
-        this.status = status;
-    }
 
     public List<OrderItem> getListOfMaterials() {
         return listOfMaterials;
@@ -88,9 +65,6 @@ public class Order {
         return totalSalesPrice;
     }
 
-    public void setTotalSalesPrice(double totalSalesPrice) {
-        this.totalSalesPrice = totalSalesPrice;
-    }
 
     public void setListOfMaterials(List<OrderItem> listOfMaterials) {
         this.listOfMaterials = listOfMaterials;
@@ -108,9 +82,15 @@ public class Order {
         return costPrice;
     }
 
+    public int getOrderId() {
+        return orderId;
+    }
+
     public Timestamp getTimeStamp() {
         return timeStamp;
     }
+
+
 
     @Override
     public String toString() {

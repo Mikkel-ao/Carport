@@ -29,6 +29,7 @@
 
 <div class="object-details">
   <h2>Dine oplysninger: </h2>
+  <!--------- Default values "Fog Fogesen" osv, som bliver vist, hvis den ikke kan finde values de dynamiske værdier ---->
   <p><strong>Navn:</strong> <span th:text="${user.fullName}">Fog Fogesen</span></p>
   <p><strong>Email:</strong> <span th:text="${user.email}">kunde@fog.com</span></p>
   <p><strong>Telefon:</strong> <span th:text="${user.phoneNumber}">42424242</span></p>
@@ -38,6 +39,10 @@
 
 <div class="orders-section">
   <h2>Dine ordreoplysninger:</h2>
+
+  <div th:if="${errorMessage}" style="color: red;">
+    <p th:text="${errorMessage}"></p>
+  </div>
 
   <div th:if="${orders != null and !#lists.isEmpty(orders)}" class="order-card-vertical">
     <div th:each="order : ${orders}" class="order-card">

@@ -9,16 +9,16 @@ public class OrderInfoDTO {
     private int carportWidth;
     private int carportLength;
     private OrderStatus status;
-    private double customerPrice;
+    private double totalSalesPrice;
     private double costPrice;
     private Timestamp timeStamp;
 
-    public OrderInfoDTO(int orderId, int carportWidth, int carportLength, OrderStatus status, double customerPrice, double costPrice, Timestamp timeStamp) {
+    public OrderInfoDTO(int orderId, int carportWidth, int carportLength, OrderStatus status, double totalSalesPrice, double costPrice, Timestamp timeStamp) {
         this.orderId = orderId;
         this.carportWidth = carportWidth;
         this.carportLength = carportLength;
         this.status = status;
-        this.customerPrice = customerPrice;
+        this.totalSalesPrice = totalSalesPrice;
         this.costPrice = costPrice;
         this.timeStamp = timeStamp;
     }
@@ -28,11 +28,7 @@ public class OrderInfoDTO {
     }
 
     public double getTotalSalesPrice() {
-        return customerPrice;
-    }
-
-    public double getCustomerPrice() {
-        return customerPrice;
+        return totalSalesPrice;
     }
 
     public OrderStatus getStatus() {
@@ -62,7 +58,7 @@ public class OrderInfoDTO {
                 ", carportWidth=" + carportWidth +
                 ", carportLength=" + carportLength +
                 ", status=" + status +
-                ", customerPrice=" + customerPrice +
+                ", totalSalesPrice=" + totalSalesPrice +
                 ", costPrice=" + costPrice +
                 ", timeStamp=" + timeStamp +
                 '}';

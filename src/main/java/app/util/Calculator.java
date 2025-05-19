@@ -3,11 +3,11 @@ package app.util;
 public class Calculator {
 
 
+    //Method for calculating the amount of poles needed for the given carport length
     public static int calcAmountOfPoles(int totalLength, double poleWidth) {
 
-        //100cm overhang in front and 30cm overhang in the back
+        //Hard-coding 130 cm of overhang (100cm in the front and 30cm in the back)
         int overhang = 130;
-
 
         //Subtracting the overhang and the width of one pole (making sure there is space for the last pole)
         double effectiveLength = totalLength - (overhang + poleWidth);
@@ -22,6 +22,7 @@ public class Calculator {
         return (quantity + 1) * 2;
     }
 
+    //Method for calculating the spacing between each pole with the given length and amount of poles
     public static double calcPoleSpacing(int totalLength, double poleWidth) {
 
         //Getting the number of poles needed for this specific length
@@ -30,7 +31,7 @@ public class Calculator {
         //Dividing by two, because we are only calculating on one side of the carport
         int poleCountPrSide = totalPoleCount / 2;
 
-        //100 cm in front and 30cm in back
+        //Hard-coding 130 cm of overhang (100cm in the front and 30cm in the back)
         int overhang = 130;
 
         //Calculating the sum of the space the poles are occupying
@@ -39,12 +40,12 @@ public class Calculator {
         //Subtracting the overhang and the sum of the width of the poles, to get the free space that needs supporting
         double remainingLength = totalLength - (overhang + totalPoleWidth);
 
-        //Subtracting 1 from the number of poles, because there will always be one gap less than the amount of poles!
+        //Subtracting 1 from the number of poles, because there will always be one gap less than the number of poles!
         return remainingLength / (poleCountPrSide - 1);
 
     }
 
-
+    //Method for calculating the amount of rafters needed for the given carport length
     public static int calcAmountOfRafters(int totalLengthInCm, double rafterWidth) {
 
         //Making sure that there is spacing for the last rafter!
@@ -53,7 +54,7 @@ public class Calculator {
         //A section that consists of 55cm of maximum space between each rafter and then a rafter
         double maxSpacing = 55 + rafterWidth;
 
-        //Rounding to smallest integer which is larger than the result of the calculation
+        //Rounding to the smallest integer which is larger than the result of the calculation
         int quantity = (int) Math.ceil((remainingLength / maxSpacing));
 
         //Adding the last rafter to the quantity before returning (the one we made space for in the beginning)
@@ -61,6 +62,7 @@ public class Calculator {
 
     }
 
+    //Method for calculating the amount of spacing needed between each rafter for then given length and amount of rafters
     public static double calcRafterSpacing(int carportLength, double rafterWidth) {
 
         //Getting the total number of rafters for this specific length

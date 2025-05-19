@@ -6,7 +6,6 @@ import app.entities.*;
 import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
 import app.persistence.OrderMapper;
-import app.persistence.ProductMapper;
 import app.persistence.UserMapper;
 import app.service.EmailService;
 import app.util.Calculator;
@@ -42,9 +41,9 @@ public class OrderController {
             ctx.attribute("carportWidth", carportWidth);
             ctx.render("index.html");
         } catch (DatabaseException e) {
-            //Printing stacktrace for the developer to locate the bug
+            //Printing stack trace for the developer to locate the bug
             e.printStackTrace();
-            //Displaying an error message to the user, if the carport dimensions could not be retrieved from the database
+            //Displaying an error message to the user if the carport dimensions could not be retrieved from the database
             ctx.attribute("errorMessage", "Kunne ikke hente carport dimensioner fra databasen - prøv venligst igen senere!");
             ctx.render("index.html");
         }
@@ -57,9 +56,9 @@ public class OrderController {
             createListOfMaterials(ctx, connectionPool);
             ctx.redirect("/add-customer-request?success=true");
         } catch (DatabaseException e) {
-            //Printing stacktrace for the developer to locate the bug
+            //Printing stack trace for the developer to locate the bug
             e.printStackTrace();
-            //Displaying an error message to the user, if the carport order could not be placed
+            //Displaying an error message to the user if the carport order could not be placed
             ctx.attribute("errorMessage", "Din ordre blev ikke gennemført - prøv igen senere eller kontakt Fog for yderligere information");
             ctx.render("index.html");
         }
@@ -69,7 +68,7 @@ public class OrderController {
     private static OrderItemAndPrice getPoleOrderItemAndPrice(int carportLength, ConnectionPool connectionPool) throws DatabaseException {
 
         //Product length is hard-coded to 300, as we do not need to loop through the different lengths as we only have one type of pole
-        ProductVariant poleVariant = ProductMapper.getVariantsByProductAndLength(300, 1, connectionPool);
+        ProductVariant poleVariant = OrderMapper.getVariantsByProductAndLength(300, 1, connectionPool);
 
         //Using the calculator method for deciding how many poles are need for the given length
         int poleCount = Calculator.calcAmountOfPoles(carportLength, poleVariant.getProduct().getWidth());
@@ -106,7 +105,7 @@ public class OrderController {
         }
 
         //Retrieving the correct product variant with the actual rafter length from the database
-        ProductVariant rafterVariant = ProductMapper.getVariantsByProductAndLength(actualLength, 2, connectionPool);
+        ProductVariant rafterVariant = OrderMapper.getVariantsByProductAndLength(actualLength, 2, connectionPool);
 
         //Caluclating the amount of rafters needed for the wished length of the carport!
         int rafterCount = Calculator.calcAmountOfRafters(carportLength, rafterVariant.getProduct().getWidth());
@@ -142,7 +141,7 @@ public class OrderController {
             for (int possibleLength : possibleLengths) {
                 if (possibleLength >= carportLength) {
                     actualLength = possibleLength;
-                    ProductVariant beamVariant = ProductMapper.getVariantsByProductAndLength(actualLength, 2, connectionPool);
+                    ProductVariant beamVariant = OrderMapper.getVariantsByProductAndLength(actualLength, 2, connectionPool);
                     if (beamVariant != null) {
                         //Hard-coding the quantity to 2, because we are sure we only need one beam in each side of the carport!
                         OrderItem beamOrderItem = new OrderItem(beamVariant, 2, 3);
@@ -159,7 +158,7 @@ public class OrderController {
         } else {
             //Hard-coding the length on one of the beams (on each side) to 360, because we then know we will be able to reach all the different lengths up to the maximum length of 780cm when adding a second beam!
             int firstBeamLength = 360;
-            ProductVariant firstBeamVariant = ProductMapper.getVariantsByProductAndLength(firstBeamLength, 2, connectionPool);
+            ProductVariant firstBeamVariant = OrderMapper.getVariantsByProductAndLength(firstBeamLength, 2, connectionPool);
             if (firstBeamVariant != null) {
                 OrderItem firstBeamOrderItem = new OrderItem(firstBeamVariant, 2, 3);
                 //Calculating the price with the given length of the beam, and the unit price (in meters) and times two (because we need one beam in each side)
@@ -170,7 +169,7 @@ public class OrderController {
             //Selecting the second beam by looping through the list and picking the first beam that (when added with the first beam) reaches the wished length!
             for (int secondBeamLength : possibleLengths) {
                 if (firstBeamLength + secondBeamLength >= carportLength) {
-                    ProductVariant secondBeamVariant = ProductMapper.getVariantsByProductAndLength(secondBeamLength, 2, connectionPool);
+                    ProductVariant secondBeamVariant = OrderMapper.getVariantsByProductAndLength(secondBeamLength, 2, connectionPool);
                     if (secondBeamVariant != null) {
                         OrderItem secondBeamOrderItem = new OrderItem(secondBeamVariant, 2, 3);
                         //Calculating the price with the given length of the beam, and the unit price (in meters) and times two (because we need one beam in each side)
@@ -186,17 +185,17 @@ public class OrderController {
     }
 
 
-    //Method that retrieves the wished length and width from front end and then uses different support methods to create an order and save it in the database!
+    //Method that retrieves the wished length and width from the front end and then uses different support methods to create an order and save it in the database!
     public static Order createListOfMaterials(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
 
 
-        //Retrieving information from front end
+        //Retrieving information from the front end
         int chosenLength = Integer.parseInt(ctx.formParam("Længde"));
         int chosenWidth = Integer.parseInt(ctx.formParam("Bredde"));
 
         Integer userId = ctx.sessionAttribute("userId");
 
-        //TODO: Handle not logged in User
+
         User loggedInUser = UserMapper.getUserById(userId, connectionPool);
 
 
@@ -276,7 +275,7 @@ public class OrderController {
             ctx.attribute("orders", orders);
             ctx.render("customer.html");
         } catch (DatabaseException e) {
-            //Printing stacktrace for the developer to locate the bug
+            //Printing stack trace for the developer to locate the bug
             e.printStackTrace();
             //Sending an error message to the user if the order list could not be retrieved
             ctx.attribute("errorMessage", "Kunne ikke hente ordrer");
@@ -298,7 +297,7 @@ public class OrderController {
                 ctx.render("admin.html");
             }
         } catch (DatabaseException e) {
-            //Printing stacktrace for the developer to locate the bug
+            //Printing stack trace for the developer to locate the bug
             e.printStackTrace();
             //Displaying an error message to the user if the order list could not be retrieved
             ctx.attribute("errorMessage", "Kunne ikke hente ordrer!");
@@ -321,7 +320,7 @@ public class OrderController {
             ctx.attribute("orderId", orderId);
             ctx.render("orderdetails.html");
         } catch (DatabaseException e) {
-            //Printing stacktrace for the developer to locate the bug
+            //Printing stack trace for the developer to locate the bug
             e.printStackTrace();
             //Displaying an error message to the user if the list of materials could not be retrieved from database
             ctx.attribute("errorMessage", "Kunne ikke hente stykliste");
@@ -342,7 +341,7 @@ public class OrderController {
             OrderMapper.UpdatePrice(newPrice, orderId, connectionPool);
             ctx.redirect("/admin");
         } catch (DatabaseException e) {
-            //Printing stacktrace for the developer to locate the bug
+            //Printing stack trace for the developer to locate the bug
             e.printStackTrace();
             //Displaying an error message to the admin if the price could not be updated!
             ctx.attribute("errorMessage", "Kunne ikke opdatere prisen!");
@@ -367,7 +366,7 @@ public class OrderController {
             EmailService.sendEmail(customerEmail);
             ctx.redirect("/admin");
         } catch (DatabaseException e) {
-            //Printing stacktrace for the developer to locate the bug
+            //Printing stack trace for the developer to locate the bug
             e.printStackTrace();
             //Displaying an error message to the admin if the order could not be sent!
             ctx.attribute("errorMessage", "Kunne ikke afsende ordren!");
@@ -385,7 +384,7 @@ public class OrderController {
             OrderMapper.updateOrderStatus(orderId, OrderStatus.PAID, connectionPool);
             ctx.redirect("/customer");
         } catch (DatabaseException e) {
-            //Printing stacktrace for the developer to locate the bug
+            //Printing stack trace for the developer to locate the bug
             e.printStackTrace();
             //Displaying an error message to the admin if the order could not be paid!
             ctx.attribute("errorMessage", "Kunne ikke afsende ordren!");

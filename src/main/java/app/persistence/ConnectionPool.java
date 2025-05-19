@@ -8,32 +8,20 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/***
- * Singleton pattern applied to handling a Hikari ConnectionPool
- */
 public class ConnectionPool {
 
     private static volatile ConnectionPool instance = null;
     private static HikariDataSource ds = null;
     private static final Logger LOGGER = Logger.getLogger(ConnectionPool.class.getName());
 
-    /***
-     * Private constructor to enforce Singleton pattern.
-     */
+
+    //Private constructor to enforce a Singleton pattern!
     private ConnectionPool() {
         // Prevent instantiation
     }
 
-    /***
-     * Getting a singleton instance of a Hikari Connection Pool with specific credentials
-     * and connection string. If an environment variable "DEPLOYED" exists, then environment variables
-     * will be used instead of provided parameters.
-     * @param user Database username
-     * @param password Database password
-     * @param url Database connection URL
-     * @param db Database name
-     * @return Singleton instance of ConnectionPool
-     */
+
+    //Getting a singleton instance of Hikari Connection Pool with the specific credentials!
     public static ConnectionPool getInstance() {
         if (instance == null) {
             synchronized (ConnectionPool.class) {
@@ -51,11 +39,7 @@ public class ConnectionPool {
     }
 
 
-    /***
-     * Getting a live connection from the Hikari Connection Pool
-     * @return a database connection
-     * @throws SQLException if connection fails
-     */
+    //Getting a live connection from the Hikari Connection Pool - throws a SQLException if failed to do so!
     public Connection getConnection() throws SQLException {
         if (ds == null) {
             throw new SQLException("DataSource is not initialized. Call getInstance() first.");
@@ -63,9 +47,7 @@ public class ConnectionPool {
         return ds.getConnection();
     }
 
-    /***
-     * Closing the Hikari Connection Pool
-     */
+    //Closing the Hikari Connection Pool - not used at the moment, because we use "try-with-resources" blocks instead!
     public void close() {
         if (ds != null) {
             LOGGER.log(Level.INFO, "Shutting down connection pool...");
@@ -75,14 +57,8 @@ public class ConnectionPool {
         }
     }
 
-    /***
-     * Configuring a Hikari DataSource ConnectionPool
-     * @param user Database username
-     * @param password Database password
-     * @param url Database connection URL
-     * @param db Database name
-     * @return Configured HikariDataSource
-     */
+
+    //Hikari Connection Pool configuration
     private static HikariDataSource createHikariConnectionPool(String user, String password, String url, String db) {
         LOGGER.log(Level.INFO, "Initializing Connection Pool for database: {0}", db);
 

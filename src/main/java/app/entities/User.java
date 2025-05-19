@@ -2,6 +2,7 @@ package app.entities;
 
 public class User {
     private int userId;
+    //We do not use password for now, but keep it as a private instance variable for potential later use!
     private String password;
     private String email;
     private String phoneNumber;
@@ -10,36 +11,6 @@ public class User {
     private String address;
     private String zipCode;
 
-    public User(int userId, String password, String email, String phoneNumber, String role) {
-        this.userId = userId;
-        this.password = password;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.role = role;
-    }
-
-    public User(String password, String email, String phoneNumber, String fullName, String address, String zipCode) {
-        this.password = password;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.fullName = fullName;
-        this.address = address;
-        this.zipCode = zipCode;
-    }
-
-    public User(String password, String email, String phoneNumber, String role) {
-        this.password = password;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.role = role;
-    }
-
-    public User(int userId, String email, String phoneNumber, String role) {
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.role = role;
-        this.userId = userId;
-    }
 
     public User(int userId, String email, String phoneNumber, String role, String zipCode, String address, String fullName) {
         this.userId = userId;
@@ -51,21 +22,9 @@ public class User {
         this.zipCode = zipCode;
     }
 
-    public User(int userId, String fullName, String email, String phoneNumber, String address, String zipCode) {
-        this.userId = userId;
-        this.fullName = fullName;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.zipCode = zipCode;
-    }
 
     public int getUserId() {
         return userId;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public String getEmail() {
@@ -91,6 +50,8 @@ public class User {
     public String getZipCode() {
         return zipCode;
     }
+
+
 
     @Override
     public String toString() {

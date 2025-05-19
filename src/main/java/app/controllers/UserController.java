@@ -11,6 +11,7 @@ import static app.controllers.OrderController.showAllOrdersForAdmin;
 
 public class UserController {
 
+    //Adding routes
     public static void addRoutes(Javalin app, ConnectionPool connectionPool) {
         app.post("/login", ctx -> login(ctx, connectionPool));
         app.get("/login", ctx -> ctx.render("/login.html"));
@@ -19,16 +20,21 @@ public class UserController {
         app.get("/logout", ctx -> logout(ctx));
     }
 
+    //Method for logging out by clearing all session attributes
     private static void logout(Context ctx) {
         ctx.req().getSession().invalidate();
         ctx.redirect("/");
     }
 
+    //Method for logging in and storing user information in the session
     private static void login(Context ctx, ConnectionPool connectionPool) {
+
+        //Retrieving log in information from the front end
         String username = ctx.formParam("email");
         String password = ctx.formParam("password");
 
 
+        //Trying to log in and if succeeded returning the User object
         try {
             User user = UserMapper.login(username, password, connectionPool);
 
@@ -38,12 +44,17 @@ public class UserController {
             ctx.sessionAttribute("email", user.getEmail());
             ctx.redirect("/index");
         } catch (DatabaseException e) {
-            ctx.attribute("message", "Login failed. Please try again.");
+            //Printing stack trace for the developer to locate the bug
+            e.printStackTrace();
+            //Displaying an error message to the user if the log in failed!
+            ctx.attribute("errorMessage", "Forkert email eller kode. Prøv igen!");
             ctx.render("/login.html");
         }
     }
 
+    //Method for creating a new user
     private static void createUser(Context ctx, ConnectionPool connectionPool) {
+        //Retrieving user information from the front end
         String email = ctx.formParam("email");
         String password1 = ctx.formParam("password1");
         String password2 = ctx.formParam("password2");
@@ -53,18 +64,23 @@ public class UserController {
         String fullName = ctx.formParam("fullName");
 
 
+        //Making sure that the two passwords are a like
         if (!password1.equals(password2)) {
-            ctx.attribute("message", "Passwords do not match, try again.");
+            ctx.attribute("errorMessage", "Kodeordene er ikke ens. Prøv igen!");
             ctx.render("/createuser.html");
             return;
         }
 
+        //Trying to insert the new user to the database and returning to the login page
         try {
             UserMapper.createUser(email, password1,phone,zipCode,homeAdress,fullName, connectionPool);
-            ctx.attribute("message", "User created successfully. Please log in.");
+            ctx.attribute("message", "Brugeren blev oprettet. Venligst log ind!");
             ctx.render("/login.html");
         } catch (DatabaseException e) {
-            ctx.attribute("message", "User already exists. Try again or log in.");
+            //Printing stack trace for the developer to locate the bug
+            e.printStackTrace();
+            //Displaying an error message to the user if the user could not be created as the user already exists in the database
+            ctx.attribute("errorMessage", "Brugeren eksisterer allerede. Log ind eller lav en ny bruger!");
             ctx.render("/createuser.html");
         }
     }

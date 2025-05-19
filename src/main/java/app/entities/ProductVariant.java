@@ -11,17 +11,8 @@ public class ProductVariant {
         this.product = product;
     }
 
-    public ProductVariant(int length, Product product){
-        this.length = length;
-        this.product = product;
-    }
-
     public int getProductVariantId() {
         return productVariantId;
-    }
-
-    public void setProductVariantId(int productVariantId) {
-        this.productVariantId = productVariantId;
     }
 
     public int getLength() {
@@ -34,10 +25,6 @@ public class ProductVariant {
 
     public Product getProduct() {
         return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
     }
 
 

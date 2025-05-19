@@ -8,8 +8,10 @@ import java.io.IOException;
 public class EmailService {
 
     public static void sendEmail(String customerEmail) {
+        //Using environment variables to store our secret email and password for security reasons!
         final String senderEmail = System.getenv("EMAIL");
         final String senderPassword = System.getenv("EMAIL_PASSWORD");
+        //Hard coding the subject and message body of the email, as we only need a generic email for now!
         final String subject = "Fog Carport - Ordrestatus Opdateret";
         final String messageBody = "Kære kunde. Der er blevet oprettet et tilbud på din carport bestilling.\n\nLog ind på din Fog-konto for at se tilbuddet.\n\nMed Venlig Hilsen\n\nFog";
 
@@ -37,7 +39,7 @@ public class EmailService {
 
             // Send email
             Transport.send(message);
-            System.out.println("Email sent successfully to " + customerEmail);
+
         } catch (MessagingException e) {
             e.printStackTrace();
         }
