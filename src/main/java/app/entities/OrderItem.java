@@ -1,11 +1,11 @@
 package app.entities;
 
 public class OrderItem {
-    int orderItemId;
-    ProductVariant productVariant;
-    int quantity;
-    String description;
-    int descriptionId;
+    private int orderItemId;
+    private ProductVariant productVariant;
+    private int quantity;
+    private String description;
+    private int descriptionId;
 
 
     //Overloading the constructor to fit our various needs!

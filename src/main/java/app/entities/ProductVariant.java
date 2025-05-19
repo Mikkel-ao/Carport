@@ -1,9 +1,9 @@
 package app.entities;
 
 public class ProductVariant {
-    int productVariantId;
-    int length;
-    Product product;
+    private int productVariantId;
+    private int length;
+    private Product product;
 
     public ProductVariant(int productVariantId, int length, Product product) {
         this.productVariantId = productVariantId;
