@@ -244,5 +244,12 @@ controllers <-- persistence
 persistence <-- entities
 controllers <-- services
 controllers <-- entities
+persistence <-- DTO
+controllers <-- DTO
+controllers <-- util
+persistence <-- util
+controllers <-- service
+
+
 
 @enduml

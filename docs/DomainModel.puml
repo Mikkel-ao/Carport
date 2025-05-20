@@ -4,25 +4,23 @@
 
 class Kunde{
 Mail
-Telefon
+Telefon nummer
 Adresse
 }
-class Sælger{
-Telefon
+class Sælger {
+Kontaktinfo
 }
 class Ordre{
 Status
+Pris
 Dato
 }
-class Faktura {
-Pris
-}
+
 class Carport {
-mål
+Pris
+Dimensioner
 }
-class Brugsanvisning{
-Tekst
-}
+
 class Stykliste {
 Materialer
 }
@@ -30,9 +28,8 @@ Materialer
 'pile'
 Kunde -- Ordre: 0-~
 Ordre -- Carport: 1-~
-Ordre -- Faktura: 1
 Sælger -- Ordre: 0-~
-Faktura -- Stykliste: 1
-Carport -- Brugsanvisning: 1
+Carport -- Stykliste: 1
+
 
 @enduml
