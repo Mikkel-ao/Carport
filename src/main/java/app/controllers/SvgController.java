@@ -1,6 +1,6 @@
 package app.controllers;
 
-import app.persistence.CarportSvg;
+import app.service.CarportSvg;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 

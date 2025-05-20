@@ -1,6 +1,6 @@
 package app.entities;
 
-import app.util.OrderStatus;
+import app.service.OrderStatus;
 
 
 import java.sql.Timestamp;

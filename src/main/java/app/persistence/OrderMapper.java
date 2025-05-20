@@ -3,7 +3,7 @@ package app.persistence;
 import app.DTO.OrderInfoDTO;
 import app.entities.*;
 import app.exceptions.DatabaseException;
-import app.util.OrderStatus;
+import app.service.OrderStatus;
 
 import java.sql.*;
 import java.util.ArrayList;

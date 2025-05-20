@@ -3,7 +3,7 @@ package app.persistence;
 import app.DTO.OrderInfoDTO;
 import app.entities.*;
 import app.exceptions.DatabaseException;
-import app.util.OrderStatus;
+import app.service.OrderStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;

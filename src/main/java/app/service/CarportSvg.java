@@ -1,6 +1,4 @@
-package app.persistence;
-
-import app.util.Calculator;
+package app.service;
 
 public class CarportSvg {
     private int width;

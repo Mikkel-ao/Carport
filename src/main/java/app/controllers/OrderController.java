@@ -8,8 +8,8 @@ import app.persistence.ConnectionPool;
 import app.persistence.OrderMapper;
 import app.persistence.UserMapper;
 import app.service.EmailService;
-import app.util.Calculator;
-import app.util.OrderStatus;
+import app.service.Calculator;
+import app.service.OrderStatus;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
