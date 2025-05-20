@@ -17,8 +17,8 @@ Index --> Opret : "Opret bruger"
 Index --> Admin : "Ordreoversigt"
 Index --> Customer : "Fog konto"
 Index --> SVG : "Generer tegning"
-note left of Admin : Admin kan tilgå
-note left of Customer : Kunde kan tilgå
+note left of Admin : Admin login kan tilgå
+note left of Customer : Kunde login kan tilgå
 
 Login --> Opret : "Opret bruger"
 Login --> Index : "Hjem"
