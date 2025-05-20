@@ -1,4 +1,4 @@
-package app.service;
+package app.util;
 
 public class Calculator {
 

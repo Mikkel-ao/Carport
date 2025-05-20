@@ -1,4 +1,4 @@
-package app.service;
+package app.enums;
 
 public enum OrderStatus {
     PENDING,
