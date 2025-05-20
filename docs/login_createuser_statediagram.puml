@@ -2,13 +2,7 @@
 [*] --> Index
 
 state "index.html" as Index #Application
-state "login.html" as Login #Aquamarine
-state "createuser.html" as Opret #Aquamarine
-
-Index --> Login : Trykker "log ind"
-Index --> Opret : Trykker "Opret bruger"
-
-state LoginProces {
+state "login.html" as Login #Aquamarine {
   [*] --> Login_IndtastInfo
   Login_IndtastInfo --> Login_Autentifikation : Sender indtastning
   Login_Autentifikation --> Login_Succes : Findes i db
@@ -17,7 +11,7 @@ state LoginProces {
   Login_Succes --> [*] : Logget ind
 }
 
-state OpretProces {
+state "createuser.html" as Opret #Aquamarine {
   [*] --> Opret_IndtastOplysninger
   Opret_IndtastOplysninger --> Opret_Validering : Sender indtastning
   Opret_Validering --> Opret_Succes : Opfylder krav
@@ -26,7 +20,7 @@ state OpretProces {
   Opret_Succes --> [*] : Oprettet i databasen
 }
 
-Login --> LoginProces
-Opret --> OpretProces
+Index --> Login : Trykker "log ind"
+Index --> Opret : Trykker "Opret bruger"
 
 @enduml
