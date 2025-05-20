@@ -48,9 +48,10 @@ class Svg{
     }
 
 class Calculator {
-Length
-Width
-+ CalculatePrice ()
++ int calcAmountOfPoles(int totalLength, double poleWidth)
++ double calcPoleSpacing(int totalLength, double poleWidth)
++ int calcAmountOfRafters(int totalLengthInCm, double rafterWidth)
++ double calcRafterSpacing(int carportLength, double rafterWidth)
     }
 }
 
@@ -69,31 +70,7 @@ class OrderMapper {
 + ProductVariant getVariantsByProductAndLength(int productLength, int productId, ConnectionPool connectionPool)
     }
 
-class Svg {
-- final String SVG_TEMPLATE = "<svg version=\"1.1\"\n" +
-"     xmlns=\"http://www.w3.org/2000/svg\"\n" +
-"     x=\"%d\" y=\"%d\"\n" +
-"     viewBox=\"%s\" width=\"%s\"\n" +
-"     preserveAspectRatio=\"xMinYMin\">";
 
-- final String SVG_ARROW_DEFS = "<defs>\n" +
-"    <marker id=\"beginArrow\" markerWidth=\"12\" markerHeight=\"12\" refX=\"0\" refY=\"6\" orient=\"auto\">\n" +
-"        <path d=\"M0,6 L12,0 L12,12 L0,6\" style=\"fill: #000000;\" />\n" +
-"    </marker>\n" +
-"    <marker id=\"endArrow\" markerWidth=\"12\" markerHeight=\"12\" refX=\"12\" refY=\"6\" orient=\"auto\">\n" +
-"        <path d=\"M0,0 L12,6 L0,12 L0,0\" style=\"fill: #000000;\" />\n" +
-"    </marker>\n" +
-"</defs>";
-- final String SVG_RECT_TEMPLATE = "<rect x=\"%.2f\" y=\"%.2f\" width=\"%.2f\" height=\"%.2f\" style=\"%s\" />"
-- final StringBuilder svg = new StringBuilder()
-- boolean closed = false
-+ Svg(int x, int y, String viewBox, String width)
-+ void addRectangle(double x, double y, double height, double width, String style)
-+ void addLine(int x1, int y1, int x2, int y2, String style)
-+ void addArrow(int x1, int y1, int x2, int y2, String style)
-+ void addText(int x, int y, int rotation, String text)
-+ void addSvg(Svg innerSvg)
-    }
 class UserMapper {
 + User login(String email, String password, ConnectionPool connectionPool)
 + void createUser(String email, String password, String phoneNumber, String zipCode, String homeAdress, String fullName, ConnectionPool connectionPool)
@@ -180,7 +157,7 @@ package config {
 class SessionConfig {
 sessionConfig ()
     }
-class ThymleafController {
+class ThymeleafController {
 templateEngine ()
     }
 }
@@ -207,7 +184,7 @@ class OrderInfoDTO {
 class OrderItemAndPrice {
 - OrderItem orderItem
 - double price
-+ OrderItemAndPrice (OederItem orderItem, double price)
++ OrderItemAndPrice (OrderItem orderItem, double price)
     }
 }
 
@@ -215,24 +192,59 @@ package service {
 class EmailService {
 + void sendEmail(String customerEmail)
     }
-}
-
-package util {
 class Calculator {
 + int calcAmountOfPoles(int totalLength, double poleWidth)
 + double calcPoleSpacing(int totalLength, double poleWidth)
 + int calcAmountOfRafters(int totalLengthInCm, double rafterWidth)
 + double calcRafterSpacing(int carportLength, double rafterWidth)
     }
-enum OrderStatus {
-PENDING,
-CONFIRMED,
-CANCELLED,
-REJECTED,
-PAID,
-ACCEPT;
-
+class carportSvg {
+- int width
+- int length
+- Svg carportSvg
+- String style = "stroke-width:1px; stroke:#000000; fill: #ffffff"
+- double rafterWidth = 4.5
+- double postWidth = 9.7
++ CarportSvg(int width, int length)
+- void drawBase()
+- void addBeams()
+- void addRafters()
+- void addPosts()
+- void addDimensions()
     }
+enum OrderStatus {
+     PENDING,
+     CONFIRMED,
+     CANCELLED,
+     REJECTED,
+     PAID,
+     ACCEPT;
+     }
+ class Svg {
+ - final String SVG_TEMPLATE = "<svg version=\"1.1\"\n" +
+ "     xmlns=\"http://www.w3.org/2000/svg\"\n" +
+ "     x=\"%d\" y=\"%d\"\n" +
+ "     viewBox=\"%s\" width=\"%s\"\n" +
+ "     preserveAspectRatio=\"xMinYMin\">";
+
+ - final String SVG_ARROW_DEFS = "<defs>\n" +
+ "    <marker id=\"beginArrow\" markerWidth=\"12\" markerHeight=\"12\" refX=\"0\" refY=\"6\" orient=\"auto\">\n" +
+ "        <path d=\"M0,6 L12,0 L12,12 L0,6\" style=\"fill: #000000;\" />\n" +
+ "    </marker>\n" +
+ "    <marker id=\"endArrow\" markerWidth=\"12\" markerHeight=\"12\" refX=\"12\" refY=\"6\" orient=\"auto\">\n" +
+ "        <path d=\"M0,0 L12,6 L0,12 L0,0\" style=\"fill: #000000;\" />\n" +
+ "    </marker>\n" +
+ "</defs>";
+ - final String SVG_RECT_TEMPLATE = "<rect x=\"%.2f\" y=\"%.2f\" width=\"%.2f\" height=\"%.2f\" style=\"%s\" />"
+ - final StringBuilder svg = new StringBuilder()
+ - boolean closed = false
+ + Svg(int x, int y, String viewBox, String width)
+ + void addRectangle(double x, double y, double height, double width, String style)
+ + void addLine(int x1, int y1, int x2, int y2, String style)
+ + void addArrow(int x1, int y1, int x2, int y2, String style)
+ + void addText(int x, int y, int rotation, String text)
+ + void addSvg(Svg innerSvg)
+     }
 }
 
 'Pile'
@@ -246,8 +258,6 @@ controllers <-- services
 controllers <-- entities
 persistence <-- DTO
 controllers <-- DTO
-controllers <-- util
-persistence <-- util
 controllers <-- service
 
 

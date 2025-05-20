@@ -37,7 +37,7 @@ package controllers {
     }
 }
 
-package services {
+package service {
     class Svg {
         + Svg()
         + addRectangle()
@@ -46,11 +46,13 @@ package services {
         + addText()
     }
 
+
     class Calculator {
-        + int Length
-        + int Width
-        + CalculatePrice()
-    }
+            + int calcAmountOfPoles(int totalLength, double poleWidth)
+            + double calcPoleSpacing(int totalLength, double poleWidth)
+            + int calcAmountOfRafters(int totalLengthInCm, double rafterWidth)
+            + double calcRafterSpacing(int carportLength, double rafterWidth)
+        }
 }
 
 package persistence {
@@ -151,7 +153,7 @@ Main <-- config
 Main <-- controllers
 controllers <-- persistence
 persistence <-- entities
-controllers <-- services
+controllers <-- service
 controllers <-- entities
 persistence <-- DTO
 controllers <-- DTO
