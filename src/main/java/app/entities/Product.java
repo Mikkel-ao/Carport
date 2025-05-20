@@ -1,11 +1,11 @@
 package app.entities;
 
 public class Product {
-    int productId;
-    String name;
-    String unit;
-    double width;
-    int pricePrUnit;
+    private int productId;
+    private String name;
+    private String unit;
+    private double width;
+    private int pricePrUnit;
 
     //Overloading the constructor to fit our various needs!
     public Product(int productId, String name, String unit, int pricePrUnit) {

@@ -2,17 +2,38 @@
 'https://plantuml.com/class-diagram
 'Klasse diagram'
 package app {
-class Main {}
+class Main {
+- final ConnectionPool connectionPool = ConnectionPool.getInstance()
++ void main(String[] args)
+
+}
 
 package controllers {
 class OrderController {
-
-}
+- void addRoutes (Javalin app, ConnectionPool connectionPool)
+- void getCarportDimensions(Context ctx, ConnectionPool connectionPool)
+- void handleCustomerRequest(Context ctx, ConnectionPool connectionPool)
+- OrderItemAndPrice getPoleOrderItemAndPrice(int carportLength, ConnectionPool connectionPool)
+- OrderItemAndPrice getRafterOrderItemAndPrice(int carportLength, int carportWidth, ConnectionPool connectionPool)
+- List<OrderItemAndPrice> getBeamOrderItemAndPrice(int carportLength, ConnectionPool connectionPool)
++ Order createListOfMaterials(Context ctx, ConnectionPool connectionPool)
++ void saveOrder(Order order, ConnectionPool connectionPool)
++ void getOrderDetailsForUser(Context ctx, ConnectionPool connectionPool)
++ void showAllOrdersForAdmin(Context ctx, ConnectionPool connectionPool)
++ void showListOfMaterials(Context ctx, ConnectionPool connectionPool)
++ void updatePrice(Context ctx, ConnectionPool connectionPool)
++ void sendOffer(Context ctx, ConnectionPool connectionPool)
++ void payOrder(Context ctx, ConnectionPool connectionPool)
+    }
 class UserController{
 + addRoutes(Javalin app, ConnectionPool connectionPool)
-- logout(Context ctx)
-- login(Context ctx, ConnectionPool connectionPool)
-- createUser(Context ctx, ConnectionPool connectionPool)
+- void logout(Context ctx)
+- void login(Context ctx, ConnectionPool connectionPool)
+- void createUser(Context ctx, ConnectionPool connectionPool)
+    }
+class SvgController {
++ void addRoutes(Javalin app)
++ void showSvg(Context ctx)
     }
 }
 
@@ -27,27 +48,49 @@ class Svg{
     }
 
 class Calculator {
-Length
-Width
-+ CalculatePrice ()
++ int calcAmountOfPoles(int totalLength, double poleWidth)
++ double calcPoleSpacing(int totalLength, double poleWidth)
++ int calcAmountOfRafters(int totalLengthInCm, double rafterWidth)
++ double calcRafterSpacing(int carportLength, double rafterWidth)
     }
 }
 
 package persistence{
 class OrderMapper {
-+ getOrderById()
-+ getAllOrders()
-+ getOrderStatus()
-
++ List<Order> getAllOrders(ConnectionPool connectionPool)
++ Order getOrderByOrderId(int orderId, ConnectionPool connectionPool)
++ void insertOrderItem(int orderId, OrderItem orderItem, ConnectionPool connectionPool)
++ void updateOrderStatus(int orderId, OrderStatus newStatus, ConnectionPool connectionPool)
++ void UpdatePrice(double newPrice, int orderId, ConnectionPool connectionPool)
++ List<Integer> getProductLengths(ConnectionPool connectionPool, int productId)
++ List<Integer> getCarportLength(ConnectionPool connectionPool)
++ List<Integer> getCarportWidth(ConnectionPool connectionPool)
++ int createOrder(ConnectionPool connectionPool, int width, int length, int userId, double customerPrice, double costPrice)
++ List<OrderInfoDTO> getOrdersForUser(int userId, ConnectionPool connectionPool)
++ ProductVariant getVariantsByProductAndLength(int productLength, int productId, ConnectionPool connectionPool)
     }
+
+
 class UserMapper {
-+ login(String email, String password, ConnectionPool connectionPool)
-+ createUser(String password, String email, ConnectionPool connectionPool)
++ User login(String email, String password, ConnectionPool connectionPool)
++ void createUser(String email, String password, String phoneNumber, String zipCode, String homeAdress, String fullName, ConnectionPool connectionPool)
++ User getUserById(int userId, ConnectionPool connectionPool)
+    }
 
-}
-
-class ProductMapper{
-}
+class carportSvg {
+- int width
+- int length
+- Svg carportSvg
+- String style = "stroke-width:1px; stroke:#000000; fill: #ffffff"
+- double rafterWidth = 4.5
+- double postWidth = 9.7
++ CarportSvg(int width, int length)
+- void drawBase()
+- void addBeams()
+- void addRafters()
+- void addPosts()
+- void addDimensions()
+    }
 
 class ConnectionPool {
 - volatile ConnectionPool
@@ -64,57 +107,144 @@ class ConnectionPool {
 package entities {
 class User {
 - int userId
+- String password
 - String email
-- String hashedPassword
-- int phoneNumber
+- String phoneNumber
 - String role
-+ User ()
+- String fullName
+- String address
+- String zipCode
++ User(int userId, String email, String phoneNumber, String role, String zipCode, String address, String fullName)
     }
 class Order {
+- List<OrderItem> listOfMaterials
 - int orderId
-- double carportWidth
-- double carportLength
-- int status
-+ Order()
+- int carportWidth
+- int carportLength
+- OrderStatus status
+- User user
+- double totalSalesPrice
+- double costPrice
+- Timestamp timeStamp
++ Order(int orderId, int carportWidth, int carportLength, OrderStatus status, User user, double totalPrice, double costPrice, Timestamp timeStamp)
+
     }
 class ProductVariant {
 - int productVariantId
-- double length
+- int length
 - Product product
-+ ProductVariant()
++ ProductVariant(int productVariantId, int length, Product product)
     }
 class Product {
 - int productId
 - String name
 - String unit
-- double price
-+ Product()
+- double width
+- int pricePrUnit
++ Product(int productId, String name, String unit, int pricePrUnit)
     }
 class OrderItem {
 - int orderItemId
+- ProductVariant productVariant
 - int quantity
 - String description
-- Order order
-- ProductVariant productVariant
-+ OrderItem()
+- int descriptionId
++ OrderItem(int orderItemId, ProductVariant productVariant, int quantity, String description, int descriptionId)
     }
 }
-
 
 package config {
 class SessionConfig {
 sessionConfig ()
     }
-class ThymleafController {
+class ThymeleafController {
 templateEngine ()
     }
 }
 
 package exception{
-class DatabaseException {
-DatabaseException ()
+class DatabaseException extends Exception {
++ DatabaseException(String userMessage)
++ DatabaseException(String userMessage, String systemMessage)
     }
 }
+}
+
+package DTO {
+class OrderInfoDTO {
+- int orderId
+- int carportWidth
+- int carportLength
+- orderStatus status
+- double totalSalesPrice
+- double costPrice
+- Timestamp timestamp
++ OrderInfoDTO ( int orderID, int carportWidth, int carportLength, orderStatus status, double totalSalesPrice, double costPrice, Timestamp timestamp)
+    }
+class OrderItemAndPrice {
+- OrderItem orderItem
+- double price
++ OrderItemAndPrice (OrderItem orderItem, double price)
+    }
+}
+
+package service {
+class EmailService {
++ void sendEmail(String customerEmail)
+    }
+class Calculator {
++ int calcAmountOfPoles(int totalLength, double poleWidth)
++ double calcPoleSpacing(int totalLength, double poleWidth)
++ int calcAmountOfRafters(int totalLengthInCm, double rafterWidth)
++ double calcRafterSpacing(int carportLength, double rafterWidth)
+    }
+class carportSvg {
+- int width
+- int length
+- Svg carportSvg
+- String style = "stroke-width:1px; stroke:#000000; fill: #ffffff"
+- double rafterWidth = 4.5
+- double postWidth = 9.7
++ CarportSvg(int width, int length)
+- void drawBase()
+- void addBeams()
+- void addRafters()
+- void addPosts()
+- void addDimensions()
+    }
+enum OrderStatus {
+     PENDING,
+     CONFIRMED,
+     CANCELLED,
+     REJECTED,
+     PAID,
+     ACCEPT;
+     }
+ class Svg {
+ - final String SVG_TEMPLATE = "<svg version=\"1.1\"\n" +
+ "     xmlns=\"http://www.w3.org/2000/svg\"\n" +
+ "     x=\"%d\" y=\"%d\"\n" +
+ "     viewBox=\"%s\" width=\"%s\"\n" +
+ "     preserveAspectRatio=\"xMinYMin\">";
+
+ - final String SVG_ARROW_DEFS = "<defs>\n" +
+ "    <marker id=\"beginArrow\" markerWidth=\"12\" markerHeight=\"12\" refX=\"0\" refY=\"6\" orient=\"auto\">\n" +
+ "        <path d=\"M0,6 L12,0 L12,12 L0,6\" style=\"fill: #000000;\" />\n" +
+ "    </marker>\n" +
+ "    <marker id=\"endArrow\" markerWidth=\"12\" markerHeight=\"12\" refX=\"12\" refY=\"6\" orient=\"auto\">\n" +
+ "        <path d=\"M0,0 L12,6 L0,12 L0,0\" style=\"fill: #000000;\" />\n" +
+ "    </marker>\n" +
+ "</defs>";
+ - final String SVG_RECT_TEMPLATE = "<rect x=\"%.2f\" y=\"%.2f\" width=\"%.2f\" height=\"%.2f\" style=\"%s\" />"
+ - final StringBuilder svg = new StringBuilder()
+ - boolean closed = false
+ + Svg(int x, int y, String viewBox, String width)
+ + void addRectangle(double x, double y, double height, double width, String style)
+ + void addLine(int x1, int y1, int x2, int y2, String style)
+ + void addArrow(int x1, int y1, int x2, int y2, String style)
+ + void addText(int x, int y, int rotation, String text)
+ + void addSvg(Svg innerSvg)
+     }
 }
 
 'Pile'
@@ -126,5 +256,10 @@ controllers <-- persistence
 persistence <-- entities
 controllers <-- services
 controllers <-- entities
+persistence <-- DTO
+controllers <-- DTO
+controllers <-- service
+
+
 
 @enduml
