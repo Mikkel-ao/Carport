@@ -1,6 +1,6 @@
 package app.DTO;
 
-import app.service.OrderStatus;
+import app.enums.OrderStatus;
 
 import java.sql.Timestamp;
 

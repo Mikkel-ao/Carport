@@ -7,9 +7,9 @@ import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
 import app.persistence.OrderMapper;
 import app.persistence.UserMapper;
-import app.service.EmailService;
-import app.service.Calculator;
-import app.service.OrderStatus;
+import app.services.EmailService;
+import app.util.Calculator;
+import app.enums.OrderStatus;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 

@@ -1,6 +1,6 @@
 package app.controllers;
 
-import app.service.CarportSvg;
+import app.services.CarportSvgService;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -22,7 +22,7 @@ public class SvgController {
         int length = Integer.parseInt(lengthStr);
         int width = Integer.parseInt(widthStr);
 
-        CarportSvg svg = new CarportSvg(width, length);
+        CarportSvgService svg = new CarportSvgService(width, length);
 
         // Set the svg as an attribute to render it
         ctx.attribute("svg", svg.toString());

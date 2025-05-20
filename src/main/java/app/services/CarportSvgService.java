@@ -1,6 +1,9 @@
-package app.service;
+package app.services;
 
-public class CarportSvg {
+import app.util.Calculator;
+import app.util.Svg;
+
+public class CarportSvgService {
     private int width;
     private int length;
     private Svg carportSvg;
@@ -9,7 +12,7 @@ public class CarportSvg {
     private double postWidth = 9.7;
 
 
-    public CarportSvg(int width, int length) {
+    public CarportSvgService(int width, int length) {
         this.width = width;
         this.length = length;
 
