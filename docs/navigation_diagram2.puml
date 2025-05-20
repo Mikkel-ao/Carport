@@ -1,0 +1,42 @@
+@startuml
+' Initial state
+[*] --> Index
+
+
+' state to allow naming and coloring
+state "index.html" as Index
+state "login.html" as Login
+state "createuser.html" as Opret
+state "admin.html" as Admin
+state "customer.html" as Customer
+state "svg.html" as SVG
+state "orderdetails.html" as OrderDetails
+
+' States
+Index --> Login : "Log ind"
+Index --> Opret : "Opret bruger"
+Index --> Admin : "Ordreoversigt"
+Index --> Customer : "Fog konto"
+Index --> SVG : "Generer tegning"
+note left of Index : Alle sider kan tilgå index.html via. "Hjem"
+note left of Admin : Admin kan tilgå
+note left of Customer : Kunde kan tilgå
+
+Login --> Opret : "Opret bruger"
+
+Opret --> Login : "Log ind"
+
+Admin --> SVG : "Se tegning"
+Admin --> OrderDetails : "Se stykliste"
+
+Customer --> SVG : "Se tegning"
+Customer --> OrderDetails : "Se stykliste"
+
+SVG --> Customer : "Fog konto"
+SVG --> Admin : "Ordreoversigt"
+
+OrderDetails --> Admin : "Ordreoversigt"
+OrderDetails --> Customer : "Fog konto"
+note left of OrderDetails : Kunde har adgang efter betaling
+
+@enduml
