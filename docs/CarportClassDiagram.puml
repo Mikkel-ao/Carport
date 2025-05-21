@@ -192,13 +192,7 @@ package service {
 class EmailService {
 + void sendEmail(String customerEmail)
     }
-class Calculator {
-+ int calcAmountOfPoles(int totalLength, double poleWidth)
-+ double calcPoleSpacing(int totalLength, double poleWidth)
-+ int calcAmountOfRafters(int totalLengthInCm, double rafterWidth)
-+ double calcRafterSpacing(int carportLength, double rafterWidth)
-    }
-class carportSvg {
+class carportSvgService {
 - int width
 - int length
 - Svg carportSvg
@@ -212,6 +206,9 @@ class carportSvg {
 - void addPosts()
 - void addDimensions()
     }
+}
+
+package enum {
 enum OrderStatus {
      PENDING,
      CONFIRMED,
@@ -220,7 +217,10 @@ enum OrderStatus {
      PAID,
      ACCEPT;
      }
- class Svg {
+}
+
+package util {
+class Svg {
  - final String SVG_TEMPLATE = "<svg version=\"1.1\"\n" +
  "     xmlns=\"http://www.w3.org/2000/svg\"\n" +
  "     x=\"%d\" y=\"%d\"\n" +
@@ -245,6 +245,12 @@ enum OrderStatus {
  + void addText(int x, int y, int rotation, String text)
  + void addSvg(Svg innerSvg)
      }
+class Calculator {
++ int calcAmountOfPoles(int totalLength, double poleWidth)
++ double calcPoleSpacing(int totalLength, double poleWidth)
++ int calcAmountOfRafters(int totalLengthInCm, double rafterWidth)
++ double calcRafterSpacing(int carportLength, double rafterWidth)
+     }
 }
 
 'Pile'
@@ -259,6 +265,11 @@ controllers <-- entities
 persistence <-- DTO
 controllers <-- DTO
 controllers <-- service
+controllers <-- enum
+entities <-- enum
+DTO <-- enum
+persistence <-- enum
+controllers <-- util
 
 
 
