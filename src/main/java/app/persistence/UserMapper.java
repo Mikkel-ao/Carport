@@ -74,7 +74,7 @@ public class UserMapper {
 
     //Method for retrieving user information by the user id
     public static User getUserById(int userId, ConnectionPool connectionPool) throws DatabaseException {
-        String sql = "SELECT * FROM public.users WHERE user_id = ?";
+        String sql = "SELECT * FROM users WHERE user_id = ?";
 
         //"try-with-resources" block that makes sure to auto close after usage!
         try (
