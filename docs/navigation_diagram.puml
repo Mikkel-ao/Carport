@@ -1,0 +1,60 @@
+@startuml
+left to right direction
+
+[*] --> Index
+
+state "index.html" as Index
+state "login.html" as Login
+state "createuser.html" as Opret
+
+' Admin
+state "admin.html" as Admin
+state "orderdetails.html" as OrderDetails
+
+' Kunde
+state "customer.html" as Customer
+
+' SVG
+state "svg.html" as SVG
+
+Index --> Login : Log ind
+Index --> Opret : Opret bruger
+Index --> Admin : Ordreoversigt (Admin)
+Index --> Customer : Fog konto (Kunde)
+
+' Login & Opret navigation
+Login --> Opret : Opret bruger
+Login --> Index : Hjem
+Opret --> Login : Log ind
+Opret --> Index : Hjem
+
+' Admin navigation
+Admin --> SVG : Se tegning
+Admin --> OrderDetails : Se stykliste
+Admin --> Index : Hjem
+note right of Admin
+  Kun for admin-bruger
+end note
+
+' Customer navigation
+Customer --> SVG : Se tegning
+Customer --> OrderDetails : Se stykliste
+Customer --> Index : Hjem
+note right of Customer
+  Kun for kunder
+end note
+
+' SVG navigation
+SVG --> Admin : Ordreoversigt (admin)
+SVG --> Customer : Fog konto (kunde)
+SVG --> Index : Hjem
+
+' OrderDetails navigation
+OrderDetails --> Admin : Ordreoversigt (admin)
+OrderDetails --> Customer : Fog konto (kunde)
+OrderDetails --> Index : Hjem
+note right of OrderDetails
+  Kunde har adgang efter betaling
+end note
+
+@enduml

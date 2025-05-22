@@ -1,0 +1,50 @@
+@startuml
+[*] --> Index
+
+state "index.html" as Index
+
+Index -left->  LogInd : Vælg "Log ind" / gå til siden
+Index -right-> OpretBruger : Vælg "Opret bruger" / gå til siden
+
+state "login.html" as LogInd {
+  [*] --> IndtastLogin
+
+  IndtastLogin : entry / vis loginformular
+  IndtastLogin : exit / læs input
+
+  ValiderLogin : entry / Tjek om bruger findes
+
+  LoginFejl : entry / vis fejlbesked
+
+  LoginSucces : entry / log ind bruger
+  LoginSucces : exit / Send bruger til index.html
+
+  IndtastLogin --> ValiderLogin : trykLogin / validerInput
+  ValiderLogin --> LoginSucces : [bruger eksisterer] / loginGodkendt
+  ValiderLogin --> LoginFejl : [bruger findes ikke] / loginAfvist
+  LoginFejl --> IndtastLogin : Prøv igen
+  LoginSucces --> [*]
+}
+
+state "createuser.html" as OpretBruger  {
+  [*] --> IndtastOplysninger
+
+  IndtastOplysninger : entry / vis opret-formular
+  IndtastOplysninger : exit / læs input
+
+  ValiderOplysninger : entry / tjek om krav opfyldes
+
+  OpretFejl : entry / vis valideringsfejl
+
+  OpretSucces : entry / gem i database
+  OpretSucces : exit / Send bruger til login.html
+
+  IndtastOplysninger --> ValiderOplysninger : trykOpret / validerInput
+  ValiderOplysninger --> OpretSucces : [gyldige oplysninger] / opretGodkendt
+  ValiderOplysninger --> OpretFejl : [ugyldige oplysninger] / opretAfvist
+  OpretFejl --> IndtastOplysninger : Prøv igen
+  OpretSucces --> [*]
+}
+
+
+@enduml

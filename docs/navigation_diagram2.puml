@@ -1,0 +1,59 @@
+@startuml
+
+' Initial state
+[*] --> Index
+
+' States
+state "index.html" as Index
+state "login.html" as Login
+state "createuser.html" as Opret
+state "admin.html" as Admin
+state "customer.html" as Customer
+state "svg.html" as SVG
+state "orderdetails.html" as OrderDetails
+
+' Navigation fra Index
+Index --> Login : Log ind
+Index --> Opret : Opret bruger
+Index --> Admin : Ordreoversigt
+Index --> Customer : Fog konto
+Index --> SVG : Generer tegning
+
+' Login og opret bruger
+Login --> Opret : Opret bruger
+Opret --> Login : Log ind
+
+' Admin navigation
+Admin --> SVG : Se tegning
+Admin --> OrderDetails : Se stykliste
+
+' Customer navigation
+Customer --> SVG : Se tegning
+Customer --> OrderDetails : Se stykliste
+
+' SVG navigation
+SVG --> Customer : Fog konto
+SVG --> Admin : Ordreoversigt
+
+' OrderDetails navigation
+OrderDetails --> Admin : Ordreoversigt
+OrderDetails --> Customer : Fog konto
+
+' Noter
+note right of Index
+  Alle sider har adgang til index.html via "Hjem"
+end note
+
+note right of Admin
+  Kun tilgængelig for admin-login
+end note
+
+note right of Customer
+  Kun tilgængelig for kunde-login
+end note
+
+note right of OrderDetails
+  Kunde adgang efter betaling
+end note
+
+@enduml
