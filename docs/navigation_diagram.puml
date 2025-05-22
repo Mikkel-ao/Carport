@@ -3,13 +3,13 @@
 [*] --> Index
 
 ' state to allow naming and coloring
-state "index.html" as Index #Application
-state "login.html" as Login #Aquamarine
-state "createuser.html" as Opret #Aquamarine
-state "admin.html" as Admin #Coral
+state "index.html" as Index
+state "login.html" as Login
+state "createuser.html" as Opret
+state "admin.html" as Admin
 state "customer.html" as Customer
 state "svg.html" as SVG
-state "orderdetails.html" as OrderDetails #Gold
+state "orderdetails.html" as OrderDetails
 
 ' States
 Index --> Login : "Log ind"
