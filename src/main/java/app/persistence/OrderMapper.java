@@ -177,7 +177,7 @@ public class OrderMapper {
     public static List<Integer> getProductLengths(ConnectionPool connectionPool, int productId) throws DatabaseException {
         List<Integer> lengths = new ArrayList<>();
 
-        String sql = "SELECT length FROM public.product p JOIN public.product_variant pv ON p.product_id = pv.product_id WHERE p.product_id = ?";
+        String sql = "SELECT length FROM product p JOIN product_variant pv ON p.product_id = pv.product_id WHERE p.product_id = ?";
 
         //"try-with-resources" block that makes sure to auto close after usage!
         try (
@@ -285,7 +285,7 @@ public class OrderMapper {
     //Method for getting all orders for a specific user returned in a List of OrderInfoDTO, as we do not want the customer to be able to see all information (at least before they have paid)!
     public static List<OrderInfoDTO> getOrdersForUser(int userId, ConnectionPool connectionPool) throws
             DatabaseException {
-        String sql = "SELECT * FROM public.orders WHERE user_id = ? ORDER BY order_id ASC";
+        String sql = "SELECT * FROM orders WHERE user_id = ? ORDER BY order_id ASC";
         List<OrderInfoDTO> orderList = new ArrayList<>();
 
         //"try-with-resources" block that makes sure to auto close after usage!

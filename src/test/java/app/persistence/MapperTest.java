@@ -48,6 +48,7 @@ class MapperTest {
 
             // Recreate tables from public schema
             stmt.execute("CREATE TABLE users (LIKE public.users INCLUDING CONSTRAINTS INCLUDING INDEXES)");
+            stmt.execute("ALTER TABLE users ALTER COLUMN role SET DEFAULT 'customer'");
             stmt.execute("CREATE TABLE orders (LIKE public.orders INCLUDING CONSTRAINTS INCLUDING INDEXES)");
             stmt.execute("CREATE TABLE product (LIKE public.product INCLUDING CONSTRAINTS INCLUDING INDEXES)");
             stmt.execute("CREATE TABLE product_description (LIKE public.product_description INCLUDING CONSTRAINTS INCLUDING INDEXES)");
@@ -92,8 +93,7 @@ class MapperTest {
                        p.unit,
                        p.price,
                        pd.description,
-                       pd.description_id,
-                       pd.key_word
+                       pd.description_id
                 FROM test.orders o
                          JOIN test.order_item oi ON o.order_id = oi.order_id
                          JOIN test.product_variant pv ON oi.product_variant_id = pv.product_variant_id
@@ -121,14 +121,13 @@ class MapperTest {
 
                 // Insert user with RETURNING user_id
                 try (PreparedStatement ps = conn.prepareStatement(
-                        "INSERT INTO test.users (email, password, phone_number, role, zip_code, home_address, full_name) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING user_id")) {
+                        "INSERT INTO test.users (email, password, phone_number, zip_code, home_address, full_name) VALUES (?, ?, ?, ?, ?, ?) RETURNING user_id")) {
                     ps.setString(1, "newuser@test.com");
                     ps.setString(2, "hashedpassword");
                     ps.setString(3, "123456");
-                    ps.setString(4, "customer");
-                    ps.setString(5, "8000");
-                    ps.setString(6, "testvej");
-                    ps.setString(7, "tester Jens");
+                    ps.setString(4, "8000");
+                    ps.setString(5, "testvej");
+                    ps.setString(6, "tester Jens");
                     try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) {
                             int userId = rs.getInt(1);
@@ -166,7 +165,7 @@ class MapperTest {
 
             stmt.execute("INSERT INTO test.product (name, unit, price, width_in_mm) VALUES ('Beam', 'pcs', 150, 45)");
 
-            stmt.execute("INSERT INTO test.product_description (key_word, description, product_id) VALUES ('support', 'Support beam for carport roof', 1)");
+            stmt.execute("INSERT INTO test.product_description (description, product_id) VALUES ('Support beam for carport roof', 1)");
 
             stmt.execute("INSERT INTO test.product_variant (length, product_id) VALUES (4000, 1)");
 
@@ -272,6 +271,7 @@ class MapperTest {
         System.out.println("Status after update: " + updated.getStatus());
         assertEquals(OrderStatus.CONFIRMED, updated.getStatus(), "Order status should be updated to CONFIRMED");
     }
+
     @Test
     void testGetAllOrders() throws DatabaseException {
         try (Connection conn = testConnectionPool.getConnection(); Statement stmt = conn.createStatement()) {
