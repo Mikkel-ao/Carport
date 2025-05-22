@@ -45,11 +45,11 @@ note right of Index
 end note
 
 note right of Admin
-  Kun tilgængelig via admin-login
+  Kun tilgængelig for admin-login
 end note
 
 note right of Customer
-  Kun tilgængelig via kunde-login
+  Kun tilgængelig for kunde-login
 end note
 
 note right of OrderDetails
