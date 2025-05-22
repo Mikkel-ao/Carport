@@ -1,9 +1,9 @@
 @startuml
+
 ' Initial state
 [*] --> Index
 
-
-' state to allow naming and coloring
+' States
 state "index.html" as Index
 state "login.html" as Login
 state "createuser.html" as Opret
@@ -12,31 +12,48 @@ state "customer.html" as Customer
 state "svg.html" as SVG
 state "orderdetails.html" as OrderDetails
 
-' States
-Index --> Login : "Log ind"
-Index --> Opret : "Opret bruger"
-Index --> Admin : "Ordreoversigt"
-Index --> Customer : "Fog konto"
-Index --> SVG : "Generer tegning"
-note left of Index : Alle sider kan tilgå index.html via. "Hjem"
-note left of Admin : Admin login kan tilgå
-note left of Customer : Kunde login kan tilgå
+' Navigation fra Index
+Index --> Login : Log ind
+Index --> Opret : Opret bruger
+Index --> Admin : Ordreoversigt
+Index --> Customer : Fog konto
+Index --> SVG : Generer tegning
 
-Login --> Opret : "Opret bruger"
+' Login og opret bruger
+Login --> Opret : Opret bruger
+Opret --> Login : Log ind
 
-Opret --> Login : "Log ind"
+' Admin navigation
+Admin --> SVG : Se tegning
+Admin --> OrderDetails : Se stykliste
 
-Admin --> SVG : "Se tegning"
-Admin --> OrderDetails : "Se stykliste"
+' Customer navigation
+Customer --> SVG : Se tegning
+Customer --> OrderDetails : Se stykliste
 
-Customer --> SVG : "Se tegning"
-Customer --> OrderDetails : "Se stykliste"
+' SVG navigation
+SVG --> Customer : Fog konto
+SVG --> Admin : Ordreoversigt
 
-SVG --> Customer : "Fog konto"
-SVG --> Admin : "Ordreoversigt"
+' OrderDetails navigation
+OrderDetails --> Admin : Ordreoversigt
+OrderDetails --> Customer : Fog konto
 
-OrderDetails --> Admin : "Ordreoversigt"
-OrderDetails --> Customer : "Fog konto"
-note left of OrderDetails : Kunde har adgang efter betaling
+' Noter
+note right of Index
+  Alle sider har adgang til index.html via "Hjem"
+end note
+
+note right of Admin
+  Kun tilgængelig via admin-login
+end note
+
+note right of Customer
+  Kun tilgængelig via kunde-login
+end note
+
+note right of OrderDetails
+  Kunde adgang efter betaling
+end note
 
 @enduml

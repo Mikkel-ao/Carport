@@ -1,44 +1,60 @@
 @startuml
-' Initial state
+left to right direction
+
 [*] --> Index
 
-' state to allow naming and coloring
 state "index.html" as Index
 state "login.html" as Login
 state "createuser.html" as Opret
+
+' Admin
 state "admin.html" as Admin
-state "customer.html" as Customer
-state "svg.html" as SVG
 state "orderdetails.html" as OrderDetails
 
-' States
-Index --> Login : "Log ind"
-Index --> Opret : "Opret bruger"
-Index --> Admin : "Ordreoversigt"
-Index --> Customer : "Fog konto"
-Index --> SVG : "Generer tegning"
-note left of Admin : Admin login kan tilgå
-note left of Customer : Kunde login kan tilgå
+' Kunde
+state "customer.html" as Customer
 
-Login --> Opret : "Opret bruger"
-Login --> Index : "Hjem"
-Opret --> Index : "Hjem"
-Opret --> Login : "Log ind"
+' SVG
+state "svg.html" as SVG
 
-Admin --> SVG : "Se tegning"
-Admin --> OrderDetails : "Se stykliste"
-Admin --> Index : "Hjem"
-Customer --> SVG : "Se tegning"
-Customer --> OrderDetails : "Se stykliste"
-Customer --> Index : "Hjem"
+Index --> Login : Log ind
+Index --> Opret : Opret bruger
+Index --> Admin : Ordreoversigt (Admin)
+Index --> Customer : Fog konto (Kunde)
 
-SVG --> Index : "Hjem"
-SVG --> Customer : "Fog konto"
-SVG --> Admin : "Ordreoversigt"
+' Login & Opret navigation
+Login --> Opret : Opret bruger
+Login --> Index : Hjem
+Opret --> Login : Log ind
+Opret --> Index : Hjem
 
-OrderDetails --> Admin : "Ordreoversigt"
-OrderDetails --> Customer : "Fog konto"
-OrderDetails --> Index : "Hjem"
-note left of OrderDetails : Kunde har adgang efter betaling
+' Admin navigation
+Admin --> SVG : Se tegning
+Admin --> OrderDetails : Se stykliste
+Admin --> Index : Hjem
+note right of Admin
+  Kun for admin-bruger
+end note
+
+' Customer navigation
+Customer --> SVG : Se tegning
+Customer --> OrderDetails : Se stykliste
+Customer --> Index : Hjem
+note right of Customer
+  Kun for kunder
+end note
+
+' SVG navigation
+SVG --> Admin : Ordreoversigt (admin)
+SVG --> Customer : Fog konto (kunde)
+SVG --> Index : Hjem
+
+' OrderDetails navigation
+OrderDetails --> Admin : Ordreoversigt (admin)
+OrderDetails --> Customer : Fog konto (kunde)
+OrderDetails --> Index : Hjem
+note right of OrderDetails
+  Kunde har adgang efter betaling
+end note
 
 @enduml

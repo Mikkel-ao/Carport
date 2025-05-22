@@ -32,7 +32,7 @@ state "createuser.html" as OpretBruger  {
   IndtastOplysninger : entry / vis opret-formular
   IndtastOplysninger : exit / læs input
 
-  ValiderOplysninger : ved entry / tjek om krav opfyldes
+  ValiderOplysninger : entry / tjek om krav opfyldes
 
   OpretFejl : entry / vis valideringsfejl
 
