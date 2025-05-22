@@ -4,7 +4,7 @@ import app.DTO.OrderInfoDTO;
 import app.entities.*;
 import app.entities.Order;
 import app.exceptions.DatabaseException;
-import app.util.OrderStatus;
+import app.enums.OrderStatus;
 import org.junit.jupiter.api.*;
 
 import java.sql.*;
