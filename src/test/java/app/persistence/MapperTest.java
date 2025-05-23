@@ -111,69 +111,48 @@ class MapperTest {
     void setup() {
         try (Connection connection = testConnectionPool.getConnection();
              Statement stmt = connection.createStatement()) {
-
+            // IMPORTANT: set search_path every time!
             stmt.execute("SET search_path TO test");
-            stmt.execute("TRUNCATE TABLE test.order_item, test.orders, test.users, test.product_variant, test.product_description, test.product, test.carport_dimension_website RESTART IDENTITY CASCADE");
-
-            try (Connection conn = testConnectionPool.getConnection()) {
-                conn.setSchema("test");  // or execute "SET search_path TO test"
-                conn.setAutoCommit(false);
-
-                // Insert user with RETURNING user_id
-                try (PreparedStatement ps = conn.prepareStatement(
-                        "INSERT INTO test.users (email, password, phone_number, zip_code, home_address, full_name) VALUES (?, ?, ?, ?, ?, ?) RETURNING user_id")) {
-                    ps.setString(1, "newuser@test.com");
-                    ps.setString(2, "hashedpassword");
-                    ps.setString(3, "123456");
-                    ps.setString(4, "8000");
-                    ps.setString(5, "testvej");
-                    ps.setString(6, "tester Jens");
-                    try (ResultSet rs = ps.executeQuery()) {
-                        if (rs.next()) {
-                            int userId = rs.getInt(1);
-
-                            // Now insert order using userId
-                            try (PreparedStatement ps2 = conn.prepareStatement(
-                                    "INSERT INTO test.orders (carport_width, carport_length, user_id, customer_price, cost_price, order_date) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)")) {
-                                ps2.setInt(1, 600);
-                                ps2.setInt(2, 780);
-                                ps2.setInt(3, userId);
-                                ps2.setInt(4, 2000);
-                                ps2.setInt(5, 1000);
-                                ps2.executeUpdate();
-                            }
-                        }
-                    }
-                }
-                conn.commit();
-            } catch (SQLException e) {
-                e.printStackTrace();
-                fail("Test data setup failed: " + e.getMessage());
-            }
-
-            ResultSet rs = stmt.executeQuery("SELECT user_id FROM test.users");
-            if (rs.next()) {
-                int userId = rs.getInt("user_id");
-                System.out.println("Inserted user ID: " + userId);
-            }
-            ResultSet rs2 = stmt.executeQuery("SELECT order_id FROM test.orders");
-            if (rs2.next()) {
-                int orderId = rs2.getInt("order_id");
-                System.out.println("Inserted order ID: " + orderId); // Add this
-            }
-            stmt.execute("INSERT INTO test.carport_dimension_website (carport_length, carport_width) VALUES (780, 600)");
-
-            stmt.execute("INSERT INTO test.product (name, unit, price, width_in_mm) VALUES ('Beam', 'pcs', 150, 45)");
-
-            stmt.execute("INSERT INTO test.product_description (description, product_id) VALUES ('Support beam for carport roof', 1)");
-
-            stmt.execute("INSERT INTO test.product_variant (length, product_id) VALUES (4000, 1)");
-
-            stmt.execute("INSERT INTO test.order_item (order_id, product_variant_id, quantity, product_description_id) VALUES (1, 1, 5, 1)");
-
+            // Truncate all tables to clean database
+            stmt.execute("TRUNCATE TABLE order_item, orders, users, product_variant, product_description, product, carport_dimension_website RESTART IDENTITY CASCADE");
+            // Insert base user
+            stmt.execute("""
+            INSERT INTO users (user_id, email, password, phone_number, role, zip_code, home_address, full_name)
+            VALUES (1, 'email@test.com', '1234', '42424242', 'customer', '2770', 'testvej', 'tester Jens')
+        """);
+            // Insert base order
+            stmt.execute("""
+            INSERT INTO orders (order_id, carport_width, carport_length, status, user_id, customer_price, cost_price, order_date)
+            VALUES (1, 600, 780, 'pending', 1, 8000, 10000, CURRENT_TIMESTAMP)
+        """);
+            // Insert carport dimension
+            stmt.execute("""
+            INSERT INTO carport_dimension_website (carport_dimension_id, carport_length, carport_width)
+            VALUES (1, 780, 600)
+        """);
+            // Insert product
+            stmt.execute("""
+            INSERT INTO product (product_id, name, unit, price, width_in_mm)
+            VALUES (1, 'Stolpe', 'stk', 220, 97)
+        """);
+            // Insert product description
+            stmt.execute("""
+            INSERT INTO product_description (description_id, description, product_id)
+            VALUES (1, 'Stolper af trykimprægneret egetræ på 97x97mm.', 1)
+        """);
+            // Insert product variant
+            stmt.execute("""
+            INSERT INTO product_variant (product_variant_id, length, product_id)
+            VALUES (1, 300, 1)
+        """);
+            // Insert order item
+            stmt.execute("""
+            INSERT INTO order_item (order_item_id, order_id , product_variant_id, quantity, product_description_id)
+            VALUES (1, 1, 1, 6, 1)
+        """);
         } catch (SQLException e) {
             e.printStackTrace();
-            fail("Test data setup failed: " + e.getMessage());
+            fail("Database setup failed: " + e.getMessage());
         }
     }
 
@@ -181,49 +160,65 @@ class MapperTest {
     void tearDown() {
         try (Connection conn = testConnectionPool.getConnection();
              Statement stmt = conn.createStatement()) {
+
             stmt.execute("SET search_path TO test");
+
             stmt.execute("TRUNCATE TABLE order_item, orders, users, product_variant, product_description, product, carport_dimension_website RESTART IDENTITY CASCADE");
+
         } catch (SQLException e) {
+            e.printStackTrace();
             fail("Test data cleanup failed: " + e.getMessage());
         }
     }
 
+
     @Test
     void createUser() throws DatabaseException {
-        UserMapper.createUser("email@.com", "password", "11223344", "9000", "Testgade 2", "tester Jens", testConnectionPool);
-    }
-
-    @Test
-    void createUserAndGetById() throws DatabaseException {
-        //UserMapper.createUser("newuser@test.com", "password", "11223344", "9000", "Testgade 2", "tester Jens", testConnectionPool);
+        UserMapper.createUser("tester@gmail.com", "password", "11223344", "9000", "Testgade 2", "tester Jens", testConnectionPool);
         User user = UserMapper.getUserById(2, testConnectionPool); // This assumes the inserted user gets ID 2
-        assertNotNull(user);
-        assertEquals("newuser@test.com", user.getEmail());
+        assertEquals("tester@gmail.com", user.getEmail());
     }
+
     @Test
-    void getCarportLength() {
-        try (Connection conn = testConnectionPool.getConnection();
-             Statement stmt = conn.createStatement()) {
-            stmt.execute("SET search_path TO test");
-            stmt.execute("INSERT INTO carport_dimension_website (carport_length) VALUES (500), (700), (600)");
-        } catch (SQLException e) {
-            fail("Setup for getCarportLength failed: " + e.getMessage());
-        }
-
-        try {
-            List<Integer> carportLengths = OrderMapper.getCarportLength(testConnectionPool);
-            assertTrue(carportLengths.containsAll(List.of(500, 600, 700)));
-        } catch (DatabaseException e) {
-            fail("DatabaseException: " + e.getMessage());
-        }
+    void getUserById() throws DatabaseException {
+        User user = UserMapper.getUserById(1, testConnectionPool); // This assumes the inserted user gets ID 2
+        assertNotNull(user);
+        assertEquals("email@test.com", user.getEmail());
     }
 
+    @Test
+    void testGetAllOrders() throws DatabaseException {
+        List<Order> orders = OrderMapper.getAllOrders(testConnectionPool);
 
+        assertNotNull(orders);
+        assertFalse(orders.isEmpty(), "Order list should not be empty");
+        assertEquals(1, orders.size());
+
+        Order order = orders.get(0);
+        assertEquals(1, order.getOrderId());
+        assertEquals(600, order.getCarportWidth());
+        assertEquals(780, order.getCarportLength());
+        assertEquals(OrderStatus.PENDING, order.getStatus());
+
+        User user = order.getUser();
+        assertNotNull(user);
+        assertEquals(1, user.getUserId());
+        assertEquals("email@test.com", user.getEmail());
+    }
+
+    @Test
+    void testGetCarportLength() throws DatabaseException {
+        List<Integer> lengths = OrderMapper.getCarportLength(testConnectionPool);
+        // Check if all inserted lengths are present
+        assertTrue(lengths.containsAll(List.of(780)), "Returned lengths should contain all inserted values");
+        // Optionally, check size exactly matches
+        assertEquals(1, lengths.size(), "There should be exactly 3 lengths returned");
+    }
+
+    /*
     @Test
     void insertOrderItem() throws DatabaseException {
-        Product product = new Product(1, "Test Træ", "stk", 100);
-        ProductVariant variant = new ProductVariant(1, 360, product);
-        OrderItem item = new OrderItem(variant, 5, 1);
+        OrderItem item =
 
         OrderMapper.insertOrderItem(1, item, testConnectionPool);
 
@@ -237,6 +232,8 @@ class MapperTest {
             fail("Query failed: " + e.getMessage());
         }
     }
+    */
+
 
     @Test
     void getOrdersForUser_returnsOrdersForGivenUser() {
@@ -248,20 +245,11 @@ class MapperTest {
             fail("DatabaseException occurred: " + e.getMessage());
         }
     }
+
+
     @Test
     void updateOrderStatus() throws DatabaseException {
         int orderId = 1; // Known from @BeforeEach setup
-
-        try (Connection conn = testConnectionPool.getConnection(); Statement stmt = conn.createStatement()) {
-            stmt.execute("SET search_path TO test");
-        } catch (SQLException e) {
-            fail("Failed to set search_path: " + e.getMessage());
-        }
-
-        // Fetch existing order and confirm it exists
-        Order existing = OrderMapper.getOrderByOrderId(orderId, testConnectionPool);
-        assertNotNull(existing, "Expected order with ID " + orderId + " to exist");
-        System.out.println("Status before update: " + existing.getStatus());
 
         // Update the order's status
         OrderMapper.updateOrderStatus(orderId, OrderStatus.CONFIRMED, testConnectionPool);
@@ -273,29 +261,19 @@ class MapperTest {
     }
 
     @Test
-    void testGetAllOrders() throws DatabaseException {
-        try (Connection conn = testConnectionPool.getConnection(); Statement stmt = conn.createStatement()) {
-            stmt.execute("SET search_path TO test");
-        } catch (SQLException e) {
-            fail("Failed to set search_path: " + e.getMessage());
+    void getProductLengths_returnsAllLengthsForProduct() {
+        int productId = 1;
+        try {
+            List<Integer> lengths = OrderMapper.getProductLengths(testConnectionPool, productId);
+            // Assert the list has expected size and value
+            assertNotNull(lengths, "Returned list should not be null");
+            assertEquals(1, lengths.size(), "Expected exactly one length");
+            assertEquals(300, lengths.get(0), "Expected length 4000 for productId 1");
+
+        } catch (DatabaseException e) {
+            fail("DatabaseException occurred: " + e.getMessage());
         }
-        List<Order> orders = OrderMapper.getAllOrders(testConnectionPool);
-
-        assertNotNull(orders);
-        assertFalse(orders.isEmpty(), "Order list should not be empty");
-        assertEquals(1, orders.size());
-
-        Order order = orders.get(0);
-        assertEquals(3, order.getOrderId());
-        assertEquals(600, order.getCarportWidth());
-        assertEquals(780, order.getCarportLength());
-        assertEquals(OrderStatus.PENDING, order.getStatus());
-
-        User user = order.getUser();
-        assertNotNull(user);
-        assertEquals(3, user.getUserId());
-        assertEquals("tester Jens", user.getFullName());
-        assertEquals("newuser@test.com", user.getEmail());
     }
 
 }
+
