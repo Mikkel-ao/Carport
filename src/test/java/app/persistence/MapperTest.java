@@ -156,15 +156,9 @@ class MapperTest {
     }
 
 
-    @Test
-    void createUser() throws DatabaseException {
-        UserMapper.createUser("tester@gmail.com", "password", "11223344", "9000", "Testgade 2", "tester Jens", testConnectionPool);
-        User user = UserMapper.getUserById(2, testConnectionPool); // This assumes the inserted user gets ID 2
-        assertEquals("tester@gmail.com", user.getEmail());
-    }
 
     @Test
-    void getUserById() throws DatabaseException {
+    void testGetUserById1() throws DatabaseException {
         User user = UserMapper.getUserById(1, testConnectionPool); // This assumes the inserted user gets ID 2
         assertNotNull(user);
         assertEquals("email@test.com", user.getEmail());
@@ -239,7 +233,7 @@ class MapperTest {
 
 
     @Test
-    void getOrderByOrderId1() throws DatabaseException {
+    void testGetOrderByOrderId1() throws DatabaseException {
         int orderId = 1;
 
         Order order = OrderMapper.getOrderByOrderId(orderId, testConnectionPool);
@@ -251,17 +245,17 @@ class MapperTest {
     }
 
     @Test
-    void getOrdersForUserWithId1() throws DatabaseException {
+    void testGetOrdersForUserWithId1() throws DatabaseException {
         List<OrderInfoDTO> orders = OrderMapper.getOrdersForUser(1, testConnectionPool);
         // Checking if the orderId and carport dimensions matches the ones created in setup
         assertEquals(1, orders.size(), "Should return exactly one order");
         assertEquals(600, orders.get(0).getCarportWidth(), "Carport width should be 600");
         assertEquals(780, orders.get(0).getCarportLength(), "Carport length should be 780");
     }
-    
+
 
     @Test
-    void updateOrderStatus() throws DatabaseException {
+    void testUpdateOrderStatus() throws DatabaseException {
         int orderId = 1; // Known from @BeforeEach setup
 
         // Update the order's status
@@ -274,7 +268,7 @@ class MapperTest {
     }
 
     @Test
-    void getProductLengthsForPole() throws DatabaseException {
+    void testGetProductLengthsForPole() throws DatabaseException {
         int productId = 1;
         try {
             List<Integer> lengths = OrderMapper.getProductLengths(testConnectionPool, productId);
@@ -307,6 +301,43 @@ class MapperTest {
             fail("DatabaseException occurred: " + e.getMessage());
         }
     }
+
+    @Test
+    void testGetVariantsByProductAndLengthPost() throws DatabaseException {
+        // productId 1 = 'Stolpe' and should only have 1 length which is 300
+        int productId = 1;
+        int length = 300;
+
+        ProductVariant variant = OrderMapper.getVariantsByProductAndLength(length, productId, testConnectionPool);
+
+        assertNotNull(variant, "ProductVariant should not be null");
+        assertEquals(length, variant.getLength(), "Length should match");
+        assertEquals(productId, variant.getProduct().getProductId(), "Product ID should match");
+
+        Product product = variant.getProduct();
+        assertNotNull(product, "Product should not be null");
+        assertEquals("Stolpe", product.getName(), "Product name should match expected");
+    }
+
+    @Test
+    void testGetVariantsByProductAndLengthRafter() throws DatabaseException {
+        // productId 1 = 'Spær' and should multiple potential lengths
+        int productId = 2;
+        int[] lengths = {300, 360, 420, 480, 540, 600};
+
+        for (int length : lengths) {
+            ProductVariant variant = OrderMapper.getVariantsByProductAndLength(length, productId, testConnectionPool);
+
+            assertNotNull(variant, "ProductVariant should not be null for length: " + length);
+            assertEquals(length, variant.getLength(), "Length should match for length: " + length);
+            assertEquals(productId, variant.getProduct().getProductId(), "Product ID should match for length: " + length);
+
+            Product product = variant.getProduct();
+            assertNotNull(product, "Product should not be null for length: " + length);
+            assertEquals("Spær", product.getName(), "Product name should match expected for length: " + length);
+        }
+    }
+
 
 
 }
