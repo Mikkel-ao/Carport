@@ -134,6 +134,10 @@ class MapperTest {
             VALUES (1, 600, 780, 'pending', 1, 8000, 10000, CURRENT_TIMESTAMP)
         """);
 
+        // After inserting your data from @BeforeEach, reset the sequence so it knows to start after the highest order_id
+        stmt.execute("SELECT setval('orders_order_id_seq', (SELECT MAX(order_id) FROM orders))");
+
+
         } catch (SQLException e) {
             e.printStackTrace();
             fail("Database setup failed: " + e.getMessage());
@@ -203,7 +207,6 @@ class MapperTest {
     }
 
 
-
     @Test
     void testGetOrdersForUserWithId1() throws DatabaseException {
         List<OrderInfoDTO> orders = OrderMapper.getOrdersForUser(1, testConnectionPool);
@@ -224,7 +227,6 @@ class MapperTest {
 
         // Fetch again and assert the status was updated
         Order updated = OrderMapper.getOrderByOrderId(orderId, testConnectionPool);
-        System.out.println("Status after update: " + updated.getStatus());
         assertEquals(OrderStatus.CONFIRMED, updated.getStatus(), "Order status should be updated to CONFIRMED");
     }
 
@@ -243,36 +245,29 @@ class MapperTest {
     @Test
     void testGetProductLengthsForPole() throws DatabaseException {
         int productId = 1;
-        try {
-            List<Integer> lengths = OrderMapper.getProductLengths(testConnectionPool, productId);
-            // Assert the list has expected size and value
-            assertNotNull(lengths, "Returned list should not be null");
-            assertEquals(1, lengths.size(), "Expected exactly one length");
-            assertEquals(300, lengths.get(0), "Expected length 300 for productId 1");
 
-        } catch (DatabaseException e) {
-            fail("DatabaseException occurred: " + e.getMessage());
-        }
+        List<Integer> lengths = OrderMapper.getProductLengths(testConnectionPool, productId);
+        // Assert the list has expected size and value
+        assertNotNull(lengths, "Returned list should not be null");
+        assertEquals(1, lengths.size(), "Expected exactly one length");
+        assertEquals(300, lengths.get(0), "Expected length 300 for productId 1");
+
     }
 
     @Test
     void getProductLengthsForRafter() throws DatabaseException {
         int productId = 2;
-        try {
-            List<Integer> lengths = OrderMapper.getProductLengths(testConnectionPool, productId);
-            assertNotNull(lengths, "Returned list should not be null");
-            assertEquals(6, lengths.size(), "Expected 6 different lengths");
-            // Checks for all the different rafter lengths
-            assertEquals(300, lengths.get(0), "Expected length 300 for the first product_variant_id");
-            assertEquals(360, lengths.get(1), "Expected length 360 for the second product_variant_id");
-            assertEquals(420, lengths.get(2), "Expected length 420 for the third product_variant_id");
-            assertEquals(480, lengths.get(3), "Expected length 480 for the fourth product_variant_id");
-            assertEquals(540, lengths.get(4), "Expected length 540 for the fifth product_variant_id");
-            assertEquals(600, lengths.get(5), "Expected length 600 for the sixth product_variant_id");
 
-        } catch (DatabaseException e) {
-            fail("DatabaseException occurred: " + e.getMessage());
-        }
+        List<Integer> lengths = OrderMapper.getProductLengths(testConnectionPool, productId);
+        assertNotNull(lengths, "Returned list should not be null");
+        assertEquals(6, lengths.size(), "Expected 6 different lengths");
+        // Checks for all the different rafter lengths
+        assertEquals(300, lengths.get(0), "Expected length 300 for the first product_variant_id");
+        assertEquals(360, lengths.get(1), "Expected length 360 for the second product_variant_id");
+        assertEquals(420, lengths.get(2), "Expected length 420 for the third product_variant_id");
+        assertEquals(480, lengths.get(3), "Expected length 480 for the fourth product_variant_id");
+        assertEquals(540, lengths.get(4), "Expected length 540 for the fifth product_variant_id");
+        assertEquals(600, lengths.get(5), "Expected length 600 for the sixth product_variant_id");
     }
 
     @Test
@@ -323,39 +318,25 @@ class MapperTest {
         }
     }
 
-}
-
-
-
-/* WORK IN PROGRES
     @Test
-    void testInsertOrderItem() throws DatabaseException {
-        // Create OrderItem - pass 0 or null for ID if it's auto-generated
-        ProductVariant poleVariant = OrderMapper.getVariantsByProductAndLength(300, 1, testConnectionPool);
-        OrderItem item = new OrderItem(poleVariant , 8, 1);
+    void testCreateOrder() throws DatabaseException {
+        int width = 500;
+        int length = 700;
+        int userId = 1; // Assuming this user exists from @BeforeEach
+        double customerPrice = 9000.0;
+        double costPrice = 6000.0;
 
-        OrderMapper.insertOrderItem(2, item, testConnectionPool);
+        int newOrderId = OrderMapper.createOrder(testConnectionPool, width, length, userId, customerPrice, costPrice);
 
-        try (Connection conn = testConnectionPool.getConnection();
-             Statement stmt = conn.createStatement()) {
-
-            stmt.execute("SET search_path TO test");
-
-            ResultSet rs = stmt.executeQuery(
-                    "SELECT * FROM order_item WHERE order_id = 1 AND product_variant_id = " + poleVariant.getProductVariantId()
-            );
-
-            assertTrue(rs.next(), "Order item should exist in the database");
-            assertEquals(8, rs.getInt("quantity"), "Quantity should be 8");
-            assertEquals(1, rs.getInt("product_description_id"), "Product description ID should be 1");
-            assertEquals(poleVariant.getProductVariantId(), rs.getInt("product_variant_id"), "ProductVariant ID should match");
-
-            assertFalse(rs.next(), "Only one matching order item should exist");
-
-        } catch (SQLException e) {
-            fail("Query failed: " + e.getMessage());
-        }
+        // Retrieve and verify the newly inserted order
+        Order order = OrderMapper.getOrderByOrderId(newOrderId, testConnectionPool);
+        assertNotNull(order, "Order should be retrievable after insertion");
+        assertEquals(width, order.getCarportWidth(), "Carport width should match inserted value");
+        assertEquals(length, order.getCarportLength(), "Carport length should match inserted value");
+        assertEquals(customerPrice, order.getTotalSalesPrice(), "Customer price should match inserted value");
+        assertEquals(userId, order.getUser().getUserId(), "User ID should match inserted value");
     }
-    */
+
+}
 
 
