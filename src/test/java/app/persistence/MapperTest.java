@@ -209,7 +209,7 @@ class MapperTest {
     @Test
     void testGetCarportLength() throws DatabaseException {
         List<Integer> lengths = OrderMapper.getCarportLength(testConnectionPool);
-        // Check if all inserted lengths are present
+        // Check if all inserted lengths are present. Currently only inserting one into test database
         assertTrue(lengths.containsAll(List.of(780)), "Returned lengths should contain all inserted values");
         // Optionally, check size exactly matches
         assertEquals(1, lengths.size(), "There should be exactly 3 lengths returned");
