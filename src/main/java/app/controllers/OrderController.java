@@ -52,6 +52,14 @@ public class OrderController {
     //Method for displaying a confirmation message when a user successfully places an order
     //This method catches the DatabaseException for createListOfMaterials method and all of its supporting methods!
     private static void handleCustomerRequest(Context ctx, ConnectionPool connectionPool) {
+        Integer userId = ctx.sessionAttribute("userId");
+
+        if (userId == null) {
+            ctx.attribute("errorMessage", "Du skal være logget ind for at oprette en ordre");
+            ctx.render("login.html");
+            return;
+        }
+
         try {
             createListOfMaterials(ctx, connectionPool);
             ctx.redirect("/add-customer-request?success=true");
