@@ -322,13 +322,13 @@ class MapperTest {
     void testCreateOrder() throws DatabaseException {
         int width = 500;
         int length = 700;
-        int userId = 1; // Assuming this user exists from @BeforeEach
-        double customerPrice = 9000.0;
-        double costPrice = 6000.0;
+        int userId = 1;
+        double customerPrice = 9000;
+        double costPrice = 6000;
 
         int newOrderId = OrderMapper.createOrder(testConnectionPool, width, length, userId, customerPrice, costPrice);
 
-        // Retrieve and verify the newly inserted order
+        // Retrieve the new order and then run asserts on it
         Order order = OrderMapper.getOrderByOrderId(newOrderId, testConnectionPool);
         assertNotNull(order, "Order should be retrievable after insertion");
         assertEquals(width, order.getCarportWidth(), "Carport width should match inserted value");
