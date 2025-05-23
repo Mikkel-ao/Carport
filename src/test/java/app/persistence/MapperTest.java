@@ -5,6 +5,7 @@ import app.entities.*;
 import app.entities.Order;
 import app.exceptions.DatabaseException;
 import app.enums.OrderStatus;
+import app.util.Calculator;
 import org.junit.jupiter.api.*;
 
 import java.sql.*;
@@ -115,6 +116,13 @@ class MapperTest {
             stmt.execute("SET search_path TO test");
             // Truncate all tables to clean database
             stmt.execute("TRUNCATE TABLE order_item, orders, users, product_variant, product_description, product, carport_dimension_website RESTART IDENTITY CASCADE");
+            // Fills certain tables with data from the public database.
+            stmt.execute("INSERT INTO test.carport_dimension_website SELECT * FROM public.carport_dimension_website;");
+            stmt.execute("INSERT INTO test.product SELECT * FROM public.product;");
+            stmt.execute("INSERT INTO test.product_description SELECT * FROM public.product_description;");
+            stmt.execute("INSERT INTO test.product_variant SELECT * FROM public.product_variant;");
+            stmt.execute("INSERT INTO test.order_item SELECT * FROM public.order_item;");
+
             // Insert base user
             stmt.execute("""
             INSERT INTO users (user_id, email, password, phone_number, role, zip_code, home_address, full_name)
@@ -125,31 +133,7 @@ class MapperTest {
             INSERT INTO orders (order_id, carport_width, carport_length, status, user_id, customer_price, cost_price, order_date)
             VALUES (1, 600, 780, 'pending', 1, 8000, 10000, CURRENT_TIMESTAMP)
         """);
-            // Insert carport dimension
-            stmt.execute("""
-            INSERT INTO carport_dimension_website (carport_dimension_id, carport_length, carport_width)
-            VALUES (1, 780, 600)
-        """);
-            // Insert product
-            stmt.execute("""
-            INSERT INTO product (product_id, name, unit, price, width_in_mm)
-            VALUES (1, 'Stolpe', 'stk', 220, 97)
-        """);
-            // Insert product description
-            stmt.execute("""
-            INSERT INTO product_description (description_id, description, product_id)
-            VALUES (1, 'Stolper af trykimprægneret egetræ på 97x97mm.', 1)
-        """);
-            // Insert product variant
-            stmt.execute("""
-            INSERT INTO product_variant (product_variant_id, length, product_id)
-            VALUES (1, 300, 1)
-        """);
-            // Insert order item
-            stmt.execute("""
-            INSERT INTO order_item (order_item_id, order_id , product_variant_id, quantity, product_description_id)
-            VALUES (1, 1, 1, 8, 1)
-        """);
+
         } catch (SQLException e) {
             e.printStackTrace();
             fail("Database setup failed: " + e.getMessage());
@@ -209,43 +193,72 @@ class MapperTest {
     @Test
     void testGetCarportLength() throws DatabaseException {
         List<Integer> lengths = OrderMapper.getCarportLength(testConnectionPool);
-        // Check if all inserted lengths are present. Currently only inserting one into test database
-        assertTrue(lengths.containsAll(List.of(780)), "Returned lengths should contain all inserted values");
+        // Check if all inserted lengths are present.
+        assertTrue(lengths.containsAll(List.of(240,270,300,330,360,390,420,450,480,510,540,600,630,660,690,720,750,780)), "Returned lengths should contain all inserted values");
         // Optionally, check size exactly matches
-        assertEquals(1, lengths.size(), "There should be exactly 3 lengths returned");
+        assertEquals(18, lengths.size(), "There should be exactly 3 lengths returned");
     }
 
-    /*
     @Test
-    void insertOrderItem() throws DatabaseException {
-        OrderItem item =
+    void testGetCarportWidth() throws DatabaseException {
+        List<Integer> lengths = OrderMapper.getCarportWidth(testConnectionPool);
+        // Check if all inserted lengths are present.
+        assertTrue(lengths.containsAll(List.of(240,270,300,330,360,390,420,450,480,510,540,600)), "Returned lengths should contain all inserted values");
+        // Optionally, check size exactly matches // TODO: Null values in width column
+        assertEquals(18, lengths.size(), "There should be exactly 3 lengths returned");
+    }
 
-        OrderMapper.insertOrderItem(1, item, testConnectionPool);
+    @Test
+    void testInsertOrderItem() throws DatabaseException {
+        // Create OrderItem - pass 0 or null for ID if it's auto-generated
+        ProductVariant poleVariant = OrderMapper.getVariantsByProductAndLength(300, 1, testConnectionPool);
+        OrderItem item = new OrderItem(poleVariant , 8, 1);
+
+        OrderMapper.insertOrderItem(2, item, testConnectionPool);
 
         try (Connection conn = testConnectionPool.getConnection();
              Statement stmt = conn.createStatement()) {
+
             stmt.execute("SET search_path TO test");
-            ResultSet rs = stmt.executeQuery("SELECT * FROM order_item WHERE order_id = 1 AND product_variant_id = 1");
-            assertTrue(rs.next());
-            assertEquals(5, rs.getInt("quantity"));
+
+            ResultSet rs = stmt.executeQuery(
+                    "SELECT * FROM order_item WHERE order_id = 1 AND product_variant_id = " + poleVariant.getProductVariantId()
+            );
+
+            assertTrue(rs.next(), "Order item should exist in the database");
+            assertEquals(8, rs.getInt("quantity"), "Quantity should be 8");
+            assertEquals(1, rs.getInt("product_description_id"), "Product description ID should be 1");
+            assertEquals(poleVariant.getProductVariantId(), rs.getInt("product_variant_id"), "ProductVariant ID should match");
+
+            assertFalse(rs.next(), "Only one matching order item should exist");
+
         } catch (SQLException e) {
             fail("Query failed: " + e.getMessage());
         }
     }
-    */
 
 
     @Test
-    void getOrdersForUser_returnsOrdersForGivenUser() {
-        try {
-            List<OrderInfoDTO> orders = OrderMapper.getOrdersForUser(1, testConnectionPool);
-            assertEquals(1, orders.size());
-            assertEquals(600, orders.get(0).getCarportWidth());
-        } catch (DatabaseException e) {
-            fail("DatabaseException occurred: " + e.getMessage());
-        }
+    void getOrderByOrderId1() throws DatabaseException {
+        int orderId = 1;
+
+        Order order = OrderMapper.getOrderByOrderId(orderId, testConnectionPool);
+        assertNotNull(order, "Order should not be null");
+        // Checking if the orderId and carport dimensions matches the ones created in setup
+        assertEquals(1, order.getOrderId(), "Order id should be 1");
+        assertEquals(780, order.getCarportLength(), "Carport width should be 780");
+        assertEquals(600, order.getCarportWidth(), "Carport width should be 600");
     }
 
+    @Test
+    void getOrdersForUserWithId1() throws DatabaseException {
+        List<OrderInfoDTO> orders = OrderMapper.getOrdersForUser(1, testConnectionPool);
+        // Checking if the orderId and carport dimensions matches the ones created in setup
+        assertEquals(1, orders.size(), "Should return exactly one order");
+        assertEquals(600, orders.get(0).getCarportWidth(), "Carport width should be 600");
+        assertEquals(780, orders.get(0).getCarportLength(), "Carport length should be 780");
+    }
+    
 
     @Test
     void updateOrderStatus() throws DatabaseException {
@@ -268,12 +281,33 @@ class MapperTest {
             // Assert the list has expected size and value
             assertNotNull(lengths, "Returned list should not be null");
             assertEquals(1, lengths.size(), "Expected exactly one length");
-            assertEquals(300, lengths.get(0), "Expected length 4000 for productId 1");
+            assertEquals(300, lengths.get(0), "Expected length 300 for productId 1");
 
         } catch (DatabaseException e) {
             fail("DatabaseException occurred: " + e.getMessage());
         }
     }
+
+    @Test
+    void getProductLengthsForRafter() throws DatabaseException {
+        int productId = 2;
+        try {
+            List<Integer> lengths = OrderMapper.getProductLengths(testConnectionPool, productId);
+            assertNotNull(lengths, "Returned list should not be null");
+            assertEquals(6, lengths.size(), "Expected 6 different lengths");
+            // Checks for all the different rafter lengths
+            assertEquals(300, lengths.get(0), "Expected length 300 for the first product_variant_id");
+            assertEquals(360, lengths.get(1), "Expected length 300 for the second product_variant_id");
+            assertEquals(420, lengths.get(2), "Expected length 300 for the third product_variant_id");
+            assertEquals(480, lengths.get(3), "Expected length 300 for the fourth product_variant_id");
+            assertEquals(540, lengths.get(4), "Expected length 300 for the fifth product_variant_id");
+            assertEquals(600, lengths.get(5), "Expected length 600 for the sixth product_variant_id");
+
+        } catch (DatabaseException e) {
+            fail("DatabaseException occurred: " + e.getMessage());
+        }
+    }
+
 
 }
 
