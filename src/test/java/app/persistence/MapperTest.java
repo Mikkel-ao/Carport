@@ -111,7 +111,7 @@ class MapperTest {
     void setup() {
         try (Connection connection = testConnectionPool.getConnection();
              Statement stmt = connection.createStatement()) {
-            // IMPORTANT: set search_path every time!
+            // Sets search_path EVERY time
             stmt.execute("SET search_path TO test");
             // Truncate all tables to clean database
             stmt.execute("TRUNCATE TABLE order_item, orders, users, product_variant, product_description, product, carport_dimension_website RESTART IDENTITY CASCADE");
@@ -148,7 +148,7 @@ class MapperTest {
             // Insert order item
             stmt.execute("""
             INSERT INTO order_item (order_item_id, order_id , product_variant_id, quantity, product_description_id)
-            VALUES (1, 1, 1, 6, 1)
+            VALUES (1, 1, 1, 8, 1)
         """);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -261,7 +261,7 @@ class MapperTest {
     }
 
     @Test
-    void getProductLengths_returnsAllLengthsForProduct() {
+    void getProductLengthsForPole() throws DatabaseException {
         int productId = 1;
         try {
             List<Integer> lengths = OrderMapper.getProductLengths(testConnectionPool, productId);
