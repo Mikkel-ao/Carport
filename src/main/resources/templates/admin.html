@@ -5,21 +5,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
+    <!-- Font awesome library that is used for the icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-<!-- Toolbar with logo for routing -->
+
+<!-- Toolbar with icon buttons for routing -->
 <header>
     <div class="navigation-bar">
+        <!-- Logo redirects to index -->
         <a th:href="@{/}">
             <img class="logo-index" th:src="@{/images/fog_logo_small.png}" alt="foglogo">
         </a>
 
+        <!-- Home button with house icon -->
         <a th:href="@{/}" class="icon-button">
-            <i class="fas fa-house"></i>
+            <i class="fas fa-house"></i> <!-- Takes the house icon from the font-awesome library in <head> -->
             <span>Hjem</span>
         </a>
 
+        <!-- Logout button shown only when user is logged in -->
         <a th:if="${session.currentUser != null}" th:href="@{/logout}" class="icon-button">
             <i class="fas fa-right-from-bracket"></i>
             <span>Log ud</span>
@@ -27,6 +32,7 @@
     </div>
 </header>
 
+<!-- Section showing the current user's details - Uses entity getter methods -->
 <div class="object-details">
     <h2>Dine oplysninger: </h2>
     <p><strong>Navn:</strong> <span th:text="${user.fullName}">Fog Fogesen</span></p>
@@ -34,24 +40,31 @@
     <p><strong>Rolle:</strong> <span th:text="${user.role}">Admin</span></p>
 </div>
 
+<!-- Section displaying all orders -->
 <div class="orders-section">
     <h2>Ordre oversigt:</h2>
 
+    <!-- Used for displaying error messages -->
     <div th:if="${errorMessage}" style="color: red;">
         <p th:text="${errorMessage}"></p>
     </div>
 
+    <!-- Displays list of orders as long as list ins't empty -->
     <div th:if="${orders != null and !#lists.isEmpty(orders)}" class="order-card-container">
+        <!-- Looping through each order -->
         <div th:each="order : ${orders}" class="order-card">
+            <!-- Order details-->
             <p><strong>Ordre ID:</strong> <span th:text="${order.orderId}">123</span></p>
             <p><strong>Dato:</strong> <span th:text="${order.timestamp}"></span></p>
 
+            <!-- Customer details -->
             <p><strong>Navn:</strong> <span th:text="${order.user.fullName}"></span></p>
             <p><strong>Email:</strong> <span th:text="${order.user.email}"></span></p>
             <p><strong>Telefon:</strong> <span th:text="${order.user.phoneNumber}"></span></p>
             <p><strong>Adresse:</strong> <span th:text="${order.user.address}"></span></p>
             <p><strong>Postnummer:</strong> <span th:text="${order.user.zipCode}"></span></p>
 
+            <!-- Order details -->
             <p><strong>Status:</strong> <span th:text="${order.status}">Pending</span></p>
             <p><strong>Carport bredde:</strong> <span th:text="${order.carportWidth}">600</span></p>
             <p><strong>Carport længde:</strong> <span th:text="${order.carportLength}">780</span></p>
@@ -59,7 +72,7 @@
             <p><strong>Salgspris:</strong> <span th:text="${order.totalSalesPrice}"></span></p>
 
             <br>
-            <!-- Price input at the top -->
+            <!-- Form for employee to update the sales price before sending it to the customer -->
             <form th:if="${order.status.toString() == 'pending'}" th:action="@{/updatePrice}" method="post" class="price-form">
                 <input type="hidden" name="orderId" th:value="${order.orderId}"/>
                 <div class="input-container">
@@ -70,17 +83,19 @@
                 </div>
             </form>
 
-            <!-- Applying Display: grid layout for the buttons -->
+            <!-- If an order is pending a button to send an offer will be available -->
             <div class="grid-buttons">
                 <form th:if="${order.status.toString() == 'pending'}" th:action="@{/sendOffer}" method="post">
                     <input type="hidden" name="orderId" th:value="${order.orderId}"/>
                     <button type="submit">Send tilbud</button>
                 </form>
 
+                <!-- Button which sends user to orderdeatils.html to view the list of materials (styklisten) -->
                 <form th:action="@{/orderdetails/{orderId}(orderId=${order.orderId})}" method="get">
                     <button type="submit">Se stykliste</button>
                 </form>
 
+                <!-- Button which sends user to svg.html to view carport drawing -->
                 <form th:action="@{/svg}" method="post">
                     <input type="hidden" name="Længde" th:value="${order.carportLength}" />
                     <input type="hidden" name="Bredde" th:value="${order.carportWidth}" />
