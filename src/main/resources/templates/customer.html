@@ -78,7 +78,7 @@
           </div>
         </form>
 
-        <!-- Displays part list only for paid orders -->
+        <!-- Displays button when order is paid - Takes the user to their 'stykliste' -->
         <form th:if="${order.status.toString() == 'paid'}"
               th:action="@{/orderdetails/{orderId}(orderId=${order.orderId})}" method="get">
           <div class="submit-button">
@@ -86,6 +86,7 @@
           </div>
         </form>
 
+        <!-- Form for Button that takes user to svg.html displaying a SVG based on their order's measurements -->
         <form th:action="@{/svg}" method="post">
           <input type="hidden" name="Længde" th:value="${order.carportLength}" />
           <input type="hidden" name="Bredde" th:value="${order.carportWidth}" />
@@ -97,6 +98,7 @@
     </div>
   </div>
 
+  <!-- If account has no orders a message gets displayed -->
   <div th:if="${orders == null or #lists.isEmpty(orders)}">
     <p>Ingen ordre fundet.</p>
   </div>

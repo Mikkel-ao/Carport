@@ -25,34 +25,38 @@
             <img class="logo-index" th:src="@{/images/fog_logo_small.png}" alt="foglogo">
         </a>
 
+        <!-- If not logged in icon to that directs to login.html is available  -->
         <a th:if="${session.currentUser == null}" th:href="@{/login}" class="icon-button">
             <i class="fas fa-user"></i>
             <span>Log ind</span>
         </a>
 
-
+        <!-- If not logged in icon to that directs to createuser.html is available  -->
         <a th:if="${session.currentUser == null}" th:href="@{/createuser}" class="icon-button">
             <i class="fas fa-user-plus"></i>
             <span>Opret bruger</span>
         </a>
 
+        <!-- If logged in as admin an icon that directs to page (admin.html) with all orders is available -->
         <a th:if="${session.role == 'admin'}" th:href="@{/admin}" class="icon-button">
             <i class="fas fa-clipboard-list"></i>
             <span>Ordreoversigt</span>
         </a>
 
+        <!-- If logged in as customer an icon that directs to their account page is available -->
         <a th:if="${session.role == 'customer'}" th:href="@{/customer}" class="icon-button">
             <i class="fas fa-user"></i>
             <span>Fog Konto</span>
         </a>
 
+        <!-- If logged in a logout function is available -->
         <a th:if="${session.currentUser != null}" th:href="@{/logout}" class="icon-button">
             <i class="fas fa-right-from-bracket"></i>
             <span>Log ud</span>
         </a>
 
+        <!-- Displays logged-in user's email -->
         <span th:if="${session.email != null}" th:text="${session.email}" class="email-address"></span>
-
 
     </div>
 </header>
@@ -61,6 +65,7 @@
     <h2>Bestil Quick-Byg tilbud - carport med fladt tag</h2>
 </div>
 
+<!-- Displays potential error messages here -->
 <div th:if="${errorMessage}" style="color: red;">
     <p th:text="${errorMessage}"></p>
 </div>
@@ -73,6 +78,7 @@
         sælger. </p>
     <p class="form-description"> Du kan også genere en skitse inden du trykker bestil tilbud.</p>
 </div>
+
 <!-- Form for displaying carport based on user input -->
 <div class="formular-container">
     <form action="/svg" method="post">
@@ -93,7 +99,7 @@
             </select>
         </label>
 
-        <!-- Submit button for the svg -->
+        <!-- Submit button for the svg which takes user to svg.html and displays drawing -->
         <div class="submit-button">
             <button type="submit">Generer tegning</button>
         </div>
@@ -102,43 +108,35 @@
 </div>
 
 
-<!-- kontakt formular starter -->
+<!-- Container for the request form -->
 <div class="formular-container">
+
+    <!-- Success message displayed when the request is successfully submitted -->
     <div th:if="${param.success}" style="color: green; margin-bottom: 15px; font-weight: bold;">
         Din forespørgsel er modtaget. Tak!
     </div>
 
+    <!-- Form to collect user input for carport length and width, and submit a quote request -->
     <form action="/add-customer-request" method="post" th:action="@{/add-customer-request}">
+
+        <!-- Dropdown for selecting carport length -->
         <label for="Længde">Længde:</label>
         <select name="Længde" id="Længde" class="formular-dropDown" required>
             <option value="" disabled selected>Vælg længde</option>
+            <!-- Dynamically generates options from 'carportLength' list -->
             <option th:value="${length}" th:each="length : ${carportLength}" th:text="${length}"></option>
         </select>
 
+        <!-- Dropdown for selecting carport width -->
         <label for="Bredde">Bredde:</label>
         <select name="Bredde" id="Bredde" class="formular-dropDown" required>
             <option value="" disabled selected>Vælg bredde</option>
+            <!-- Dynamically generates options from 'carportWidth' list, excluding null or 0 values -->
             <option th:each="width : ${carportWidth}" th:if="${width != null and width != 0}"
                     th:text="${width}"></option>
         </select>
 
-        <!--
-        <h3>Redskabsrum:</h3>
-        <p>NB! Der skal beregnes 15 cm tagudhæng på hver side af redskabsrummet*</p>
-
-        <label for="Redskabsrum Bredde">Redskabsrum Bredde:</label>
-        <select name="Redskabsrum Bredde" id="Redskabsrum Bredde" class="formular-dropDown" required>
-            <option value="" disabled selected>Vælg bredde</option>
-            <option th:each="shedWidth : ${shedWidths}" th:value="${shedWidth}" th:text="${shedWidth}"></option>
-        </select>
-
-        <label for="Redskabsrum Længde">Redskabsrum Længde:</label>
-        <select name="Redskabsrum Længde" id="Redskabsrum Længde" class="formular-dropDown" required>
-            <option value="" disabled selected>Vælg længde</option>
-            <option th:each="shedLength : ${shedLengths}" th:value="${shedLength}" th:text="${shedLength}"></option>
-        </select>
-        -->
-
+        <!-- Submit button to send the request -->
         <div class="submit-button">
             <button type="submit">Bestil tilbud</button>
         </div>
@@ -146,6 +144,8 @@
 </div>
 
 </body>
+
+<!-- Footer with link that directs to Fog's official contact page -->
 <footer class="index-site-footer">
     <a href="https://www.johannesfog.dk/om-fog/forretninger/kontakt" class="footer-button" target="_blank"
        rel="noopener">
