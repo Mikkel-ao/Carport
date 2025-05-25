@@ -134,7 +134,7 @@ class MapperTest {
             VALUES (1, 600, 780, 'pending', 1, 8000, 10000, CURRENT_TIMESTAMP)
         """);
 
-        // After inserting your data from @BeforeEach, reset the sequence so it knows to start after the highest order_id
+        // After inserting data from @BeforeEach, reset the sequence so it knows to start after the highest order_id
         stmt.execute("SELECT setval('orders_order_id_seq', (SELECT MAX(order_id) FROM orders))");
 
 
@@ -163,7 +163,7 @@ class MapperTest {
 
     @Test
     void testGetUserById1() throws DatabaseException {
-        User user = UserMapper.getUserById(1, testConnectionPool); // This assumes the inserted user gets ID 2
+        User user = UserMapper.getUserById(1, testConnectionPool);
         assertNotNull(user);
         assertEquals("email@test.com", user.getEmail());
     }
@@ -193,7 +193,7 @@ class MapperTest {
         List<Integer> lengths = OrderMapper.getCarportLength(testConnectionPool);
         // Check if all inserted lengths are present.
         assertTrue(lengths.containsAll(List.of(240,270,300,330,360,390,420,450,480,510,540,600,630,660,690,720,750,780)), "Returned lengths should contain all inserted values");
-        // Optionally, check size exactly matches
+        // Optionally, check size matches
         assertEquals(18, lengths.size(), "There should be 18 lengths returned");
     }
 
@@ -202,7 +202,7 @@ class MapperTest {
         List<Integer> lengths = OrderMapper.getCarportWidth(testConnectionPool);
         // Check if all inserted lengths are present.
         assertTrue(lengths.containsAll(List.of(240,270,300,330,360,390,420,450,480,510,540,600)), "Returned lengths should contain all inserted values");
-        // Optionally, check size exactly matches // TODO: Null values in width column
+        // Optionally, check size matches // TODO: Null values in width column
         assertEquals(18, lengths.size());
     }
 
