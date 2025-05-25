@@ -7,17 +7,19 @@
 <!-- For icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+<!-- Header with navigation/toolbar -->
 <header>
     <div class="navigation-bar">
+        <!-- Logo that links back to index.html -->
         <a th:href="@{/}">
             <img class="logo-index" th:src="@{/images/fog_logo_small.png}" alt="foglogo">
         </a>
-
+        <!-- Home icon that leads to index.html -->
         <a th:href="@{/}" class="icon-button">
             <i class="fas fa-house"></i>
             <span>Hjem</span>
         </a>
-
+        <!-- Login button only shown if no user is currently logged in -->
         <a th:if="${session.currentUser == null}" th:href="@{/login}" class="icon-button">
             <i class="fas fa-user"></i>
             <span>Log ind</span>
@@ -27,9 +29,12 @@
 </header>
 
 <body class="background-color">
+
+<!-- Main container for all of the form content. -->
 <div class="page-container">
     <header>
         <br>
+        <!-- Fog logo which directs to login page -->
         <a href="login.html" th:href="@{/login}">
             <img class="logo" src="/public/images/fog_logo_small.png"
                  th:src="@{/images/fog_logo_small.png}" alt="fog-logo">
@@ -38,11 +43,13 @@
         <br>
     </header>
 
-
+    <!-- User creation form -->
     <form class="generic-form" method="post">
+        <!-- Email input -->
         <label>
             <input type="email" name="email" placeholder="Indtast email" required/>
         </label>
+        <!-- Password input fields -->
         <label>
             <input type="password" name="password1" placeholder="Indtast kodeord" required/>
         </label>
@@ -50,6 +57,7 @@
             <input type="password" name="password2" placeholder="Gentag kodeord" required/>
         </label>
 
+        <!-- Section for contact details -->
         <h4>Kontaktoplysninger:</h4>
         <label>
             <input type="text" name="fullName" placeholder="Fornavn og efternavn" required>
@@ -63,13 +71,18 @@
         <label>
             <input type="text" name="phone" placeholder="Telefon nummer" required>
         </label>
+
+        <!-- Consent checkbox needs to be marked -->
         <div class="checkbox-consent">
             <label>
                 <input type="checkbox" required>
                 Fog må benytte dine afgivne oplysninger til at kontakte mig i forbindelse med tilbud på QuickByg carport
             </label>
         </div>
+        <!-- Submit button to create user based on inputs -->
         <button type="submit" formaction="/createuser">Opret bruger</button>
+
+        <!-- Displays error message if an error that isn't due to basic form input errors occurs -->
         <div th:if="${errorMessage}" style="color: red;">
             <p th:text="${errorMessage}"></p>
         </div>

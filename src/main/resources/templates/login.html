@@ -8,17 +8,22 @@
     <!-- For icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
+<!-- Navigation bar at the top of the page -->
 <header>
     <div class="navigation-bar">
+        <!-- Logo that redirects to index.html-->
         <a th:href="@{/}">
             <img class="logo-index" th:src="@{/images/fog_logo_small.png}" alt="foglogo">
         </a>
 
+        <!-- Home button, directs to index.html -->
         <a th:href="@{/}" class="icon-button">
             <i class="fas fa-house"></i>
             <span>Hjem</span>
         </a>
 
+        <!-- Link to registration page, only shown if user is not logged in -->
         <a th:if="${session.currentUser == null}" th:href="@{/createuser}" class="icon-button">
             <i class="fas fa-user-plus"></i>
             <span>Opret bruger</span>
@@ -27,9 +32,11 @@
     </div>
 </header>
 
-
 <body class="background-color">
+
+<!-- Page content container -->
 <div class="page-container">
+    <!-- Logo header -->
     <header class="header">
         <a href="login.html" th:href="@{/login}">
             <img class="logo" src="/public/images/fog_logo_small.png"
@@ -37,13 +44,16 @@
         </a>
     </header>
 
+    <!-- Login form with input fields -->
     <form class="generic-form" method="post" action="/login">
         <input type="email" name="email" placeholder="Indtast email" required />
         <input type="password" name="password" placeholder="Indtast adgangskode" required />
         <button type="submit" class="submit-button">Log ind</button>
+        <!-- Error message display if login fails -->
         <div th:if="${errorMessage}" style="color: red;">
             <p th:text="${errorMessage}"></p>
         </div>
+        <!-- Displays message when user gets redirected to login.html after creating an account -->
         <div th:if="${message}" style="color: green">
             <p th:text="${message}"></p>
         </div>
