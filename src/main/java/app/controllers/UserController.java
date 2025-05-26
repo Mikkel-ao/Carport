@@ -30,13 +30,13 @@ public class UserController {
     private static void login(Context ctx, ConnectionPool connectionPool) {
 
         //Retrieving log in information from the front end
-        String username = ctx.formParam("email");
+        String email = ctx.formParam("email");
         String password = ctx.formParam("password");
 
 
         //Trying to log in and if succeeded returning the User object
         try {
-            User user = UserMapper.login(username, password, connectionPool);
+            User user = UserMapper.login(email, password, connectionPool);
 
             ctx.sessionAttribute("currentUser", user.getUserId());
             ctx.sessionAttribute("userId", user.getUserId());
