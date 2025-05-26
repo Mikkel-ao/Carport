@@ -130,7 +130,7 @@ public class OrderController {
         return orderItemAndPrice;
     }
 
-    //Private (support) method that returuns beam variant(s), quantity and price (in a DTO) for the given length of carport wished by the user
+    //Private (support) method that returns beam variant(s), quantity and price (in a DTO) for the given length of carport wished by the user
     private static List<OrderItemAndPrice> getBeamOrderItemAndPrice(int carportLength, ConnectionPool connectionPool) throws DatabaseException {
 
 

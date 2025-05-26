@@ -60,7 +60,7 @@ public class UserController {
         String password2 = ctx.formParam("password2");
         String phone = ctx.formParam("phone");
         String zipCode = ctx.formParam("zipCode");
-        String homeAdress = ctx.formParam("homeAddress");
+        String homeAddress = ctx.formParam("homeAddress");
         String fullName = ctx.formParam("fullName");
 
 
@@ -73,7 +73,7 @@ public class UserController {
 
         //Trying to insert the new user to the database and returning to the login page
         try {
-            UserMapper.createUser(email, password1,phone,zipCode,homeAdress,fullName, connectionPool);
+            UserMapper.createUser(email, password1,phone,zipCode,homeAddress,fullName, connectionPool);
             ctx.attribute("message", "Brugeren blev oprettet. Venligst log ind!");
             ctx.render("/login.html");
         } catch (DatabaseException e) {
