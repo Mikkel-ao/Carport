@@ -25,9 +25,9 @@ Index --> Customer : Fog konto (Kunde)\n( GET /customer )
 
 ' Login & Opret navigation
 Login --> Opret : Opret bruger\n( GET /createuser )
-Login --> Index : Hjem\n( redirect /index )
+Login --> Index : Hjem\n( GET /index )
 Opret --> Login : Log ind\n( GET /login )
-Opret --> Index : Hjem\n( redirect /index )
+Opret --> Index : Hjem\n( GET /index )
 
 ' Admin navigation
 Admin --> SVG : Se tegning\n( POST /svg )
