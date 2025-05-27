@@ -21,7 +21,7 @@ state "svg.html" as SVG
 Index --> Login : Log ind\n( GET /login )
 Index --> Opret : Opret bruger\n( GET /createuser )
 Index --> Admin : Ordreoversigt (Admin)\n( GET /ordreoversigt )
-Index --> Customer : Fog konto (Kunde)\n( GET /fogkonto )
+Index --> Customer : Fog konto (Kunde)\n( GET /customer )
 
 ' Login & Opret navigation
 Login --> Opret : Opret bruger\n( GET /createuser )
@@ -47,12 +47,12 @@ end note
 
 ' SVG navigation
 SVG --> Admin : Ordreoversigt (admin)\n( GET /ordreoversigt )
-SVG --> Customer : Fog konto (kunde)\n( GET /fogkonto )
+SVG --> Customer : Fog konto (kunde)\n( GET /customer )
 SVG --> Index : Hjem\n( GET /index )
 
 ' OrderDetails navigation
 OrderDetails --> Admin : Ordreoversigt (admin)\n( GET /ordreoversigt )
-OrderDetails --> Customer : Fog konto (kunde)\n( GET /fogkonto )
+OrderDetails --> Customer : Fog konto (kunde)\n( GET /customer )
 OrderDetails --> Index : Hjem\n( GET /index )
 note right of OrderDetails
   Kunde har adgang efter betaling

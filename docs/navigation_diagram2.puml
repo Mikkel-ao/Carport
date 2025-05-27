@@ -13,7 +13,7 @@ state "orderdetails.html" as OrderDetails
 Index --> Login : Log ind\n( GET /login )
 Index --> Opret : Opret bruger\n( GET /createuser )
 Index --> Admin : Ordreoversigt\n( GET /ordreoversigt )
-Index --> Customer : Fog konto\n( GET /fogkonto )
+Index --> Customer : Fog konto\n( GET /customer )
 Index --> SVG : Generer tegning\n( POST /svg )
 
 Login --> Opret : Opret bruger\n( GET /createuser )
@@ -25,11 +25,11 @@ Admin --> OrderDetails : Se stykliste\n( GET /orderdetails )
 Customer --> SVG : Se tegning\n( POST /svg )
 Customer --> OrderDetails : Se stykliste\n( GET /orderdetails )
 
-SVG --> Customer : Fog konto\n( GET /fogkonto )
+SVG --> Customer : Fog konto\n( GET /customer )
 SVG --> Admin : Ordreoversigt\n( GET /ordreoversigt )
 
 OrderDetails --> Admin : Ordreoversigt\n( GET /ordreoversigt )
-OrderDetails --> Customer : Fog konto\n( GET /fogkonto )
+OrderDetails --> Customer : Fog konto\n( GET /customer )
 
 note right of Index
   Alle sider har adgang til index.html via "Hjem"
