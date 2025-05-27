@@ -299,7 +299,7 @@ class MapperTest {
 
     @Test
     void testGetVariantsByProductAndLengthRafter() throws DatabaseException {
-        // productId 1 = 'Spær' and should multiple potential lengths
+        // productId 2 = 'Spær' and should multiple potential lengths
         int productId = 2;
         int[] lengths = {300, 360, 420, 480, 540, 600};
 
@@ -312,7 +312,7 @@ class MapperTest {
 
             Product product = variant.getProduct();
             assertNotNull(product, "Product should not be null for length: " + length);
-            assertEquals("Spær", product.getName(), "Product name should match expected for length: " + length);
+            assertEquals("Spærtræ", product.getName(), "Product name should match expected for length: " + length);
         }
     }
 

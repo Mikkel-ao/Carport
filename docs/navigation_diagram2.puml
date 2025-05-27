@@ -1,9 +1,7 @@
 @startuml
 
-' Initial state
 [*] --> Index
 
-' States
 state "index.html" as Index
 state "login.html" as Login
 state "createuser.html" as Opret
@@ -12,34 +10,27 @@ state "customer.html" as Customer
 state "svg.html" as SVG
 state "orderdetails.html" as OrderDetails
 
-' Navigation fra Index
-Index --> Login : Log ind
-Index --> Opret : Opret bruger
-Index --> Admin : Ordreoversigt
-Index --> Customer : Fog konto
-Index --> SVG : Generer tegning
+Index --> Login : Log ind\n( GET /login )
+Index --> Opret : Opret bruger\n( GET /createuser )
+Index --> Admin : Ordreoversigt\n( GET /ordreoversigt )
+Index --> Customer : Fog konto\n( GET /fogkonto )
+Index --> SVG : Generer tegning\n( POST /svg )
 
-' Login og opret bruger
-Login --> Opret : Opret bruger
-Opret --> Login : Log ind
+Login --> Opret : Opret bruger\n( GET /createuser )
+Opret --> Login : Log ind\n( GET /login )
 
-' Admin navigation
-Admin --> SVG : Se tegning
-Admin --> OrderDetails : Se stykliste
+Admin --> SVG : Se tegning\n( POST /svg )
+Admin --> OrderDetails : Se stykliste\n( GET /orderdetails )
 
-' Customer navigation
-Customer --> SVG : Se tegning
-Customer --> OrderDetails : Se stykliste
+Customer --> SVG : Se tegning\n( POST /svg )
+Customer --> OrderDetails : Se stykliste\n( GET /orderdetails )
 
-' SVG navigation
-SVG --> Customer : Fog konto
-SVG --> Admin : Ordreoversigt
+SVG --> Customer : Fog konto\n( GET /fogkonto )
+SVG --> Admin : Ordreoversigt\n( GET /ordreoversigt )
 
-' OrderDetails navigation
-OrderDetails --> Admin : Ordreoversigt
-OrderDetails --> Customer : Fog konto
+OrderDetails --> Admin : Ordreoversigt\n( GET /ordreoversigt )
+OrderDetails --> Customer : Fog konto\n( GET /fogkonto )
 
-' Noter
 note right of Index
   Alle sider har adgang til index.html via "Hjem"
 end note

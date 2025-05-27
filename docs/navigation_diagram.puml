@@ -17,42 +17,43 @@ state "customer.html" as Customer
 ' SVG
 state "svg.html" as SVG
 
-Index --> Login : Log ind
-Index --> Opret : Opret bruger
-Index --> Admin : Ordreoversigt (Admin)
-Index --> Customer : Fog konto (Kunde)
+' Navigation from Index
+Index --> Login : Log ind\n( GET /login )
+Index --> Opret : Opret bruger\n( GET /createuser )
+Index --> Admin : Ordreoversigt (Admin)\n( GET /ordreoversigt )
+Index --> Customer : Fog konto (Kunde)\n( GET /fogkonto )
 
 ' Login & Opret navigation
-Login --> Opret : Opret bruger
-Login --> Index : Hjem
-Opret --> Login : Log ind
-Opret --> Index : Hjem
+Login --> Opret : Opret bruger\n( GET /createuser )
+Login --> Index : Hjem\n( redirect /index )
+Opret --> Login : Log ind\n( GET /login )
+Opret --> Index : Hjem\n( redirect /index )
 
 ' Admin navigation
-Admin --> SVG : Se tegning
-Admin --> OrderDetails : Se stykliste
-Admin --> Index : Hjem
+Admin --> SVG : Se tegning\n( POST /svg )
+Admin --> OrderDetails : Se stykliste\n( GET /orderdetails )
+Admin --> Index : Hjem\n( GET /index )
 note right of Admin
   Kun for admin-bruger
 end note
 
 ' Customer navigation
-Customer --> SVG : Se tegning
-Customer --> OrderDetails : Se stykliste
-Customer --> Index : Hjem
+Customer --> SVG : Se tegning\n( POST /svg )
+Customer --> OrderDetails : Se stykliste\n( GET /orderdetails )
+Customer --> Index : Hjem\n( GET /index )
 note right of Customer
   Kun for kunder
 end note
 
 ' SVG navigation
-SVG --> Admin : Ordreoversigt (admin)
-SVG --> Customer : Fog konto (kunde)
-SVG --> Index : Hjem
+SVG --> Admin : Ordreoversigt (admin)\n( GET /ordreoversigt )
+SVG --> Customer : Fog konto (kunde)\n( GET /fogkonto )
+SVG --> Index : Hjem\n( GET /index )
 
 ' OrderDetails navigation
-OrderDetails --> Admin : Ordreoversigt (admin)
-OrderDetails --> Customer : Fog konto (kunde)
-OrderDetails --> Index : Hjem
+OrderDetails --> Admin : Ordreoversigt (admin)\n( GET /ordreoversigt )
+OrderDetails --> Customer : Fog konto (kunde)\n( GET /fogkonto )
+OrderDetails --> Index : Hjem\n( GET /index )
 note right of OrderDetails
   Kunde har adgang efter betaling
 end note
