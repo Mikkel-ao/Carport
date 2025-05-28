@@ -13,6 +13,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
 class MapperTest {
 
     private static ConnectionPool testConnectionPool;
@@ -121,17 +122,20 @@ class MapperTest {
             stmt.execute("INSERT INTO test.product SELECT * FROM public.product;");
             stmt.execute("INSERT INTO test.product_description SELECT * FROM public.product_description;");
             stmt.execute("INSERT INTO test.product_variant SELECT * FROM public.product_variant;");
-            stmt.execute("INSERT INTO test.order_item SELECT * FROM public.order_item;");
+
+            //Insert base order item
+            stmt.execute("INSERT INTO test.order_item (order_item_id, order_id, product_variant_id, quantity, product_description_id) VALUES (1, 1, 1, 1, 1)");
+            stmt.execute("INSERT INTO test.order_item (order_item_id, order_id, product_variant_id, quantity, product_description_id) VALUES (2, 2, 2, 2, 2)");
 
             // Insert base user
             stmt.execute("""
-            INSERT INTO users (user_id, email, password, phone_number, role, zip_code, home_address, full_name)
-            VALUES (1, 'email@test.com', '1234', '42424242', 'customer', '2770', 'testvej', 'tester Jens')
+            INSERT INTO test.users (user_id, email, password, phone_number, zip_code, home_address, full_name)
+            VALUES (1, 'email@test.com', '1234', '42424242', '2770', 'testvej', 'tester Jens')
         """);
             // Insert base order
             stmt.execute("""
-            INSERT INTO orders (order_id, carport_width, carport_length, status, user_id, customer_price, cost_price, order_date)
-            VALUES (1, 600, 780, 'pending', 1, 8000, 10000, CURRENT_TIMESTAMP)
+            INSERT INTO test.orders (order_id, carport_width, carport_length, user_id, customer_price, cost_price, order_date)
+            VALUES (1, 600, 780, 1, 8000, 10000, CURRENT_TIMESTAMP)
         """);
 
         // After inserting data from @BeforeEach, reset the sequence so it knows to start after the highest order_id
@@ -192,16 +196,16 @@ class MapperTest {
     void testGetCarportLength() throws DatabaseException {
         List<Integer> lengths = OrderMapper.getCarportLength(testConnectionPool);
         // Check if all inserted lengths are present.
-        assertTrue(lengths.containsAll(List.of(240,270,300,330,360,390,420,450,480,510,540,600,630,660,690,720,750,780)), "Returned lengths should contain all inserted values");
+        assertTrue(lengths.containsAll(List.of(240,270,300,330,360,390,420,450,480,510,540, 570, 600,630,660,690,720,750,780)), "Returned lengths should contain all inserted values");
         // Optionally, check size matches
-        assertEquals(18, lengths.size(), "There should be 18 lengths returned");
+        assertEquals(19, lengths.size(), "There should be 19 lengths returned");
     }
 
     @Test
     void testGetCarportWidth() throws DatabaseException {
         List<Integer> lengths = OrderMapper.getCarportWidth(testConnectionPool);
         // Check if all inserted lengths are present.
-        assertTrue(lengths.containsAll(List.of(240,270,300,330,360,390,420,450,480,510,540,600)), "Returned lengths should contain all inserted values");
+        assertTrue(lengths.containsAll(List.of(240,270,300,330,360,390,420,450,480,510,540, 570,600)), "Returned lengths should contain all inserted values");
     }
 
 
