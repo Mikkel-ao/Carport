@@ -15,8 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 class MapperTest {
-
-    private static ConnectionPool testConnectionPool;
+private static ConnectionPool testConnectionPool;
     private static int insertedOrderId;
 
 
