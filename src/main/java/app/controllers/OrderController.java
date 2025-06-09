@@ -21,7 +21,7 @@ public class OrderController {
     public static void addRoutes(Javalin app, ConnectionPool connectionPool) {
         app.get("/index", ctx -> getCarportDimensions(ctx, connectionPool));
         app.post("/add-customer-request", ctx -> handleCustomerRequest(ctx, connectionPool));
-        app.get("/add-customer-request", ctx -> ctx.render("index.html"));
+        //app.get("/add-customer-request", ctx -> ctx.render("index.html"));
         app.get("/orderdetails/{orderId}", ctx -> showListOfMaterials(ctx, connectionPool));
         app.post("/updatePrice", ctx -> updatePrice(ctx, connectionPool));
         app.post("/sendOffer", ctx -> sendOffer(ctx, connectionPool));
@@ -39,6 +39,12 @@ public class OrderController {
 
             ctx.attribute("carportLength", carportLength);
             ctx.attribute("carportWidth", carportWidth);
+
+            // Pass success parameter if present
+            if (ctx.queryParam("success") != null) {
+                ctx.attribute("success", true);
+            }
+
             ctx.render("index.html");
         } catch (DatabaseException e) {
             //Printing stack trace for the developer to locate the bug
@@ -62,7 +68,7 @@ public class OrderController {
 
         try {
             createListOfMaterials(ctx, connectionPool);
-            ctx.redirect("/add-customer-request?success=true");
+            ctx.redirect("/index?success=true");
         } catch (DatabaseException e) {
             //Printing stack trace for the developer to locate the bug
             e.printStackTrace();
@@ -300,6 +306,16 @@ public class OrderController {
             User user = UserMapper.getUserById(userId, connectionPool);
             if (user.getRole().equalsIgnoreCase("admin")) {
                 List<Order> orders = OrderMapper.getAllOrders(connectionPool);
+                List<Order> pendingOrders = new ArrayList<>();
+                for(Order order : orders) {
+                    if(order.getStatus() == OrderStatus.PENDING) {
+                        pendingOrders.add(order);
+                    }
+                }
+
+                boolean showAllOrders = ctx.queryParam("showAll") != null;
+                //ternary operator
+                ctx.attribute("pendingOrders", showAllOrders ? orders : pendingOrders);
                 ctx.attribute("orders", orders);
                 ctx.attribute("user", user);
                 ctx.render("admin.html");
