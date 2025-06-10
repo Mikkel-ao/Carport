@@ -306,6 +306,7 @@ public class OrderController {
             User user = UserMapper.getUserById(userId, connectionPool);
             if (user.getRole().equalsIgnoreCase("admin")) {
                 List<Order> orders = OrderMapper.getAllOrders(connectionPool);
+
                 List<Order> pendingOrders = new ArrayList<>();
                 for(Order order : orders) {
                     if(order.getStatus() == OrderStatus.PENDING) {
@@ -315,8 +316,8 @@ public class OrderController {
 
                 boolean showAllOrders = ctx.queryParam("showAll") != null;
                 //ternary operator
-                ctx.attribute("pendingOrders", showAllOrders ? orders : pendingOrders);
-                ctx.attribute("orders", orders);
+                ctx.attribute("orders", showAllOrders ? orders : pendingOrders);
+              //  ctx.attribute("orders", orders);
                 ctx.attribute("user", user);
                 ctx.render("admin.html");
             }

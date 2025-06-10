@@ -54,9 +54,9 @@
     </div>
 
     <!-- Displays list of orders as long as list ins't empty -->
-    <div th:if="${pendingOrders != null and !#lists.isEmpty(pendingOrders)}" class="order-card-container">
+    <div th:if="${orders != null and !#lists.isEmpty(orders)}" class="order-card-container">
         <!-- Looping through each order -->
-        <div th:each="order : ${pendingOrders}" class="order-card">
+        <div th:each="order : ${orders}" class="order-card">
             <!-- Order details-->
             <p><strong>Ordre ID:</strong> <span th:text="${order.orderId}">123</span></p>
             <p><strong>Dato:</strong> <span th:text="${order.timestamp}"></span></p>
